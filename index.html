@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ian's Job Search Dashboard</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.dash { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f5f7; color: #1a1a1a; padding: 20px; }
+.dash-header { margin-bottom: 16px; }
+.dash-header h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+.dash-header p { font-size: 13px; color: #666; margin: 0; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0; }
+.filter-btn { border: 1px solid #d0d3d9; background: #fff; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: #333; }
+.filter-btn.active { background: #1F3864; color: #fff; border-color: #1F3864; }
+.toggle-btn { border: 1px solid #d0d3d9; background: #fff; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: #333; }
+.toggle-btn.on { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
+.divider { width: 1px; height: 22px; background: #d9dce1; margin: 0 2px; }
+.filter-select { border: 1px solid #d0d3d9; background: #fff; border-radius: 6px; padding: 6px 10px; font-size: 13px; color: #333; font-family: inherit; }
+.filter-select.active { border-color: #1F3864; color: #1F3864; font-weight: 600; }
+.updated-note { font-size: 11px; color: #999; margin-top: 2px; }
+.spacer { flex: 1; }
+.copy-btn { border: 1px solid #1F3864; background: #1F3864; color: #fff; border-radius: 6px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
+.copy-btn:hover { background: #16294a; }
+.summary-box { display: none; margin: 10px 0; background: #fff; border: 1px solid #d0d3d9; border-radius: 8px; padding: 12px; }
+.summary-box.show { display: block; }
+.summary-box textarea { width: 100%; height: 140px; font-family: ui-monospace, monospace; font-size: 12px; border: 1px solid #e0e2e6; border-radius: 6px; padding: 8px; resize: vertical; }
+.summary-box p { font-size: 12px; color: #666; margin: 6px 0 0; }
+.empty-note { font-size: 13px; color: #888; font-style: italic; padding: 20px 4px; }
+.card-list { display: flex; flex-direction: column; gap: 10px; }
+.card { background: #fff; border: 1px solid #e0e2e6; border-radius: 8px; padding: 14px 16px; }
+.card.archived { opacity: 0.65; }
+.card-top { cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.card-title { font-size: 14px; font-weight: 600; margin: 0 0 2px; }
+.card-company { font-size: 13px; color: #444; margin: 0; }
+.card-linkedin-note { font-size: 11px; color: #999; margin: 2px 0 0; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eef0f4; color: #444; white-space: nowrap; }
+.badge.industry { background: #E6F1FB; color: #0C447C; }
+.badge.status-New { background: #EAF3DE; color: #27500A; }
+.badge.status-Closed { background: #FCEBEB; color: #791F1F; }
+.badge.status-Monitoring { background: #FAEEDA; color: #633806; }
+.badge.status-Applied { background: #EEEDFE; color: #3C3489; }
+.badge.unreviewed { background: #1F3864; color: #fff; font-weight: 600; }
+.badge.rejected-badge { background: #FCEBEB; color: #791F1F; }
+.badge.archived-badge { background: #eef0f4; color: #666; }
+.badge.tier-b { background: #F0E9FA; color: #4B2E83; }
+.card-meta { text-align: right; font-size: 12px; color: #666; white-space: nowrap; }
+.card-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee; }
+.card-detail.open { display: block; }
+.card-detail h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: #888; margin: 10px 0 4px; }
+.card-detail p, .card-detail li { font-size: 13px; line-height: 1.55; color: #222; }
+.card-detail ul { margin: 4px 0; padding-left: 18px; }
+.caution-callout { background: #FCEBEB; border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #791F1F; margin-top: 6px; }
+.open-link { display: inline-block; margin-top: 8px; margin-right: 8px; font-size: 13px; color: #fff; background: #1F3864; padding: 7px 14px; border-radius: 6px; text-decoration: none; }
+.clear-btn { display: inline-block; margin-top: 8px; font-size: 13px; color: #1F3864; background: #fff; border: 1px solid #1F3864; padding: 6px 13px; border-radius: 6px; cursor: pointer; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.controls label { font-size: 11px; color: #666; display: block; margin-bottom: 3px; }
+.controls select, .controls textarea { width: 100%; font-size: 13px; padding: 6px 8px; border: 1px solid #d0d3d9; border-radius: 6px; font-family: inherit; }
+.controls .full { grid-column: 1 / -1; }
+.controls textarea { height: 50px; resize: vertical; }
+.no-desc { font-size: 13px; color: #888; font-style: italic; }
+.sync-note { font-size: 11px; color: #999; margin: 0 0 12px; }
+@media (max-width: 480px) {
+  .controls { grid-template-columns: 1fr; }
+  .card-top { flex-direction: column; }
+  .card-meta { text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="dash">
+  <div class="dash-header">
+    <h1>Ian's job search dashboard</h1>
+    <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on Claude's side, not just untouched by you.</p>
+  </div>
+  <p class="sync-note" id="syncNote"></p>
+  <div class="toolbar" id="filterBar"></div>
+  <div class="summary-box" id="summaryBox">
+    <textarea id="summaryText" readonly></textarea>
+    <p>Paste this into chat with Claude to sync the xlsx tracker and taste-profile notes. Items stay in "Unreviewed" until Claude's next update confirms the sync - copying alone doesn't clear them.</p>
+  </div>
+  <div class="card-list" id="cardList"></div>
+</div>
+<script>
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date().toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " from the live desktop dashboard. Ask Claude to refresh this file any time it looks out of date.";
+
+const JOBS = [
+{id:"uber-strategic-client-partner", industry:"Rideshare/Delivery", company:"Uber", role:"Lead Strategic Client Partner - Global Delivery Partnerships", level:"Director-equiv", location:"San Francisco, CA", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4442751513", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:"LinkedIn shows 18 school alumni here (unverified)", fitNotes:"Client-facing strategic partner role for Uber's global delivery partnerships - close match to Ian's existing Uber ADS relationship (Axel Deloron's team).", tier:"A", description:null},
+{id:"lyft-strategic-finance", industry:"Rideshare/Delivery", company:"Lyft", role:"Director, Strategic Finance (Global Growth)", level:"Director", location:"San Francisco County, CA (Hybrid)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4440864512", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Finance-leaning strategy role tied to global growth initiatives.", tier:"A", description:null},
+{id:"lyft-chief-of-staff", industry:"Rideshare/Delivery", company:"Lyft", role:"Chief of Staff, CEO", level:"Director-equiv", location:"San Francisco County, CA (Hybrid)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4445210353", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"High-visibility executive-adjacent role, but over 100 people have already clicked apply.", tier:"A", description:null},
+{id:"doordash-restaurant-ads-strategy", industry:"Rideshare/Delivery", company:"DoorDash", role:"Director, Restaurant Ads & Promotions - Strategy & Operations - SMB Growth", level:"Director", location:"Los Angeles, CA", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4408897653", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:"You'd saved this on LinkedIn already (unverified network signal)", fitNotes:"Ads/promotions strategy for SMB restaurant growth - direct overlap with Ian's Pathmatics/ad-intelligence background.", tier:"A", description:null},
+{id:"doordash-enterprise-director", industry:"Rideshare/Delivery", company:"DoorDash", role:"Director, Enterprise Sales & Strategic Partnerships (DoorDash for Business)", level:"Director", location:"NY / LA / SF / Remote", comp:"$144,540-$212,520 base; $240,900-$354,200 OTE", link:"https://careersatdoordash.com/jobs/director-enterprise-sales-strategic-partnerships-doordash-for-business/7895617/", source:"DoorDash careers site (verified live)", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Owns largest Fortune 1000 relationships. Expected fill 7/4/2026.", tier:"A", description:null},
+{id:"doordash-sales-lab", industry:"Rideshare/Delivery", company:"DoorDash", role:"Director, Strategy & Operations, Sales Lab", level:"Director", location:"Los Angeles, CA", comp:"$197,200-$290,000 base", link:"https://www.linkedin.com/jobs/view/4411751453", source:"LinkedIn", status:"Applied (past)", dateFound:"2026-06-01", linkedinNote:null, fitNotes:"HISTORICAL - the role Ian applied to cold in June 2026.", tier:"A", description:null},
+{id:"instacart-enterprise-delivery-growth", industry:"Rideshare/Delivery", company:"Instacart", role:"Senior Director, Enterprise Delivery and Growth", level:"Sr Director", location:"United States (Remote)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4403163412", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:"You'd saved this on LinkedIn already (unverified network signal)", fitNotes:"Reposted 2 months ago with over 100 applicants already - may be late-stage, worth moving fast if pursuing.", tier:"A", description:null},
+{id:"deliveroo-strategy-director", industry:"Rideshare/Delivery", company:"Deliveroo", role:"Strategy & Operations Director, Deliveroo Media & Ecommerce", level:"Director", location:"London, UK (likely)", comp:"Not listed", link:"https://startup.jobs/strategy-operations-director-deliveroo-media-ecommerce-deliveroo-3123862", source:"startup.jobs", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Reports to VP of Media & eCommerce and Global Strategic Partnerships.", tier:"A", description:null},
+{id:"deliveroo-partner-ops", industry:"Rideshare/Delivery", company:"Deliveroo", role:"Director of Partner Operations", level:"Director", location:"London, UK (likely)", comp:"Not listed", link:"https://startup.jobs/director-of-partner-operations-deliveroo-4368039", source:"startup.jobs", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Owns partner operations strategy across restaurant and grocery verticals.", tier:"A", description:null},
+{id:"walmart-business-strategy-director", industry:"Retail Media", company:"Walmart", role:"Senior Director, Business Strategy", level:"Sr Director", location:"Bentonville, AR", comp:"$130K-$260K base", link:"https://www.linkedin.com/jobs/view/4428217070", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"General Walmart business strategy (the retailer itself, not the Connect media/ads arm).", tier:"A", description:null},
+{id:"walmart-connect-sr-director", industry:"Retail Media", company:"Walmart Connect", role:"Senior Director, Business Strategy and Partnerships", level:"Sr Director", location:"Hoboken, NJ / San Bruno, CA", comp:"$156K-$338K base (by location)", link:"https://careers.walmart.com/us/en/jobs/R-2202018", source:"Walmart careers (posting expired)", status:"Applied (past)", dateFound:"2025-12-01", linkedinNote:null, fitNotes:"HISTORICAL - the role Ian loved the shape of and applied to cold. Connect is the ads/media arm, distinct from the core-retailer role above.", tier:"A", description:null},
+{id:"kroger-strategic-partnerships", industry:"Retail Media", company:"Kroger Precision Marketing / 84.51", role:"Director, Strategic Partnerships", level:"Director", location:"Cincinnati OH / Portland OR / Remote", comp:"Not listed", link:"https://startup.jobs/director-strategic-partnerships-kroger-precision-marketing-p1913-8451-3301411", source:"startup.jobs (confirmed closed)", status:"Closed", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Confirmed closed. Good template for a repost - watch for one.", tier:"A", description:null},
+{id:"kroger-ai-platform-pm", industry:"Retail Media", company:"Kroger Precision Marketing / 84.51", role:"Director, Product Management, AI Platform", level:"Director", location:"Cincinnati, OH", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4435182338", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Formal product management role with lifecycle/roadmap ownership - see your notes on why this shape doesn't fit.", tier:"A", description:null},
+{id:"albertsons-product-marketing", industry:"Retail Media", company:"Albertsons Media Collective", role:"Director of Product Marketing - Retail Media", level:"Director", location:"Itasca, IL", comp:"Not listed", link:"https://jobs.digitalhire.com/job-listing/opening/10oObMRRxH6m4X5EHgsLur", source:"digitalhire.com (verified live)", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Product marketing scope.", tier:"A", description:null},
+{id:"criteo-strategic-partnerships", industry:"Retail Media", company:"Criteo", role:"Senior Director, Strategic Partnerships", level:"Sr Director", location:"New York, NY", comp:"Not listed", link:"https://careers.criteo.com/en/jobs/r20411/senior-director-strategic-partnerships/", source:"Criteo careers site (link fixed and confirmed live)", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Sr Director title - see the VP role below, which is the one you loved.", tier:"A", description:null},
+{id:"criteo-vp-commercialization", industry:"Retail Media", company:"Criteo", role:"VP of Commercialization, GO Enterprise", level:"VP", location:"New York, NY (Hybrid)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4411278483", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"VP title at Criteo, exactly the level you said you'd want at a company this size. You loved this one.", tier:"A", description:null},
+{id:"pacvue-vp-ai", industry:"Retail Media / AI", company:"Pacvue", role:"VP, AI Strategy & Delivery", level:"VP", location:"Remote (US)", comp:"$250,000-$310,000 base + bonus", link:"https://www.linkedin.com/jobs/view/4424014908", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:"You'd saved this on LinkedIn already (unverified network signal)", fitNotes:"Loved, with a worry about technical depth. Role reads customer-facing/GTM per the listing, not pure ML engineering.", tier:"A", description:null},
+{id:"bestbuy-associate-director", industry:"Retail Media", company:"Best Buy Ads", role:"Associate Director, Product Analytics and Insights", level:"Assoc Director", location:"New York, NY", comp:"Not listed", link:"https://jobs.bestbuy.com/bby?id=job_details&req_id=1025697BR", source:"Best Buy careers (link may be region-locked or expired)", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Level below target.", tier:"A", description:null},
+{id:"openai-si-partnerships", industry:"AI", company:"OpenAI", role:"Partner Director, SI Partnerships", level:"Director", location:"San Francisco, CA", comp:"Not listed", link:"https://openai.com/careers/partner-director-si-partnerships-san-francisco/", source:"OpenAI careers site", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Systems-integrator partnerships as OpenAI scales enterprise via its new Frontier Alliance.", tier:"A", description:null},
+{id:"openai-head-scaled-ads", industry:"AI", company:"OpenAI", role:"Head of Scaled, Ads Solutions", level:"Head (Director-equiv)", location:"San Francisco, CA (Hybrid)", comp:"$302,000-$385,000 base", link:"https://www.linkedin.com/jobs/view/4433285976", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:"You'd saved this on LinkedIn already (unverified network signal)", fitNotes:"Enterprise AI ads strategy at OpenAI's comp scale - notably higher pay band than anything else on this list.", tier:"A", description:null},
+{id:"openai-client-partner-ads", industry:"AI", company:"OpenAI", role:"Client Partner, Ads Solutions", level:"Director-equiv", location:"San Francisco, CA", comp:"$261,000-$335,000 base", link:"https://www.linkedin.com/jobs/view/4417171130", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Client-facing enterprise ads partnership role - closest shape to your existing account-owner scope (Uber, Google) but at OpenAI.", tier:"A", description:null},
+{id:"openai-bcg-alliance", industry:"AI", company:"OpenAI", role:"Partner Director, Global BCG Alliance", level:"Director", location:"New York, NY", comp:"Not listed", link:"https://openai.com/careers/partner-director-global-bcg-alliance-new-york-city/", source:"OpenAI careers site", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Single accountable executive owner of the global BCG relationship.", tier:"A", description:null},
+{id:"google-scaled-commercial", industry:"AI", company:"Google", role:"Director, Scaled Commercial Activation and Insights, Global Partnerships", level:"Director", location:"Not listed", comp:"Not listed", link:"https://www.google.com/about/careers/applications/jobs/results/129611864081343174-director-scaled-commercial-activation-and-insights-global-partnerships", source:"Google careers site", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Director-level global commercial partnerships engaging senior external stakeholders.", tier:"A", description:null},
+{id:"google-ai-partner-dev", industry:"AI", company:"Google", role:"Director, Partner AI Pureplays", level:"Director", location:"New York, NY", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4445772360", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Replaced a dead link with this live, closely-related AI partnerships role.", tier:"A", description:null},
+{id:"google-youtube-strategic-planning", industry:"AI", company:"Google", role:"Global Head of Strategic Planning, YouTube", level:"Head (Director-equiv)", location:"San Bruno, CA", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4449101366", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Media planning/buying/selling background required - outside Ian's core experience.", tier:"A", description:null},
+{id:"google-merchant-foundations", industry:"AI", company:"Google", role:"Director, Product Management, Merchant Foundations", level:"Director", location:"Not listed", comp:"Not listed", link:"https://careers.google.com/jobs/results/76218425432515270-director/", source:"Google careers site", status:"New", dateFound:"2026-08-05", linkedinNote:null, fitNotes:"Product management scope.", tier:"A", description:null},
+{id:"amazon-ads-principal-enterprise-partnerships", industry:"Retail Media", company:"Amazon Ads", role:"Principal Enterprise Partnerships - Demand, Amazon Ads Strategy and Partnerships", level:"Principal (Director-equiv)", location:"New York, NY", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4443028919", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Sits directly inside Amazon Ads' own Strategy and Partnerships org - closest possible match to Ian's RMI/retail-media background at the largest player in the space.", tier:"A", description:null},
+{id:"target-roundel-strategy-enablement", industry:"Retail Media", company:"Target (Roundel)", role:"Director Strategy & Enablement - Roundel", level:"Director", location:"Minneapolis, MN (Hybrid)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4441930029", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Strategy role inside Target's retail media network - same shape as the Walmart Connect role Ian loved, different retailer.", tier:"A", description:null},
+{id:"anthropic-strategy-ops-product-partnerships", industry:"AI", company:"Anthropic", role:"Strategy & Operations, Product Partnerships", level:"Not specified (likely Sr Manager/Director-equiv)", location:"San Francisco, CA (Hybrid)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4448662949", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Posted 1 day ago - freshest listing on the whole board. Strategy/BD scope at a frontier AI lab, directly adjacent to Ian's AI-strategy focus over the last 18 months.", tier:"A", description:null},
+{id:"meta-ai-partnerships-director", industry:"AI", company:"Meta", role:"Director, Business Development - AI Partnerships", level:"Director", location:"Menlo Park, CA", comp:"$296,000-$356,000 base", link:"https://www.linkedin.com/jobs/view/4447395018", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Strong comp band and a direct AI-partnerships BD scope at Director level.", tier:"A", description:null},
+{id:"tribeai-principal-gm", industry:"AI", company:"Tribe AI", role:"Principal General Manager", level:"Principal (VP/SVP-equiv)", location:"United States (Remote)", comp:"$300,000-$415,000", link:"https://www.linkedin.com/jobs/view/4445285456", source:"LinkedIn (found via Ian's LinkedIn saved jobs)", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Ian had already saved this on LinkedIn - found via his Saved Jobs list, not a fresh search. Tribe AI is an AI-native services firm; role owns Tribe's most complex enterprise client relationships end-to-end plus builds the GM function itself. Explicitly states 'technical depth is not required, but you must be credible advising senior executives on AI strategy' - directly answers the concern Ian raised about Pacvue. Strongest comp band found so far and closest shape to his account-ownership + AI thought-leadership combination.", tier:"A", description:"Principal GMs carry full GM accountability (enterprise relationships, commercial outcomes, delivery quality) plus a second mandate: coaching other GMs and building the GM function's playbooks/standards. Requires 8-15+ years in enterprise consulting/services/account management with C-suite credibility and genuine AI-landscape fluency, not technical depth."},
+{id:"nvidia-director-bd-retail-intelligent-stores", industry:"AI", company:"Nvidia", role:"Director, Business Development - Retail Intelligent Stores", level:"Director", location:"Santa Clara, CA (On-site)", comp:"Not listed", link:"https://www.linkedin.com/jobs/view/4448274028/", source:"LinkedIn (found via Ian's LinkedIn saved jobs)", status:"New", dateFound:"2026-08-05", linkedinNote:"You'd saved this on LinkedIn already (unverified network signal)", fitNotes:"Found via Ian's LinkedIn Saved Jobs list. Business Development role for Nvidia's Retail Intelligent Stores initiative (AI-powered in-store retail tech) - real commercial BD ownership, not a quota-carrying sales title, not product/marketing. Adjacent to Ian's retail-media/retail-tech background from Sensor Tower and Pathmatics.", tier:"A", description:null},
+{id:"visa-director-ai-strategic-partnerships", industry:"AI", company:"Visa", role:"Director, AI Strategic Partnerships", level:"Director", location:"San Francisco, CA (On-site, 3 days/wk)", comp:"$192,300-$307,600 base + bonus + equity", link:"https://www.linkedin.com/jobs/view/4438851199", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Owns Visa's strategic relationships across the AI ecosystem, including OpenAI and Anthropic - hybrid partnerships/product/strategy scope, directly in Ian's AI-strategy vertical.", tier:"A", description:null},
+{id:"amazon-ads-principal-emea", industry:"Retail Media", company:"Amazon Ads", role:"Principal, Ads Strategy and Partnerships, EMEA", level:"Principal (Director-equiv)", location:"London, UK (likely - EMEA ads hub; not explicit in posting)", comp:"Not listed", link:"https://www.amazon.jobs/en/jobs/10459895/principal-ads-strategy-and-partnerships-emea-amazon-ads-strategy-and-partnerships", source:"Amazon.jobs careers site (verified live)", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"EMEA counterpart to the NY-based Amazon Ads Principal Enterprise Partnerships role you marked Interested. Owns end-to-end partnership lifecycle across ad platforms, agency holding companies, systems integrators and martech providers spanning UK/Europe/Middle East/Africa - explicitly touches AI-driven media buying, identity solutions and data clean rooms. Found via this week's long-tail sweep of Amazon's own careers site, not LinkedIn. Base location isn't stated explicitly on the posting - confirm before pursuing.", tier:"A", description:null},
+{id:"microsoft-director-bd-data-ai", industry:"AI", company:"Microsoft", role:"Director, Business Development (Data & AI)", level:"Director", location:"Mountain View, CA (Hybrid)", comp:"$165,600-$272,300 base (Bay Area)", link:"https://www.linkedin.com/jobs/view/4446749669", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Azure AI partnership/BD role - real fit but heavy on deal-sourcing/negotiation scope, and Ian passed on a similarly-shaped Meta AI partnerships Director role.", tier:"B", description:null},
+{id:"adobe-sr-director-enterprise-strategy-gtm", industry:"Retail Media / Enterprise SaaS", company:"Adobe", role:"Senior Director, Enterprise Strategy & Integrated GTM", level:"Sr Director", location:"San Jose, CA (On-site)", comp:"$201,100-$380,225 base (CA: $244,600-$380,225)", link:"https://www.linkedin.com/jobs/view/4370790312", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"Strong comp and hybrid strategy/GTM ownership, but Sr Director (not VP) at a 30k-employee company and outside his three named verticals - enterprise SaaS, not retail media/rideshare/AI-partnerships.", tier:"B", description:null},
+{id:"betmgm-svp-business-transformation-ai", industry:"AI", company:"BetMGM", role:"SVP, Business Transformation and AI Strategy", level:"SVP", location:"New York, United States (Hybrid)", comp:"$269,925-$371,000 base + bonus", link:"https://www.linkedin.com/jobs/view/4440379343", source:"LinkedIn", status:"New", dateFound:"2026-08-06", linkedinNote:null, fitNotes:"SVP-level enterprise AI strategy and transformation role - leads a senior team including 1-2 more technical leaders without personally owning day-to-day model/platform delivery, which directly answers the technical-depth worry raised on other AI roles (Pacvue, Kroger). Real doubt: no partnerships component at all, and BetMGM (online sports betting/iGaming) sits outside the three named verticals.", tier:"B", description:null},
+];
+
+const SYNCED_STATE = {
+"doordash-sales-lab": {status:"Applied (past)"},
+"uber-strategic-client-partner": {reaction:"Interested", status:"New"},
+"lyft-strategic-finance": {reaction:"Not for me", status:"New"},
+"lyft-chief-of-staff": {reaction:"Not for me", status:"New", notes:"i'm not a chief of staff"},
+"doordash-restaurant-ads-strategy": {reaction:"Interested", status:"New"},
+"doordash-enterprise-director": {reaction:"Not for me", status:"New", notes:"I don't want a role that is directly a sales role"},
+"instacart-enterprise-delivery-growth": {reaction:"Love it", status:"New"},
+"deliveroo-strategy-director": {reaction:"Maybe", status:"New"},
+"deliveroo-partner-ops": {reaction:"Maybe", status:"New"},
+"walmart-business-strategy-director": {reaction:"Maybe", status:"New", notes:"i'm not really interested in working for walmart the retailer."},
+"walmart-connect-sr-director": {reaction:"Love it", status:"Applied (past)"},
+"kroger-strategic-partnerships": {reaction:"Interested", status:"Closed"},
+"kroger-ai-platform-pm": {reaction:"Not for me", status:"New", notes:"This is really really tricky. I ran the innovation team at sensor tower and developed new products that are now being sold. But this was not a formal product org, I don't like the rigidity of the product team, setting guidelines for when and why a product would get made or what thresholds I'd need to look at a product. The innovation team was scrappy and unstructured. product teams are by definition very structured. Most people have technical experience, which I do not. So I need to be careful about putting myself up for a product role - the role needs to be strategic and less about the development of products on a lifecycle or managing the time of engineering."},
+"albertsons-product-marketing": {reaction:"Not for me", status:"New", notes:"I don't think I should be going out for marketing or product marketing roles."},
+"criteo-strategic-partnerships": {reaction:"Maybe", status:"New", notes:"the link to the job posting didn't work. can you check it? In general, a company the size of criteo I would prefer VP to Sr Director, but I'd review it for sure."},
+"criteo-vp-commercialization": {reaction:"Love it", status:"New"},
+"pacvue-vp-ai": {reaction:"Love it", status:"New", notes:"I like this one. i just struggle with thinking it needs someone with a more technical background than I have."},
+"bestbuy-associate-director": {reaction:"Not for me", status:"New", notes:"Job link there is dead too."},
+"openai-si-partnerships": {reaction:"Interested", status:"New"},
+"openai-head-scaled-ads": {reaction:"Interested", status:"New"},
+"openai-client-partner-ads": {reaction:"Interested", status:"New"},
+"openai-bcg-alliance": {reaction:"Not for me", status:"New"},
+"google-scaled-commercial": {reaction:"Maybe", status:"New"},
+"google-ai-partner-dev": {reaction:"Interested", status:"New", notes:"link is dead"},
+"google-youtube-strategic-planning": {reaction:"Not for me", status:"New", notes:"I don't have a background in media planning, buying or selling. I'm not set up to lead a team here."},
+"google-merchant-foundations": {reaction:"Not for me", status:"New"},
+"amazon-ads-principal-enterprise-partnerships": {reaction:"Interested", status:"New"},
+"target-roundel-strategy-enablement": {reaction:"Interested", status:"New"},
+"anthropic-strategy-ops-product-partnerships": {reaction:"Interested", status:"New"},
+"meta-ai-partnerships-director": {reaction:"Not for me", status:"New"},
+"tribeai-principal-gm": {reaction:"Interested", status:"New"},
+"nvidia-director-bd-retail-intelligent-stores": {reaction:"Love it", status:"New"},
+};
+
+const STATE_KEY = "ian_job_dashboard_state_v1_mobile";
+function loadState() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STATE_KEY)) || {}; } catch(e) { saved = {}; }
+  const merged = {};
+  Object.keys(SYNCED_STATE).forEach(k => merged[k] = Object.assign({}, SYNCED_STATE[k]));
+  Object.keys(saved).forEach(k => merged[k] = Object.assign({}, merged[k]||{}, saved[k]));
+  return merged;
+}
+function saveState(s) { localStorage.setItem(STATE_KEY, JSON.stringify(s)); }
+let state = loadState();
+let openId = null;
+let hideArchived = true;
+let showBTier = false;
+let unreviewedOnly = false;
+let reactionFilter = "All";
+let statusFilter = "All";
+let sortBy = "updatedDesc";
+
+const REACTIONS = ["Love it","Interested","Maybe","Not for me","Wrong level","Wrong comp"];
+const STATUSES = ["New","Reviewing","Pursuing (network)","Applied","Interviewing","Closed","Monitoring","Applied (past)"];
+const industries = ["All", ...Array.from(new Set(JOBS.map(j => j.industry)))];
+let activeFilter = "All";
+
+function fmtDate(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return d.toLocaleString(undefined, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
+}
+
+function isArchived(job) {
+  const st = state[job.id] || {};
+  return st.reaction === "Not for me" || st.archived === true;
+}
+function norm(s) { return (s||"").replace(/\s+/g," ").trim(); }
+function isUnreviewed(job) {
+  const st = state[job.id] || {};
+  const synced = SYNCED_STATE[job.id] || {};
+  const hasSyncedEntry = Object.prototype.hasOwnProperty.call(SYNCED_STATE, job.id);
+  if (!hasSyncedEntry && !st.reaction) return true;
+  if (norm(st.reaction) !== norm(synced.reaction)) return true;
+  if (norm(st.notes) !== norm(synced.notes)) return true;
+  if (norm(st.status||job.status) !== norm(synced.status||job.status)) return true;
+  return false;
+}
+function archivedCount() { return JOBS.filter(isArchived).length; }
+function unreviewedCount() { return JOBS.filter(isUnreviewed).length; }
+function bTierCount() { return JOBS.filter(j => (j.tier||"A") === "B").length; }
+
+function renderFilters() {
+  const bar = document.getElementById("filterBar");
+  bar.innerHTML = "";
+  industries.forEach(ind => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (ind === activeFilter ? " active" : "");
+    btn.textContent = ind + (ind !== "All" ? " (" + JOBS.filter(j => j.industry === ind).length + ")" : " (" + JOBS.length + ")");
+    btn.onclick = () => { activeFilter = ind; renderFilters(); renderCards(); };
+    bar.appendChild(btn);
+  });
+  const div1 = document.createElement("div");
+  div1.className = "divider";
+  bar.appendChild(div1);
+
+  const unreviewedBtn = document.createElement("button");
+  unreviewedBtn.className = "toggle-btn" + (unreviewedOnly ? " on" : "");
+  unreviewedBtn.textContent = "Unreviewed only (" + unreviewedCount() + ")";
+  unreviewedBtn.onclick = () => { unreviewedOnly = !unreviewedOnly; renderFilters(); renderCards(); };
+  bar.appendChild(unreviewedBtn);
+
+  const archivedBtn = document.createElement("button");
+  archivedBtn.className = "toggle-btn" + (!hideArchived ? " on" : "");
+  archivedBtn.textContent = hideArchived ? "Show archived (" + archivedCount() + ")" : "Hide archived";
+  archivedBtn.onclick = () => { hideArchived = !hideArchived; renderFilters(); renderCards(); };
+  bar.appendChild(archivedBtn);
+
+  const bTierBtn = document.createElement("button");
+  bTierBtn.className = "toggle-btn" + (showBTier ? " on" : "");
+  bTierBtn.textContent = showBTier ? "Hide B-tier" : "Show B-tier (" + bTierCount() + ")";
+  bTierBtn.onclick = () => { showBTier = !showBTier; renderFilters(); renderCards(); };
+  bar.appendChild(bTierBtn);
+
+  const div2 = document.createElement("div");
+  div2.className = "divider";
+  bar.appendChild(div2);
+
+  const reactionSelect = document.createElement("select");
+  reactionSelect.className = "filter-select" + (reactionFilter !== "All" ? " active" : "");
+  reactionSelect.innerHTML = `<option value="All">Reaction: All</option><option value="(none)">Reaction: no reaction yet</option>` +
+    REACTIONS.map(r => `<option value="${r}" ${reactionFilter===r?"selected":""}>Reaction: ${r}</option>`).join("");
+  reactionSelect.value = reactionFilter;
+  reactionSelect.onchange = (e) => { reactionFilter = e.target.value; renderFilters(); renderCards(); };
+  bar.appendChild(reactionSelect);
+
+  const statusSelect = document.createElement("select");
+  statusSelect.className = "filter-select" + (statusFilter !== "All" ? " active" : "");
+  statusSelect.innerHTML = `<option value="All">Status: All</option>` +
+    STATUSES.map(s => `<option value="${s}" ${statusFilter===s?"selected":""}>Status: ${s}</option>`).join("");
+  statusSelect.value = statusFilter;
+  statusSelect.onchange = (e) => { statusFilter = e.target.value; renderFilters(); renderCards(); };
+  bar.appendChild(statusSelect);
+
+  const sortSelect = document.createElement("select");
+  sortSelect.className = "filter-select";
+  sortSelect.innerHTML = `
+    <option value="updatedDesc">Sort: most recently changed</option>
+    <option value="updatedAsc">Sort: least recently changed</option>
+    <option value="foundDesc">Sort: newest found</option>
+    <option value="foundAsc">Sort: oldest found</option>`;
+  sortSelect.value = sortBy;
+  sortSelect.onchange = (e) => { sortBy = e.target.value; renderCards(); };
+  bar.appendChild(sortSelect);
+
+  const spacer = document.createElement("div");
+  spacer.className = "spacer";
+  bar.appendChild(spacer);
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "copy-btn";
+  copyBtn.textContent = "Copy summary for Claude";
+  copyBtn.onclick = copySummary;
+  bar.appendChild(copyBtn);
+}
+
+function escapeHtml(s) {
+  if (!s) return "";
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderCards() {
+  const list = document.getElementById("cardList");
+  list.innerHTML = "";
+  let jobs = JOBS.filter(j => activeFilter === "All" || j.industry === activeFilter);
+  if (hideArchived) jobs = jobs.filter(j => !isArchived(j));
+  if (!showBTier) jobs = jobs.filter(j => (j.tier||"A") !== "B");
+  if (unreviewedOnly) jobs = jobs.filter(isUnreviewed);
+  if (reactionFilter !== "All") {
+    jobs = jobs.filter(j => {
+      const r = (state[j.id]||{}).reaction || "";
+      return reactionFilter === "(none)" ? !r : r === reactionFilter;
+    });
+  }
+  if (statusFilter !== "All") {
+    jobs = jobs.filter(j => ((state[j.id]||{}).status || j.status) === statusFilter);
+  }
+  jobs.sort((a, b) => {
+    const sa = state[a.id]||{}, sb = state[b.id]||{};
+    if (sortBy === "updatedDesc" || sortBy === "updatedAsc") {
+      const va = sa.updatedAt || "", vb = sb.updatedAt || "";
+      return sortBy === "updatedDesc" ? vb.localeCompare(va) : va.localeCompare(vb);
+    }
+    const va = a.dateFound || "", vb = b.dateFound || "";
+    return sortBy === "foundDesc" ? vb.localeCompare(va) : va.localeCompare(vb);
+  });
+
+  if (jobs.length === 0) {
+    const note = document.createElement("div");
+    note.className = "empty-note";
+    note.textContent = unreviewedOnly ? "Nothing unreviewed in this view." : "No postings match this filter.";
+    list.appendChild(note);
+    return;
+  }
+
+  jobs.forEach(job => {
+    const st = state[job.id] || {};
+    const isOpen = openId === job.id;
+    const archived = isArchived(job);
+    const card = document.createElement("div");
+    card.className = "card" + (archived ? " archived" : "");
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <p class="card-title">${escapeHtml(job.role)}</p>
+          <p class="card-company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</p>
+          ${job.linkedinNote ? `<p class="card-linkedin-note">${escapeHtml(job.linkedinNote)}</p>` : ""}
+          <div class="badges">
+            ${isUnreviewed(job) ? `<span class="badge unreviewed">NEW - unreviewed</span>` : ""}
+            ${(job.tier||"A") === "B" ? `<span class="badge tier-b">B-tier</span>` : ""}
+            <span class="badge industry">${escapeHtml(job.industry)}</span>
+            <span class="badge">${escapeHtml(job.level)}</span>
+            <span class="badge status-${job.status.replace(/[^A-Za-z]/g,'')}">${escapeHtml(job.status)}</span>
+            ${st.reaction ? `<span class="badge ${st.reaction==='Not for me'?'rejected-badge':''}">${escapeHtml(st.reaction)}</span>` : ""}
+            ${st.archived ? `<span class="badge archived-badge">cleared from list</span>` : ""}
+          </div>
+        </div>
+        <div class="card-meta">${escapeHtml(job.comp)}<br>${escapeHtml(job.source)}${fmtDate(st.updatedAt) ? `<div class="updated-note">Updated ${escapeHtml(fmtDate(st.updatedAt))}</div>` : ""}</div>
+      </div>
+      <div class="card-detail ${isOpen ? "open" : ""}" id="detail-${job.id}">
+        <h4>Fit notes</h4>
+        <p>${escapeHtml(job.fitNotes)}</p>
+        ${job.description ? `<h4>Job description</h4><p>${escapeHtml(job.description)}</p>` : `<p class="no-desc">Full description not pulled for this one - use the link below.</p>`}
+        ${job.source && job.source.indexOf("not independently re-verified") > -1 ? `<div class="caution-callout">This link was not re-checked on LinkedIn - confirm it resolves before relying on it.</div>` : ""}
+        ${st.notes ? `<h4>Your notes</h4><p>${escapeHtml(st.notes)}</p>` : ""}
+        <a class="open-link" href="${job.link}" target="_blank" rel="noopener">Open original posting &#8599;</a>
+        <button class="clear-btn" data-clear="${job.id}">${st.archived ? "Restore to list" : "Clear from list"}</button>
+        <div class="controls">
+          <div>
+            <label>Your reaction</label>
+            <select data-field="reaction" data-id="${job.id}">
+              <option value="">-- pick one --</option>
+              ${["Love it","Interested","Maybe","Not for me","Wrong level","Wrong comp"].map(r => `<option value="${r}" ${st.reaction===r?"selected":""}>${r}</option>`).join("")}
+            </select>
+          </div>
+          <div>
+            <label>Status</label>
+            <select data-field="status" data-id="${job.id}">
+              ${["New","Reviewing","Pursuing (network)","Applied","Interviewing","Closed","Monitoring","Applied (past)"].map(s => `<option value="${s}" ${(st.status||job.status)===s?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+          <div class="full">
+            <label>Notes (warm contacts you actually know, reasons, anything worth remembering)</label>
+            <textarea data-field="notes" data-id="${job.id}" placeholder="e.g. Jane from my old Uber team works here now">${escapeHtml(st.notes||"")}</textarea>
+          </div>
+        </div>
+      </div>
+    `;
+    card.querySelector(".card-top").onclick = () => {
+      openId = isOpen ? null : job.id;
+      renderCards();
+    };
+    list.appendChild(card);
+  });
+  list.querySelectorAll("select[data-field]").forEach(el => {
+    el.addEventListener("click", e => e.stopPropagation());
+    el.addEventListener("change", handleFieldChange);
+  });
+  list.querySelectorAll("textarea[data-field]").forEach(el => {
+    el.addEventListener("click", e => e.stopPropagation());
+    el.addEventListener("input", handleNotesInput);
+    el.addEventListener("blur", handleNotesBlur);
+  });
+  list.querySelectorAll("[data-clear]").forEach(el => {
+    el.addEventListener("click", e => {
+      e.stopPropagation();
+      const id = el.getAttribute("data-clear");
+      state[id] = state[id] || {};
+      state[id].archived = !state[id].archived;
+      state[id].updatedAt = new Date().toISOString();
+      saveState(state);
+      renderFilters();
+      renderCards();
+    });
+  });
+}
+
+function handleFieldChange(e) {
+  const id = e.target.getAttribute("data-id");
+  const field = e.target.getAttribute("data-field");
+  state[id] = state[id] || {};
+  state[id][field] = e.target.value;
+  state[id].updatedAt = new Date().toISOString();
+  saveState(state);
+  renderFilters();
+  renderCards();
+}
+
+function handleNotesInput(e) {
+  const id = e.target.getAttribute("data-id");
+  state[id] = state[id] || {};
+  state[id].notes = e.target.value;
+  state[id].updatedAt = new Date().toISOString();
+  saveState(state);
+}
+function handleNotesBlur() {
+  renderFilters();
+  renderCards();
+}
+
+function copySummary() {
+  const lines = [];
+  JOBS.forEach(job => {
+    if (isUnreviewed(job)) {
+      const st = state[job.id] || {};
+      lines.push(`${job.company} - ${job.role}: reaction=${st.reaction||"(none)"}, status=${st.status||job.status}${st.notes ? ", notes=\"" + st.notes + "\"" : ""}`);
+    }
+  });
+  const box = document.getElementById("summaryBox");
+  const text = document.getElementById("summaryText");
+  text.value = lines.length ? lines.join("\n") : "Nothing pending sync right now.";
+  box.classList.add("show");
+  text.focus();
+  text.select();
+}
+
+renderFilters();
+renderCards();
+</script>
+</body>
+</html>
