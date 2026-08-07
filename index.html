@@ -236,13 +236,15 @@ function bTierCount() { return JOBS.filter(j => (j.tier||"A") === "B").length; }
 function renderFilters() {
   const bar = document.getElementById("filterBar");
   bar.innerHTML = "";
-  industries.forEach(ind => {
-    const btn = document.createElement("button");
-    btn.className = "filter-btn" + (ind === activeFilter ? " active" : "");
-    btn.textContent = ind + (ind !== "All" ? " (" + JOBS.filter(j => j.industry === ind).length + ")" : " (" + JOBS.length + ")");
-    btn.onclick = () => { activeFilter = ind; renderFilters(); renderCards(); };
-    bar.appendChild(btn);
-  });
+  const industrySelect = document.createElement("select");
+  industrySelect.className = "filter-select" + (activeFilter !== "All" ? " active" : "");
+  industrySelect.innerHTML = industries.map(ind => {
+    const count = ind === "All" ? JOBS.length : JOBS.filter(j => j.industry === ind).length;
+    return `<option value="${escapeHtml(ind)}" ${ind === activeFilter ? "selected" : ""}>${escapeHtml(ind)} (${count})</option>`;
+  }).join("");
+  industrySelect.value = activeFilter;
+  industrySelect.onchange = (e) => { activeFilter = e.target.value; renderFilters(); renderCards(); };
+  bar.appendChild(industrySelect);
   const div1 = document.createElement("div");
   div1.className = "divider";
   bar.appendChild(div1);
