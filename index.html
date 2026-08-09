@@ -291,7 +291,13 @@ function isArchived(job) {
   const st = state[job.id] || {};
   return st.reaction === "Not for me" || st.archived === true;
 }
-function norm(s) { return (s||"").replace(/\s+/g," ").trim(); }
+function norm(s) {
+  return (s||"")
+    .replace(/[‘’ʼ`´]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/\s+/g," ")
+    .trim();
+}
 function isUnreviewed(job) {
   const st = state[job.id] || {};
   const synced = SYNCED_STATE[job.id] || {};
