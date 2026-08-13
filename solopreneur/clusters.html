@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saved ideas — cluster map</title>
+<style>
+:root { color-scheme: light;
+  --bg:#f8f9fb; --card:#fff; --ink:#1a2233; --muted:#6b7486; --line:#e6e9ef;
+  --catch:#0f766e; --life:#db2777; --glue:#2563eb; --watch:#ea580c; --comply:#7c3aed; --intel:#059669;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--ink); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; padding:20px 18px 40px; }
+h1 { font-size:19px; font-weight:700; letter-spacing:-.2px; }
+.sub { color:var(--muted); font-size:12.5px; margin-top:3px; max-width:820px; }
+.sub a { color:#2563eb; text-decoration:none; font-weight:600; }
+.sub a:hover { text-decoration:underline; }
+header { margin-bottom:14px; }
+.legend { display:flex; flex-wrap:wrap; gap:8px 14px; margin:10px 0 4px; }
+.legend span { font-size:12px; font-weight:650; display:inline-flex; align-items:center; gap:6px; }
+.legend i { width:9px; height:9px; border-radius:50%; display:inline-block; }
+.controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:12px 0 8px; }
+.seg { display:inline-flex; background:#eceff4; border-radius:9px; padding:3px; }
+.seg button { border:0; background:transparent; padding:6px 12px; border-radius:7px; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; }
+.seg button.on { background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(20,30,60,.14); }
+label.sel { font-size:12px; color:var(--muted); font-weight:600; display:inline-flex; align-items:center; gap:6px; }
+select { font:inherit; font-size:13px; font-weight:600; border:1px solid var(--line); border-radius:7px; padding:5px 8px; background:#fff; }
+.filters { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 12px; }
+.chip { border:1px solid var(--line); background:#fff; border-radius:999px; padding:4px 11px; font-size:12px; font-weight:650; color:var(--muted); cursor:pointer; }
+.chip.on { color:var(--ink); border-color:currentColor; box-shadow:inset 0 0 0 1px currentColor; }
+.chip .n { font-weight:700; opacity:.55; margin-left:4px; }
+.hint { font-size:11.5px; color:var(--muted); flex-basis:100%; }
+.count { font-size:12px; color:var(--muted); margin-left:auto; }
+.board { display:grid; grid-template-columns:repeat(6, minmax(180px,1fr)); gap:10px; align-items:start; }
+@media (max-width:1200px){ .board { grid-template-columns:repeat(3, minmax(180px,1fr)); } }
+@media (max-width:720px){ .board { grid-template-columns:1fr; } .rowhead{grid-template-columns:1fr;} }
+.col { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 8px 8px; min-height:80px; }
+.col h3 { font-size:12.5px; font-weight:750; padding:2px 6px 8px; display:flex; justify-content:space-between; align-items:baseline; }
+.col h3 .n { font-size:11px; color:var(--muted); font-weight:650; }
+.col .why { font-size:11px; color:var(--muted); padding:0 6px 8px; line-height:1.4; }
+.card { border:1px solid var(--line); border-radius:9px; padding:8px 9px; margin-bottom:6px; cursor:pointer; background:#fff; }
+.card:hover { box-shadow:0 2px 8px rgba(20,30,60,.08); }
+.card.on { outline:2px solid #111827; }
+.card .id { font-size:10px; font-weight:750; color:var(--muted); }
+.card .t { font-weight:700; font-size:12.5px; line-height:1.3; }
+.card .p { font-size:11.5px; color:#4b5568; margin-top:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.tag { font-size:10px; font-weight:700; background:#f1f2f5; color:#4b5568; border-radius:4px; padding:2px 5px; }
+.tag.also { background:#fff7ed; color:#9a3412; }
+.score { font-variant-numeric:tabular-nums; font-weight:750; font-size:12px; }
+.scatterwrap { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px 6px; }
+svg.plot { width:100%; height:min(72vh, 640px); display:block; }
+.axis { font-size:11px; fill:var(--muted); font-weight:650; }
+.tick { font-size:10px; fill:#6b7486; }
+.dot { cursor:pointer; stroke:#fff; stroke-width:1.5; }
+.dot:hover { stroke:#111827; stroke-width:2; }
+.tooltip { position:fixed; pointer-events:none; background:#111827; color:#fff; font-size:12px; padding:7px 9px; border-radius:8px; z-index:20; max-width:260px; display:none; }
+.detail { position:fixed; right:16px; top:16px; bottom:16px; width:min(420px, 92vw); background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 40px rgba(20,30,60,.18); padding:18px 18px 22px; overflow:auto; display:none; z-index:30; }
+.detail.on { display:block; }
+.detail h2 { font-size:16px; margin:4px 0 6px; }
+.detail .close { float:right; border:0; background:#eef1f6; border-radius:7px; padding:5px 10px; font-weight:700; cursor:pointer; }
+.detail h4 { font-size:10.5px; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); margin:12px 0 3px; }
+.detail p { font-size:13px; }
+.pitchbox { background:#f0f4ff; border-left:3px solid #2563eb; border-radius:0 8px 8px 0; padding:9px 12px; font-size:13.5px; font-weight:600; margin:8px 0 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>56 saved ideas — cluster map</h1>
+  <div class="sub">
+    Same 56 you hearted on Aug 13, recut by job (not lane) and the dimensions the fit-adjusted score hides.
+    Dual-tagged cards have a second home in orange. <a href="index.html">← main dashboard</a>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="sub" style="margin-top:8px">
+    <b>Build:</b> Thin = extension / form / newsletter. Medium = SaaS + 1–2 APIs. Heavy = crawl, OS permissions, hardware, or realtime voice.
+    <b>AI:</b> Pipe = rules, ETL, or a report (AI is how you build). Product = AI is what they buy. Hybrid = both.
+    <b>Depth:</b> whether you need insider credibility to sell it, not whether the code is hard.
+  </div>
+</header>
+
+<div class="controls">
+  <div class="seg" id="view">
+    <button data-v="board" class="on">Board</button>
+    <button data-v="scatter">Scatter</button>
+  </div>
+  <div class="seg" id="presets"></div>
+  <label class="sel">X <select id="xAxis"></select></label>
+  <label class="sel">Y <select id="yAxis"></select></label>
+  <label class="sel">Color <select id="colorBy"></select></label>
+  <label class="chip" id="dual" style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" id="showDual"> Show overlaps on both columns</label>
+  <span class="count" id="count"></span>
+  <div class="hint">Scatter defaults to payoff vs GTM ease (same axes as the dashboard map). Switch presets to split “easy” into build vs launch, or to plot data residue / buyer / domain depth / AI-as-product.</div>
+</div>
+<div class="filters" id="filters"></div>
+<div id="board" class="board"></div>
+<div id="scatter" class="scatterwrap" style="display:none">
+  <svg class="plot" id="plot"></svg>
+</div>
+<div class="tooltip" id="tip"></div>
+<aside class="detail" id="detail"></aside>
+<script>
+const CARDS = [
+  {
+    "id": "LOG-1",
+    "title": "IEEPA Tariff Refund Recovery",
+    "lane": "Logistics & DTC import",
+    "pitch": "RefundLane would help small US importers automatically recover the IEEPA tariffs they overpaid, without needing a $50M-minimum consulting relationship.",
+    "who": "Small e-commerce/DTC importers ($1M-$50M revenue) who paid IEEPA 'Liberation Day'/fentanyl tariffs since 2025 and are eligible for refunds but too small for law-firm/consultant contingency programs.",
+    "solo": "Importer connects/uploads ACE entry summary data; tool auto-matches entries against the specific invalidated IEEPA tariff proclamations, calculates exact refund + interest owed, auto-generates the CAPE claim file or protest paperwork.",
+    "cons": "Time-boxed windfall (claims wave likely resolves in 1-2 years, needs a follow-on product); regulatory process is still being litigated/appealed; possible customs-broker-licensing questions around preparing federal filings.",
+    "adj": 74.6,
+    "raw": 77.1,
+    "band": "Deep-dive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 3,
+    "a": 5,
+    "s": 4,
+    "t": 5,
+    "m": 3,
+    "whynow": true,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "SMB-1",
+    "title": "AI Invoice-Chasing Layer",
+    "lane": "SMB ops",
+    "pitch": "An AI dunning assistant that plugs into QuickBooks/Xero and automatically chases overdue invoices before they go 30+ days late, so small B2B businesses stop losing $17K a year to slow payers.",
+    "who": "Owner / office manager at <20-person B2B service businesses \u2014 agencies, consultants, trades. Millions of firms.",
+    "solo": "AI dunning assistant plugged into QuickBooks/Xero: auto-escalates tone and channel (email \u2192 SMS \u2192 call script) as invoices age, flags cash-flow risk. $30\u2013100/mo, no success fee.",
+    "cons": "Accounting-API approvals take time; feature-absorption risk by Intuit/Xero is the main long-term threat. Evidence verified directly against Intuit's report.",
+    "adj": 69,
+    "raw": 72.6,
+    "band": "Deep-dive",
+    "ease": 3,
+    "jack": "Moderate",
+    "flywheel": "Moderate",
+    "fit": 2,
+    "a": 5,
+    "s": 5,
+    "t": 4,
+    "m": 2,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Product",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "AGE-1",
+    "title": "Commission-Free Senior Living Guide",
+    "lane": "Aging & care",
+    "pitch": "A commission-free senior-living advisory service that turns scattered state inspection data into plain-English facility report cards, so families aren't steered by a referral fee like A Place for Mom's.",
+    "who": "Adult children (usually daughters, 45-65) placing a parent in senior housing under acute time pressure \u2014 ~800K+ US placements/year.",
+    "solo": "AI-leveraged paid concierge: ingests state inspection/violation data via public APIs, generates plain-English facility 'report cards,' sells a flat-fee (not commission) vetting + shortlist + question-list service \u2014 explicitly marketed as commission-free.",
+    "cons": "Strictly logistics/vetting information, no medical-necessity or care-level clinical judgments; liability disclaimers needed since inspection data can be outdated.",
+    "adj": 65.7,
+    "raw": 67.4,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 3,
+    "a": 5,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": true,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Medium",
+    "ai": "Product",
+    "build": "Medium",
+    "also": "intel"
+  },
+  {
+    "id": "SSB-1",
+    "title": "Etsy Trademark Pre-Check",
+    "lane": "SMB self-serve",
+    "pitch": "A browser extension where an Etsy seller pastes a new listing and instantly sees a trademark-risk score, before they get permanently suspended for guessing wrong.",
+    "who": "Solo Etsy and print-on-demand sellers launching new listings/product lines.",
+    "solo": "Browser extension / web app: paste listing title+tags \u2192 checks USPTO TESS (public API) + LLM-flagged list of commonly-enforced brands \u2192 risk score before publishing. Freemium, found via seller communities and Chrome Web Store search.",
+    "cons": "'Not legal advice' disclaimers; blocklist curation is ongoing; low technical moat \u2014 speed and community trust are the defense.",
+    "adj": 65.1,
+    "raw": 68.7,
+    "band": "Shortlist",
+    "ease": 1,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 5,
+    "s": 5,
+    "t": 4,
+    "m": 2,
+    "whynow": false,
+    "cluster": "watch",
+    "buyer": "B2B",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "CMI-1",
+    "title": "RMN Measurement Referee",
+    "lane": "Commerce intel",
+    "pitch": "A subscription research service that gives mid-market brands one independently-verified retail-media measurement report instead of three vendor dashboards that all disagree.",
+    "who": "Growth/media leads at mid-market CPG/DTC brands running 3\u20136+ retail media networks who can't afford enterprise-grade neutral measurement.",
+    "solo": "Subscription cross-network normalization: ingest each RMN's self-reported metrics, apply a published methodology, deliver a monthly reconciled report + advisory call. Ian's analyst credibility is the trust asset a faceless SaaS can't buy.",
+    "cons": "Needs brand data-sharing trust; thin moat vs a funded copycat \u2014 published methodology + reputation is the defense.",
+    "adj": 61.4,
+    "raw": 59.5,
+    "band": "Shortlist",
+    "ease": 5,
+    "jack": "Moderate",
+    "flywheel": "Strong",
+    "fit": 5,
+    "a": 4,
+    "s": 3,
+    "t": 4,
+    "m": 3,
+    "whynow": false,
+    "cluster": "intel",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "catch"
+  },
+  {
+    "id": "FIN-8",
+    "title": "Workers' Comp Premium Audit",
+    "lane": "Finance & insurance",
+    "pitch": "PremiumAudit AI would help commercial insurance agents flag workers' comp misclassification overcharges for their small-business clients in minutes, turning a retention perk into a new revenue line without hiring an audit team.",
+    "who": "Independent commercial-lines insurance agents who want to offer workers' comp premium-overpayment recovery to small-business clients but can't staff a dedicated audit team.",
+    "solo": "Agent uploads a client's workers' comp audit worksheet and payroll/job-classification records; AI flags likely misclassifications against NCCI/state rating-bureau rules and generates a dispute packet \u2014 contingency or flat-fee pricing.",
+    "cons": "Requires state-by-state rating-bureau rule knowledge (NCCI vs. independent states); accuracy liability if a flagged dispute is wrong; established human consultants already occupy the high-touch end.",
+    "adj": 59,
+    "raw": 60.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "TRD-2",
+    "title": "Refrigerant Price Intelligence",
+    "lane": "Skilled trades",
+    "pitch": "A price-tracking newsletter and calculator that alerts small HVAC contractors to refrigerant price spikes in real time, so they stop losing 4-7 margin points per install.",
+    "who": "1\u201315 truck HVAC contractors in the mandatory 2026 refrigerant transition.",
+    "solo": "Data product + newsletter: aggregate regional distributor pricing, real-time spike alerts, a quote-repricing calculator. Start as paid newsletter + calculator \u2014 Ian's data-product playbook transposed to HVAC.",
+    "cons": "Pricing-data sourcing takes hustle; volatility window may compress to 1\u20132 years \u2014 launch fast or skip. Good first-revenue experiment shape.",
+    "adj": 57.4,
+    "raw": 58.9,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Moderate",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 4,
+    "s": 5,
+    "t": 4,
+    "m": 3,
+    "whynow": true,
+    "cluster": "intel",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "HC-2",
+    "title": "Credentialing Validator",
+    "lane": "Healthcare admin",
+    "pitch": "An AI credentialing assistant that auto-populates CAQH and payer applications and catches the data mismatches causing most of the 60-120 day delays that cost small practices thousands a week.",
+    "who": "Solo/small practice owners and office managers (new physicians, therapists, dentists joining or starting practices).",
+    "solo": "AI credentialing tracker: single intake auto-populates CAQH/payer applications, cross-validates against NPPES/state license databases to catch mismatches, auto-sends payer follow-up nudges.",
+    "cons": "Handles sensitive provider PII requiring strong security; liability risk if incorrect guidance delays an application further \u2014 position as document-prep/tracking, not a guarantee.",
+    "adj": 57.3,
+    "raw": 60.3,
+    "band": "Shortlist",
+    "ease": 3,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 2,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": "glue"
+  },
+  {
+    "id": "PRD-3",
+    "title": "Cursor: Passive Time Reconstruction",
+    "lane": "Productivity apps",
+    "pitch": "A passive time-tracking app that would rebuild a freelancer's billable-hour log from git commits, calendar events, and activity signals instead of relying on a start/stop timer people forget to use.",
+    "who": "Freelance developers, consultants, and Upwork/Fiverr-style gig workers billing hourly, especially deep-focus knowledge workers who forget the timer mid-task.",
+    "solo": "A background app that ingests git activity, calendar events, and (optionally) active-window titles, then proposes an editable, reconstructed time log at day/week end \u2014 'the timer you don't have to remember to start' \u2014 sold as a $10-15/mo add-on that plugs into existing invoicing tools.",
+    "cons": "Needs OS-level accessibility/screen-recording permissions, which raises its own trust bar; must position clearly against Hubstaff-style surveillance, which freelancers already distrust.",
+    "adj": 57.3,
+    "raw": 60.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 5,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "Prosumer",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Heavy",
+    "also": ""
+  },
+  {
+    "id": "CMI-9",
+    "title": "Marketplace Review Authenticity Platform",
+    "lane": "Commerce intel",
+    "pitch": "ReviewProof would help Amazon/Walmart sellers and brand-protection teams prove their reviews are authentic and document competitors' fake-review violations for FTC action.",
+    "who": "Amazon/Walmart marketplace sellers and brand-protection teams who need to prove their own reviews are clean and document competitors' fake-review violations.",
+    "solo": "A B2B tool (not a consumer browser extension, to avoid Fakespot's monetization trap) scores review authenticity via linguistic/timing/reviewer-network pattern analysis, sold as a seller self-monitoring dashboard and a competitor-monitoring/FTC-evidence subscription.",
+    "cons": "Amazon could restrict scraping/API access at any time; must avoid the exact monetization trap that killed Fakespot; risk of being seen as enabling weaponized FTC complaints against competitors.",
+    "adj": 56.9,
+    "raw": 58.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 5,
+    "s": 4,
+    "t": 4,
+    "m": 3,
+    "whynow": true,
+    "cluster": "watch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Product",
+    "build": "Medium",
+    "also": "catch"
+  },
+  {
+    "id": "HOSP-4",
+    "title": "Delivery Payout Reconciliation",
+    "lane": "Hospitality & events",
+    "pitch": "PayoutCheck would help independent restaurant owners automatically catch and dispute the 2-5% of delivery revenue that DoorDash, UberEats, and Grubhub quietly shortchange them every month.",
+    "who": "Independent restaurant owners fulfilling third-party delivery orders who can't easily tell whether platform payouts match what they're actually owed.",
+    "solo": "Connect POS export plus platform payout CSV/API, auto-match line items, flag variances above a threshold, auto-draft the dispute (order ID, POS record, evidence) for the merchant to file.",
+    "cons": "Depends on reliable POS/platform data access (integration maintenance burden, platforms could restrict access); savings must clearly beat subscription cost for very small operators.",
+    "adj": 55.8,
+    "raw": 57,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 4,
+    "s": 4,
+    "t": 4,
+    "m": 3,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "AGE-2",
+    "title": "Bank-Ready POA Kit",
+    "lane": "Aging & care",
+    "pitch": "A tool that generates a state-specific, bank-ready power of attorney and tells you exactly what your parent's bank will require, so you're never turned away at the exact moment you need account access.",
+    "who": "Financially-responsible adult children managing a parent's day-to-day bills and accounts \u2014 AARP has covered this exact problem twice.",
+    "solo": "State-specific statutory POA form generator plus a maintained database of 'what Bank X actually requires' (medallion guarantee, notarization type) plus a pre-appointment checklist \u2014 sold as a one-time prep packet, explicitly document-prep, not legal counsel.",
+    "cons": "Hard non-legal-advice boundary \u2014 unauthorized-practice-of-law risk is the primary constraint and varies by state.",
+    "adj": 55.2,
+    "raw": 58.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Moderate",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Deep",
+    "ai": "Hybrid",
+    "build": "Thin",
+    "also": "comply"
+  },
+  {
+    "id": "REP-2",
+    "title": "STR Compliance Copilot",
+    "lane": "Real estate",
+    "pitch": "An AI compliance copilot that tracks every city and state's short-term-rental rules against a host's actual booking calendar, so a per-day fine never comes as a surprise.",
+    "who": "Individual STR hosts (1-5 listings) operating across multiple or ambiguous jurisdictions \u2014 too small for compliance staff, large enough to be a fine target.",
+    "solo": "AI compliance copilot: ingests a host's addresses, watches municipal ordinance feeds for changes, cross-references against the booking calendar to flag violations before they happen, auto-generates renewal paperwork.",
+    "cons": "Data-freshness IS the product \u2014 a stale rule set is worse than none; liability if compliance guidance is wrong; needs calendar API access from Airbnb/Vrbo.",
+    "adj": 54.6,
+    "raw": 55.7,
+    "band": "Shortlist",
+    "ease": 3,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 3,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": true,
+    "cluster": "comply",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "CMI-8",
+    "title": "In-Store Retail Media Verification",
+    "lane": "Commerce intel",
+    "pitch": "ShelfVerify would help CPG media buyers confirm that the in-store retail media impressions they're paying for actually happened.",
+    "who": "CPG brand media buyers spending on in-store retail media (digital endcaps, shelf screens, in-store TV networks) who can't independently verify retailer-reported impressions or screen uptime.",
+    "solo": "A lean spot-check verification service combining a gig-network of mystery shoppers photographing/timestamping screen content at sampled stores, cross-referenced against third-party foot-traffic data, producing a discrepancy report brands can use in RMN negotiations.",
+    "cons": "Field-verification component is less 'pure software' than other candidates, capping solo-scalability; retailers could resist third-party audits inside their stores; camera-based automation faces privacy hurdles IAB itself is still navigating.",
+    "adj": 54.2,
+    "raw": 51.7,
+    "band": "Shortlist",
+    "ease": 3,
+    "jack": "Moderate",
+    "flywheel": "Strong",
+    "fit": 5,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 4,
+    "whynow": false,
+    "cluster": "intel",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Pipe",
+    "build": "Heavy",
+    "also": "catch"
+  },
+  {
+    "id": "HOM-4",
+    "title": "Move-Out Proof",
+    "lane": "Home & life-admin",
+    "pitch": "Move-Out Proof would help renters build an automatic, timestamped photo/video record of their unit's condition at move-in and move-out so they can dispute unfair deposit deductions.",
+    "who": "Roughly 44M US renter households; recurs every move, making it a repeat, not one-time, need.",
+    "solo": "A guided-walkthrough app: structured room-by-room photo/video capture, timestamp + metadata, auto-generated PDF condition report, state-specific move-out checklists.",
+    "cons": "Legal content must be accurate per state without crossing into unlicensed legal advice; usage is seasonally concentrated (May-Sept); core tech is easy to copy.",
+    "adj": 54.1,
+    "raw": 58.9,
+    "band": "Shortlist",
+    "ease": 1,
+    "jack": "Moderate",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 3,
+    "s": 5,
+    "t": 4,
+    "m": 2,
+    "whynow": true,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Thin",
+    "also": "comply"
+  },
+  {
+    "id": "LOG-6",
+    "title": "Small-Brand 3PL Invoice Audit",
+    "lane": "Logistics & DTC import",
+    "pitch": "ShipAudit would help small DTC brands too small for contingency audit firms catch and dispute 3PL billing overcharges on their own.",
+    "who": "Small DTC brands spending roughly $2K-$10K/month on 3PL fulfillment, below the volume threshold contingency audit firms actively pursue.",
+    "solo": "Brand connects their 3PL invoice feed plus WMS/inventory export; tool automatically flags storage/pick-pack/surcharge discrepancies using a rules library of common 3PL billing error patterns, generates a dispute email \u2014 flat low-cost subscription, not contingency.",
+    "cons": "Several contingency firms exist for the higher end already; needs to clearly differentiate as a self-serve/flat-fee product for brands too small for those firms; requires ongoing maintenance of a 3PL billing-rules library.",
+    "adj": 52.4,
+    "raw": 53.2,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "SMB-5",
+    "title": "I-9 Audit Shield",
+    "lane": "SMB ops",
+    "pitch": "An AI scanner that checks a restaurant or contractor's existing I-9 paperwork against current rules and flags what would fail an ICE audit, before the audit happens.",
+    "who": "Owner/GM of small multi-location restaurants, contractors, hospitality \u2014 frequent hourly hiring, no HR department.",
+    "solo": "Upload existing I-9 scans \u2192 AI flags substantive-violation risks against current rules \u2192 remediation checklist + guided flow for new hires. Flat per-location fee.",
+    "cons": "High-stakes accuracy; attorney partnership advisable; buyers are hard to reach online (weakest distribution score in the batch).",
+    "adj": 51.3,
+    "raw": 55.7,
+    "band": "Shortlist",
+    "ease": 4,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": true,
+    "cluster": "comply",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": "catch"
+  },
+  {
+    "id": "BOD-1",
+    "title": "MenoCase",
+    "lane": "Body & health",
+    "pitch": "MenoCase would help women in their 40s-50s turn scattered perimenopause symptoms into a plain-English, provider-ready evidence packet and a script for getting taken seriously.",
+    "who": "Women 40-58 currently cycling through primary care/OB-GYN visits for hot flashes, brain fog, sleep and mood changes.",
+    "solo": "A structured intake flow \u2014 symptoms, timeline, what's been tried, family history \u2014 that an LLM turns into a one-page 'visit brief' in clinical vocabulary, plus a curated directory of NAMS-certified menopause practitioners by region.",
+    "cons": "Must stay strictly in 'prepare/translate,' never diagnose or recommend treatment; provider directory requires ongoing data upkeep and accuracy liability.",
+    "adj": 51.3,
+    "raw": 55.7,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 5,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": true,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Medium",
+    "ai": "Product",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "CMI-5",
+    "title": "Agentic Commerce Briefing",
+    "lane": "Commerce intel",
+    "pitch": "A recurring 'State of Agentic Commerce' briefing that tells brands which AI-shopping channels are actually generating sales, before anyone else is tracking it credibly.",
+    "who": "E-commerce/growth leads at DTC and marketplace brands allocating 2026\u201327 budgets.",
+    "solo": "Recurring 'State of Agentic Commerce' tracker/briefing: protocols live, real transaction volume, legal status per agent-retailer pair. Pure synthesis \u2014 no data infrastructure. The cheapest first product of the whole CMI cluster; shippable in weeks.",
+    "cons": "Possibly 6\u201312 months early (also the opportunity). Low moat until the category stabilizes \u2014 first-mover voice is the prize.",
+    "adj": 51,
+    "raw": 48.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Moderate",
+    "flywheel": "None",
+    "fit": 5,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": true,
+    "cluster": "intel",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Pipe",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "SSB-2",
+    "title": "Design-Theft Watchdog",
+    "lane": "SMB self-serve",
+    "pitch": "A monitoring service that scans Temu, Shein, and AliExpress for stolen Etsy designs and automatically files takedown notices.",
+    "who": "Independent Etsy makers, especially bestselling listings that attract copycats.",
+    "solo": "Subscription monitor: periodic reverse-image-search of the seller's listing photos across Temu/Shein/AliExpress/TikTok Shop \u2192 match alerts \u2192 auto-drafted platform-specific DMCA notices.",
+    "cons": "Crawling infra costs scale with users; detection accuracy IS the product; platforms may rate-limit.",
+    "adj": 49.7,
+    "raw": 52.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 5,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "watch",
+    "buyer": "B2B",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Heavy",
+    "also": ""
+  },
+  {
+    "id": "HOSP-5",
+    "title": "Hospitality Chargeback Evidence Desk",
+    "lane": "Hospitality & events",
+    "pitch": "EvidenceDesk would help independent restaurants, boutique hotels, and event venues auto-assemble winning chargeback evidence packets before the deadline instead of writing off every friendly-fraud dispute.",
+    "who": "Independent restaurant owners, boutique hotel/inn operators, and event venues taking deposits, who lose revenue fighting credit-card chargebacks from guests who received the service.",
+    "solo": "Ingest POS/PMS/booking-system order and signature data, auto-assemble a standardized evidence packet per dispute reason code, submit/track it \u2014 AI drafts the dispute narrative.",
+    "cons": "Fragmented merchant tech stack (many POS/PMS to integrate); win rates depend on processor/bank behavior outside the product's control; needs light integration work per client, not pure self-serve.",
+    "adj": 49.2,
+    "raw": 51.7,
+    "band": "Shortlist",
+    "ease": 3,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 2,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "WEL-2",
+    "title": "Held",
+    "lane": "Wellbeing",
+    "pitch": "Held would give unpaid family caregivers a 3-minute daily emotional check-in and coping toolkit for caregiver burnout and compassion fatigue, separate from the scheduling apps they already use.",
+    "who": "Tens of millions of unpaid US family caregivers \u2014 spouses, adult children caring for aging/ill parents, parents of disabled/chronically ill kids.",
+    "solo": "A lightweight companion layered on top of (not competing with) existing coordination tools: a near-zero-friction daily emotional check-in, AI-personalized coping micro-exercises tuned to caregiver subtype, light async peer matching.",
+    "cons": "Users are time- and energy-poor so onboarding must be nearly frictionless; must stay clearly non-clinical; caregivers skew lower discretionary income.",
+    "adj": 49,
+    "raw": 53.2,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "CV2-4",
+    "title": "Before-the-Crisis Organizer",
+    "lane": "Consumer",
+    "pitch": "A guided app that walks an adult child through collecting a parent's accounts, passwords, and documents before a health crisis makes it urgent, ending in a shareable emergency binder.",
+    "who": "Adult children (40s-60s) trying to get ahead of a parent's declining capacity.",
+    "solo": "Guided digital app walking an adult child through collecting accounts, an encrypted password vault, documents, and key contacts \u2014 generates a shareable emergency binder for siblings/POA.",
+    "cons": "Handling sensitive financial/password data raises a real security and liability bar; competitors could bundle this as a feature; likely one-time/low-annual pricing caps revenue.",
+    "adj": 48.6,
+    "raw": 51.1,
+    "band": "Shortlist",
+    "ease": 1,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Hybrid",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "PET-1",
+    "title": "PawGlucose",
+    "lane": "Pets & companionship",
+    "pitch": "PawGlucose would help owners of chronically ill cats and dogs log medication doses, symptoms, and vitals, then get plain-language AI guidance so they stop panicking over every borderline reading.",
+    "who": "Owners of pets with diagnosed diabetes, epilepsy, or kidney disease who must give injections/pills on strict daily schedules.",
+    "solo": "A structured logger (glucose curves, seizure logs, meds) with an LLM trained on veterinary consensus guidelines giving reassurance-with-guardrails, always escalating urgent cases to a vet.",
+    "cons": "Real liability exposure requiring careful 'information not diagnosis' framing and likely a vet advisory board; not an emergency-care substitute.",
+    "adj": 48.1,
+    "raw": 52.3,
+    "band": "Shortlist",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Medium",
+    "ai": "Product",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "DCI-1",
+    "title": "TikTok Shop Inventory Truth Layer",
+    "lane": "DTC commerce infra",
+    "pitch": "TikTokStockSync would help small DTC brands selling on TikTok Shop stop overselling and false stockouts by reconciling inventory across warehouses in real time.",
+    "who": "Small DTC brands (1-20 SKUs, sub-$5M revenue) selling simultaneously on Shopify, TikTok Shop, and Instagram/Facebook Shop.",
+    "solo": "Single-purpose reconciliation webhook service \u2014 polls TikTok Shop API + Shopify locations every few minutes, flags/holds risky SKUs automatically, alerts the founder before an oversell happens.",
+    "cons": "Platform risk \u2014 TikTok Shop could tighten API access or build this natively; US TikTok ownership/regulatory uncertainty is an overhang.",
+    "adj": 47.7,
+    "raw": 48.3,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 3,
+    "s": 4,
+    "t": 4,
+    "m": 2,
+    "whynow": true,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "LIF-4",
+    "title": "Household Reset",
+    "lane": "Life transitions",
+    "pitch": "Household Reset would help a parent and their adult 'boomerang' child turn vague expectations into a clear, low-conflict written agreement in one guided session.",
+    "who": "Parents of adult children 18-35 and the boomerang kids themselves \u2014 44% of US parents of adult children report a child has moved back home.",
+    "solo": "AI-mediated 'household reset' session: separate short intake from parent and adult child, AI flags mismatched expectations, generates a plain-language shared agreement plus a 60-day check-in cadence.",
+    "cons": "Low price point and one-time use per family cap LTV; needs two-sided buy-in; must stay clearly non-legal.",
+    "adj": 46.9,
+    "raw": 51.1,
+    "band": "Shortlist",
+    "ease": 1,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 4,
+    "t": 4,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "HOM-2",
+    "title": "LegacySort",
+    "lane": "Home & life-admin",
+    "pitch": "LegacySort would help adult children and downsizing parents walk through a house room by room, log what's there, and get matched next steps instead of freezing up in front of decades of stuff.",
+    "who": "Boomer/Silent Generation households downsizing or passing on estates, and the Gen X/Millennial adult children who end up managing it.",
+    "solo": "AI-assisted cataloging app (photo \u2192 item ID \u2192 estimated resale value \u2192 recommended local channel: consignment, donation, buy-nothing group, estate-sale platform), monetized via a flat report fee plus referral relationships.",
+    "cons": "Full-service disposition requires local logistics partnerships that don't scale nationally overnight; emotional sensitivity requires careful UX.",
+    "adj": 46.9,
+    "raw": 51.1,
+    "band": "Shortlist",
+    "ease": 3,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "CV2-3",
+    "title": "Amicable Co-Parenting App",
+    "lane": "Consumer",
+    "pitch": "A simple shared calendar and expense-split app for amicable co-parents, priced like a consumer app instead of the $220-600/yr litigation-grade tools built for high-conflict divorces.",
+    "who": "Separated/divorced parents in low-to-moderate-conflict situations paying for legal-grade software they don't need.",
+    "solo": "Minimal shared calendar + expense-split + message-log app priced per-family at a low flat rate, explicitly not a legal/court tool \u2014 marketed via parenting subreddits and divorce-support Facebook groups.",
+    "cons": "Field crowding fast in 2026 (Parenting Path, AppClose, Custody X Change all attacking this same complaint) \u2014 differentiate on simplicity, not feature parity.",
+    "adj": 46.4,
+    "raw": 48.5,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 3,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "glue"
+  },
+  {
+    "id": "PET-4",
+    "title": "PetCard",
+    "lane": "Pets & companionship",
+    "pitch": "PetCard would help pet owners create and share a simple, always-accessible emergency plan \u2014 designated guardian, funds, feeding/medical instructions \u2014 without needing a lawyer.",
+    "who": "The majority of the roughly 95 million US pet-owning households without a formal plan \u2014 only 46% of pet owners in disaster-prone areas have any preparedness plan.",
+    "solo": "A lightweight app/web form generating a shareable 'pet emergency card' (PDF + wallet pass + QR code) covering guardian contact, vet info, meds, feeding, and a funds note, with annual review reminders.",
+    "cons": "Not a substitute for a legally binding trust \u2014 must be clearly positioned as informational; low proactive urgency for most users.",
+    "adj": 46.4,
+    "raw": 50.4,
+    "band": "Shortlist",
+    "ease": 1,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 3,
+    "s": 5,
+    "t": 4,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "CON-4",
+    "title": "ADHD Reliable Timer",
+    "lane": "Consumer",
+    "pitch": "A deliberately minimal ADHD visual planner whose only job is to never lose your schedule or miss a reminder, unlike Tiimo.",
+    "who": "Adults with ADHD relying on external time-cueing; r/ADHD is an unusually vocal, tool-hungry, high-WTP community.",
+    "solo": "Deliberately minimal visual timer/routine app whose single differentiator is guaranteed notification delivery and offline reliability. No AI bloat. Distribution: r/ADHD word-of-mouth + 'Tiimo alternative' search.",
+    "cons": "OS background-execution limits are the true root cause \u2014 real native engineering, not just design; category churn risk (novelty fade).",
+    "adj": 46,
+    "raw": 50.2,
+    "band": "Shortlist",
+    "ease": 1,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 3,
+    "s": 4,
+    "t": 4,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "DCI-2",
+    "title": "Fraud-Resistant Affiliate/Creator Commission Tracking",
+    "lane": "DTC commerce infra",
+    "pitch": "TrueAttrib would help small DTC brands running affiliate/creator programs stop paying fraudulent commissions by flagging suspicious attribution before payout.",
+    "who": "Small DTC brand marketing/ops founders running creator or affiliate programs across Shopify Collabs, TikTok Shop affiliates, and Instagram.",
+    "solo": "Lightweight fraud-scoring layer that plugs into existing affiliate apps' order data via API/CSV, flags suspicious attribution patterns (IP/geo mismatch, draft-invoice claims, rapid-fire signups), generates a payout-hold report.",
+    "cons": "Dependent on affiliate platforms exposing enough raw order/attribution data via API; risk of false positives alienating legitimate creators.",
+    "adj": 46,
+    "raw": 46.4,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 3,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "SSV2-2",
+    "title": "True-Solo Field Service App",
+    "lane": "SMB self-serve",
+    "pitch": "A dead-simple booking and invoicing app built only for true one-person cleaning, grooming, and handyman businesses, without paying for team features you'll never use.",
+    "who": "True solopreneur home-service operators (cleaners, mobile groomers, handymen) outside HVAC/plumbing/electrical.",
+    "solo": "Mobile-first booking + invoicing + SMS app scoped only to true solo operators \u2014 no team/dispatch features \u2014 shipped to app stores, found via 'solo cleaning business app' search and short-form content.",
+    "cons": "Crowded app-store category; churn risk as businesses outgrow single-operator scope; adjacent pet-sitting niche already served by Time To Pet.",
+    "adj": 45.4,
+    "raw": 47.7,
+    "band": "Archive",
+    "ease": 1,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 3,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "PRD-4",
+    "title": "Cursor: Secure-by-Default Focus Blocker",
+    "lane": "Productivity apps",
+    "pitch": "A focus blocker that would ship with the hardest-to-bypass mode on from day one, closing the VPN-toggle and admin-browser escape hatches that make Freedom and Cold Turkey easy to defeat by default.",
+    "who": "Knowledge workers and freelancers with genuine compulsive-use/procrastination patterns who install a blocker specifically because they don't trust their own willpower, then leave it on default settings.",
+    "solo": "A cross-platform blocker that flips the default: strict, hard-to-bypass mode out of the box (no VPN-toggle escape, no admin-browser escape) with a deliberately frictionful, delayed opt-out \u2014 marketed explicitly against Freedom/Cold Turkey's opt-in-safety-net framing, for the 'I already know soft mode doesn't work for me' buyer.",
+    "cons": "Genuinely crowded category (Freedom, Cold Turkey, Opal, Cursed Screen, plus OS-native screen-time tools) \u2014 must win on a narrow, provable 'harder to defeat, cross-platform' claim rather than broad feature parity.",
+    "adj": 45.4,
+    "raw": 47.7,
+    "band": "Archive",
+    "ease": 1,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 3,
+    "s": 4,
+    "t": 4,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "Prosumer",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "CRE-4",
+    "title": "Creator Payment Registry",
+    "lane": "Creators",
+    "pitch": "An invoicing tool for creators plus a crowdsourced database of which brands actually pay on time, so creators can vet a brand deal before signing.",
+    "who": "Mid-tier YouTubers/podcasters/newsletter writers living on brand-deal income.",
+    "solo": "Creator invoicing + escalation templates + crowdsourced brand-payment-reliability database. Subscription + optional early-payment advance via a lending partner.",
+    "cons": "Reputation database cold-start; factoring needs capital or a partner.",
+    "adj": 44.5,
+    "raw": 44.8,
+    "band": "Archive",
+    "ease": 4,
+    "jack": "Strong",
+    "flywheel": "Strong",
+    "fit": 3,
+    "a": 3,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "intel",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "glue"
+  },
+  {
+    "id": "EDU-5",
+    "title": "CE Reporting Reconciliation Watchdog",
+    "lane": "Education & tutoring",
+    "pitch": "ReportCheck would help small CE providers catch a failed CE Broker report in days, not months, before an angry licensee finds out their renewal is blocked.",
+    "who": "Solo/small continuing-education providers (nursing, real estate, insurance CE instructors) whose course completions must post to state boards via CE Broker.",
+    "solo": "Provider uploads their completion roster after each course; tool periodically checks whether each completion actually posted, flags failures within days, auto-drafts the resubmission or licensee-notification email.",
+    "cons": "Depends on continued access to CE Broker provider-side data/exports; CE Broker could restrict access; addressable market limited to providers whose clients are actively complaining.",
+    "adj": 44.5,
+    "raw": 44.8,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 3,
+    "a": 3,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "DCI-3",
+    "title": "BNPL Settlement Reconciliation",
+    "lane": "DTC commerce infra",
+    "pitch": "SettleSync would help small DTC brands using Klarna, Afterpay, and Affirm close their books by automatically reconciling BNPL settlements against Shopify orders.",
+    "who": "Small DTC brand finance/ops owner (often the founder) reconciling Shopify order revenue against net BNPL payouts.",
+    "solo": "Pull Klarna/Afterpay/Affirm settlement reports + Shopify order/refund data via API, auto-match at the order level, surface the reserve/holdback balance and true net revenue.",
+    "cons": "Only 3-4 BNPL providers to integrate but each has quirks; risk that Shopify's own financial reporting eventually absorbs this natively.",
+    "adj": 44.5,
+    "raw": 44.8,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 3,
+    "a": 3,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "CMI-11",
+    "title": "Creator Whitelisting Rights Compliance",
+    "lane": "Commerce intel",
+    "pitch": "RightsGuard would help brand paid-social teams stop running whitelisted creator ads past their licensed usage window.",
+    "who": "Brand paid-social/influencer-marketing managers who unknowingly keep running whitelisted creator ads past their contracted usage window.",
+    "solo": "Lightweight SaaS ingests creator contract terms (duration, channels, territory) and cross-references live ad-account spend data via API to auto-flag assets running past their license window.",
+    "cons": "\u26a0 Evidence caveat: the research agent flagged this as its thinnest-sourced candidate \u2014 the core trend claim traces to a single publication rather than independently corroborated outlets. Treat as a real pattern worth watching, not yet meeting the 2-independent-source bar.",
+    "adj": 44.3,
+    "raw": 46.4,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 2,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "comply",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": "catch"
+  },
+  {
+    "id": "TRV-2",
+    "title": "WheelGuard",
+    "lane": "Travel & mobility",
+    "pitch": "WheelGuard would help wheelchair users flying commercially document their device pre-flight, capture handling proof, and auto-file/escalate damage claims.",
+    "who": "Wheelchair/scooter users who fly; airlines damaged or destroyed 11,357 of 899,385 transported wheelchairs/scooters in 2024.",
+    "solo": "App logs make/model/battery type/pre-existing damage before each flight, generates a 'handle with care' tag/QR, and if damage occurs, auto-fills DOT/airline claim forms and tracks legally-mandated response deadlines.",
+    "cons": "Regulatory nuance must be accurate \u2014 errors have real mobility consequences; small total addressable market limits ceiling revenue despite high emotional stakes.",
+    "adj": 43.8,
+    "raw": 47.7,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Medium",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": "comply"
+  },
+  {
+    "id": "DCI-5",
+    "title": "SKU-Level Return-Reason Analytics",
+    "lane": "DTC commerce infra",
+    "pitch": "ReasonReturns would help small DTC apparel and beauty brands cut return-to-origin losses with clean, SKU-level return-reason data without enterprise pricing.",
+    "who": "Small DTC apparel/beauty brand founders who can't afford or don't need Loop Returns' enterprise pricing but need to know why products come back at the SKU level.",
+    "solo": "Simple returns-intake form + SKU-level reason-code dashboard integrated with Shopify, priced far below Loop, focused narrowly on apparel/beauty.",
+    "cons": "Loop and AfterShip could move down-market at any time; return-reason data quality depends on customers actually filling in accurate reasons.",
+    "adj": 43.4,
+    "raw": 43.6,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Moderate",
+    "fit": 3,
+    "a": 3,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "intel"
+  },
+  {
+    "id": "SSV2-6",
+    "title": "Coach CRM, Simplified",
+    "lane": "SMB self-serve",
+    "pitch": "A lightweight package-sales CRM built specifically for coaches and consultants, so they stop wrestling with Dubsado's project-management complexity for a simple session package.",
+    "who": "Independent coaches (career, health, business, life) and consultants selling fixed packages rather than complex multi-deliverable projects.",
+    "solo": "Coach-specific package-sales + light-CRM tool with niche templates and AI-drafted proposals, distributed via coaching-community newsletters and 'Dubsado alternative for coaches' SEO.",
+    "cons": "Paperbell already occupies this exact positioning \u2014 differentiation is essential, not optional. ARCHIVED: an existing funded competitor already fits this niche.",
+    "adj": 43.2,
+    "raw": 45.1,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Shallow",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "SAF-4",
+    "title": "Baited",
+    "lane": "Personal safety & privacy",
+    "pitch": "Baited would let anyone forward a suspected scam call into an AI decoy persona that keeps the scammer talking while auto-transcribing the call and filing an FTC/IC3-ready report.",
+    "who": "Anyone who receives frequent scam calls; FTC reported a record $15.9B in fraud losses in 2025 across ~3M complaints.",
+    "solo": "A call-forwarding number consumers give to scammers, backed by real-time voice AI with stock decoy personas; auto-transcribes and auto-fills FTC/IC3 complaint forms; inherently shareable scam-bait clips drive organic growth.",
+    "cons": "Must not itself violate TCPA/spoofing rules; real-time voice AI latency/cost; two-party consent recording laws vary by state; scammers will adapt once bots are widely known.",
+    "adj": 43.2,
+    "raw": 47,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 5,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "watch",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Heavy",
+    "also": ""
+  },
+  {
+    "id": "CRE-5",
+    "title": "Clone Watch",
+    "lane": "Creators",
+    "pitch": "A monitoring service that scans YouTube, TikTok, and ad networks for AI clones of a creator's voice or face and files takedowns automatically.",
+    "who": "Independent musicians, podcasters, YouTubers below agency tier.",
+    "solo": "Monitoring service scanning platforms + ad networks against registered voice/face samples, auto-filing takedowns. ARCHIVED: biometric-law exposure (BIPA), weak distribution, platform-native tools closing in.",
+    "cons": "Archived this batch \u2014 revisit if the category matures without a dominant player.",
+    "adj": 42.6,
+    "raw": 44.5,
+    "band": "Archive",
+    "ease": 3,
+    "jack": "Moderate",
+    "flywheel": "Moderate",
+    "fit": 2,
+    "a": 5,
+    "s": 3,
+    "t": 2,
+    "m": 3,
+    "whynow": false,
+    "cluster": "watch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Product",
+    "build": "Heavy",
+    "also": ""
+  },
+  {
+    "id": "RES-3",
+    "title": "IsThisReal",
+    "lane": "Research-driven",
+    "pitch": "IsThisReal would help online daters instantly check whether a match's photos or video-call face are AI-generated, stolen, or otherwise fake before they get emotionally involved.",
+    "who": "Online daters, especially those 40+; only 12% feel highly confident they can distinguish AI-made from human-made content despite 75% saying it's important.",
+    "solo": "A narrow browser extension/app: upload a match's photos or a video-call recording, get an AI-generation-likelihood score plus reverse-image match, marketed purely around dating safety.",
+    "cons": "Underlying detection tech is an ongoing adversarial arms race as generators improve; risk of false accusations (liability/defamation if a real photo is wrongly flagged).",
+    "adj": 42.6,
+    "raw": 46.4,
+    "band": "Archive",
+    "ease": 1,
+    "jack": "Moderate",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "watch",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Product",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "HOSP-2",
+    "title": "Rural Venue Noise Compliance Log",
+    "lane": "Hospitality & events",
+    "pitch": "QuietBarn would help rural wedding venue owners turn ad hoc noise complaints into a timestamped compliance record that holds up in a zoning dispute or neighbor lawsuit.",
+    "who": "Owners of rural/agritourism wedding barns and outdoor event venues operating near residential neighbors.",
+    "solo": "Phone-based or low-cost IoT decibel logging + timestamped complaint intake + auto-generated per-event compliance report, usable both for the venue's own risk management and as a legal exhibit.",
+    "cons": "Narrow niche (thousands, not tens of thousands, of rural venues); must avoid implying legal guarantees; credibility likely requires bundling with inexpensive decibel hardware.",
+    "adj": 42.3,
+    "raw": 46.1,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 3,
+    "s": 4,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "comply",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "HOSP-3",
+    "title": "Mobile Bar/Caterer Permit Navigator",
+    "lane": "Hospitality & events",
+    "pitch": "GigPermit would help mobile bar and off-premise catering operators know exactly which food and alcohol permits they need for their next out-of-county event, and get reminded before the deadline.",
+    "who": "Solo/small off-premise caterers and mobile bar ('tap truck') operators working events across multiple counties or states.",
+    "solo": "Searchable database (state/county + event date in, required permits + lead times + application links out) plus a per-gig checklist with reminder nudges \u2014 content-heavy but maintainable solo with AI-assisted jurisdiction summaries.",
+    "cons": "Regulatory data must stay current across thousands of counties (largest execution risk); liability if guidance is wrong (needs 'not legal advice' framing); niche but fast-growing market.",
+    "adj": 41.7,
+    "raw": 45.5,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Moderate",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "comply",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "CON-5",
+    "title": "Insurance Home Inventory",
+    "lane": "Consumer",
+    "pitch": "A home-inventory app for insurance claims that automatically backs up every photo and receipt so months of documentation can never disappear.",
+    "who": "Homeowners/renters, especially post-scare and in disaster season.",
+    "solo": "Reliability-obsessed inventory app: automatic cloud + local export (PDF/CSV) from day one, AI photo-to-item tagging. ARCHIVED: crowded category (ClaimsReady, ClaimGuard, ReEmber), infrequent-use economics.",
+    "cons": "Archived \u2014 one strong complaint + category proliferation wasn't enough breadth of evidence.",
+    "adj": 41.5,
+    "raw": 45.1,
+    "band": "Archive",
+    "ease": 1,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 4,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Hybrid",
+    "build": "Thin",
+    "also": "comply"
+  },
+  {
+    "id": "LCI-5",
+    "title": "Cancellation Backfill for Boutique Fitness Studios",
+    "lane": "Local commerce infra",
+    "pitch": "SpotFill would help boutique fitness studios instantly refill every late-cancellation spot from the waitlist so no class revenue goes to waste.",
+    "who": "Boutique studio owners (pilates, yoga, cycling, boxing) running on Mindbody/Vagaro/Momence who lose revenue to late cancellations.",
+    "solo": "Webhook/API-connected add-on watching a studio's existing booking platform for late cancellations, instantly auto-texting the standby list first-to-claim, with a dashboard showing recovered revenue.",
+    "cons": "Dependent on third-party API access/goodwill (platform could restrict or copy the feature); small per-studio revenue recovery caps willingness to pay.",
+    "adj": 40.6,
+    "raw": 42.3,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 2,
+    "a": 3,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "DCI-7",
+    "title": "True Multi-Marketplace Profit-Per-Order Calculator",
+    "lane": "DTC commerce infra",
+    "pitch": "TrueMargin would help small multi-channel DTC sellers know their real per-order profit across Amazon, Walmart, TikTok Shop, and Shopify.",
+    "who": "Small multi-channel DTC sellers who can't tell their real per-order profit once marketplace fees, ad spend, returns, and COGS are netted out across Amazon, Walmart, TikTok Shop, and Shopify.",
+    "solo": "Pull settlement/fee reports from each marketplace API plus Shopify COGS data and compute true landed profit per order/SKU/channel \u2014 an ETL-and-math problem, not a modeling problem.",
+    "cons": "Crowded, well-funded competitive set (Triple Whale, BeProfit, Lifetimely); must win on the narrow 'accuracy' wedge, not features.",
+    "adj": 40.3,
+    "raw": 38.2,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 4,
+    "a": 3,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "catch",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "glue"
+  },
+  {
+    "id": "SSV2-4",
+    "title": "Farmers-Market Inventory Sync",
+    "lane": "SMB self-serve",
+    "pitch": "An inventory-sync app that keeps a farmers-market vendor's in-person and online stock counts in lockstep, so they stop accidentally double-selling what's already sold at the booth.",
+    "who": "Solo/small farm and local-food producers selling at markets plus a Shopify/Squarespace storefront.",
+    "solo": "Narrow two-way sync app connecting Square (in-person) with Shopify/Squarespace, listed on Shopify/Square app marketplaces at $15\u201325/mo.",
+    "cons": "Dependent on Shopify/Square API stability; small per-vendor TAM; seasonal (market-season) revenue. ARCHIVED: weakest AI-leverage fit and thinnest evidence in this lane.",
+    "adj": 40.1,
+    "raw": 41.7,
+    "band": "Archive",
+    "ease": 1,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 2,
+    "s": 4,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Thin",
+    "also": ""
+  },
+  {
+    "id": "REP-6",
+    "title": "Niche-Market Pricing Layer",
+    "lane": "Real estate",
+    "pitch": "A pricing override layer for short-term-rental hosts in secondary and luxury markets that Wheelhouse and Smart Pricing consistently mis-price.",
+    "who": "STR hosts in secondary/tertiary or unique-property markets outside the top 20 metro areas.",
+    "solo": "Narrow override-layer pricing tool for underserved market segments, combining lightweight local event/demand scraping with host-defined floor/ceiling rules. ARCHIVED: weakest scores in the lane \u2014 thin evidence (Wheelhouse's overall rating is actually high) and a niche competitor (DPGO) already targets this exact angle.",
+    "cons": "Needs reliable local event/demand data sourcing per target market, labor-intensive to expand market-by-market.",
+    "adj": 38.1,
+    "raw": 39.5,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 2,
+    "a": 3,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "HOSP-7",
+    "title": "Multi-State Tip Pool Compliance Audit",
+    "lane": "Hospitality & events",
+    "pitch": "TipAudit would help small multi-state restaurant and bar groups catch DOL-audit-failing tip pool and credit-card-fee-deduction violations before an investigator does.",
+    "who": "Owners of small multi-location restaurant/bar groups (roughly 2-8 units, often spanning state lines) navigating FLSA tip-pooling and credit-card-fee-deduction rules.",
+    "solo": "Rules engine ingests POS tip and hours data, flags configuration violations against the specific state(s) selected, outputs DOL-audit-ready documentation.",
+    "cons": "Direct competitors already exist and could add this as a feature; requires staying current with a complex, frequently-litigated legal area; narrower target market than single-location independents.",
+    "adj": 36.4,
+    "raw": 39.5,
+    "band": "Archive",
+    "ease": 3,
+    "jack": "Weak",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 3,
+    "s": 3,
+    "t": 3,
+    "m": 3,
+    "whynow": false,
+    "cluster": "comply",
+    "buyer": "B2B",
+    "depth": "Deep",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "catch"
+  },
+  {
+    "id": "DCI-4",
+    "title": "Wholesale Order & Payment Collection for Boutique Sellers",
+    "lane": "DTC commerce infra",
+    "pitch": "BoutiquePay would help small DTC brands selling wholesale to independent boutiques get paid on time by automating order capture and payment collection.",
+    "who": "Small DTC brand founders running a wholesale channel into independent boutiques/specialty stores.",
+    "solo": "Order capture + automated dunning/reminder sequences + optional card-on-file or ACH collection at time of order, built on Stripe/ACH rails.",
+    "cons": "Small total addressable base per brand (few dozen boutique accounts each); credit risk underwriting is genuinely hard to automate well.",
+    "adj": 36.4,
+    "raw": 37.5,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 2,
+    "a": 2,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": "catch"
+  },
+  {
+    "id": "LCI-8",
+    "title": "Real-Time BOPIS Pickup-Slot & Inventory Sync",
+    "lane": "Local commerce infra",
+    "pitch": "PickupSync would help independent retailers offer buy-online-pickup-in-store without overselling or scrambling when a customer walks in.",
+    "who": "Independent retailers (bookstores, gift shops, small chains of 2-10 locations) offering online-order-for-in-store-pickup.",
+    "solo": "Lightweight middleware connecting a store's POS (Square, Shopify POS, Lightspeed) to its online storefront, pushing true real-time stock holds the moment a pickup order is placed, plus a simple pickup-slot calendar.",
+    "cons": "Dependent on POS/e-commerce platform API stability and access; platforms could build this natively; thin margins on a per-store subscription.",
+    "adj": 36.4,
+    "raw": 37.5,
+    "band": "Archive",
+    "ease": 3,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 2,
+    "a": 2,
+    "s": 3,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "WLD-5",
+    "title": "Afterword",
+    "lane": "Wild & experimental",
+    "pitch": "Afterword would help people record, while alive, clear preferences about whether they can be turned into an AI chat or voice clone after death.",
+    "who": "Anyone with aging or terminally ill family members in the era of accessible voice-cloning AI; several griefbot platforms already exist, used by 'millions' per reporting.",
+    "solo": "A simple, low-cost registry where a person records granular preferences (yes/no to voice clone, yes/no to chat clone, allowed uses, a sunset date) alongside existing estate documents, with public-facing content explaining why it matters.",
+    "cons": "Very unproven willingness to pay \u2014 no clear monetization path beyond bundling into estate planning; depends on griefbot platforms someday agreeing to honor an external consent record, which none currently do. The most speculative card in this batch.",
+    "adj": 35,
+    "raw": 37.8,
+    "band": "Archive",
+    "ease": 2,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 2,
+    "s": 4,
+    "t": 1,
+    "m": 2,
+    "whynow": true,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Pipe",
+    "build": "Thin",
+    "also": "comply"
+  },
+  {
+    "id": "LIF-5",
+    "title": "Settling In",
+    "lane": "Life transitions",
+    "pitch": "Settling In would help someone relocating for a personal life transition rebuild their local life \u2014 providers, routines, and a social circle \u2014 via a structured 90-day plan.",
+    "who": "Retirees relocating near family, widowed people downsizing closer to family, empty-nesters downsizing to a new town.",
+    "solo": "AI-driven 90-day settling-in plan: structured local research tailored to life stage, curated small-group activity matching, weekly nudges, a 'belonging,' not 'friend-count,' success metric.",
+    "cons": "Local-data quality varies by market and needs upkeep; closer to a content/curation business than a network-effects business without a matching layer.",
+    "adj": 34.2,
+    "raw": 36.9,
+    "band": "Archive",
+    "ease": 3,
+    "jack": "Strong",
+    "flywheel": "None",
+    "fit": 1,
+    "a": 3,
+    "s": 2,
+    "t": 3,
+    "m": 2,
+    "whynow": false,
+    "cluster": "life",
+    "buyer": "B2C",
+    "depth": "Shallow",
+    "ai": "Hybrid",
+    "build": "Medium",
+    "also": ""
+  },
+  {
+    "id": "LCI-4",
+    "title": "Foot-Traffic-to-Sales Conversion Analytics",
+    "lane": "Local commerce infra",
+    "pitch": "FootPulse would help single-location boutique owners know exactly what percent of today's walk-in traffic actually bought something.",
+    "who": "Owner-operators of single-store independent boutiques/gift shops/specialty retail who have no idea what percent of walk-in traffic converts to a sale.",
+    "solo": "Cheap ($50-80/mo) camera-or-thermal sensor kit plugging into common small-shop POS (Square, Shopify POS, Clover) via API to auto-compute conversion rate and send simple text alerts.",
+    "cons": "Hardware component adds support/logistics burden atypical for solo scale; crowded existing vendor field; camera privacy concerns in some jurisdictions.",
+    "adj": 31.9,
+    "raw": 32.5,
+    "band": "Archive",
+    "ease": 3,
+    "jack": "Weak",
+    "flywheel": "Weak",
+    "fit": 2,
+    "a": 2,
+    "s": 2,
+    "t": 2,
+    "m": 2,
+    "whynow": false,
+    "cluster": "glue",
+    "buyer": "B2B",
+    "depth": "Medium",
+    "ai": "Pipe",
+    "build": "Heavy",
+    "also": "intel"
+  }
+];
+const CLUSTERS = [
+  {id:"catch", label:"Catch the shortchange", why:"Reconcile a platform, payer, or network that grades its own homework.", hex:"#0f766e"},
+  {id:"life", label:"Life-admin, high-stakes moment", why:"One-time family / body / home crisis kit. Strong Jack surface.", hex:"#db2777"},
+  {id:"glue", label:"Ops glue", why:"Sync, CRM, inventory, booking, timers — keep a small operator running.", hex:"#2563eb"},
+  {id:"watch", label:"Watchdog", why:"Scan + alert + takedown. Detection is the product.", hex:"#ea580c"},
+  {id:"comply", label:"Permit / compliance log", why:"Don't get fined. Prove you followed the rule.", hex:"#7c3aed"},
+  {id:"intel", label:"Research / measurement", why:"Independent briefing, index, or referee. Closest to home turf.", hex:"#059669"}
+];
+const AXES = [
+  {id:"adj", label:"Fit-adjusted score", num:c=>c.adj, ticks:[30,40,50,60,70,80], fmt:v=>v.toFixed(0)},
+  {id:"ease", label:"GTM ease (E1 easy → E5 hard)", num:c=>c.ease, ticks:[1,2,3,4,5], fmt:v=>"E"+v, cat:true},
+  {id:"build", label:"Build thinness (1 thin → 3 heavy)", num:c=>({Thin:1,Medium:2,Heavy:3}[c.build]), ticks:[1,2,3], fmt:v=>({1:"Thin",2:"Medium",3:"Heavy"}[v]), cat:true},
+  {id:"fly", label:"Data / user residue", num:c=>({None:0,Weak:1,Moderate:2,Strong:3}[c.flywheel]), ticks:[0,1,2,3], fmt:v=>["None","Weak","Mod","Strong"][v], cat:true},
+  {id:"depth", label:"Domain depth", num:c=>({Shallow:1,Medium:2,Deep:3}[c.depth]), ticks:[1,2,3], fmt:v=>({1:"Shallow",2:"Medium",3:"Deep"}[v]), cat:true},
+  {id:"buyer", label:"Buyer", num:c=>({B2C:1,Prosumer:2,B2B:3}[c.buyer]), ticks:[1,2,3], fmt:v=>({1:"B2C",2:"Prosumer",3:"B2B"}[v]), cat:true},
+  {id:"ai", label:"AI as the product", num:c=>({Pipe:1,Hybrid:2,Product:3}[c.ai]), ticks:[1,2,3], fmt:v=>({1:"Pipe",2:"Hybrid",3:"Product"}[v]), cat:true},
+  {id:"jack", label:"Jack angle", num:c=>({Weak:1,Moderate:2,Strong:3}[c.jack]), ticks:[1,2,3], fmt:v=>({1:"Weak",2:"Mod",3:"Strong"}[v]), cat:true},
+  {id:"fit", label:"Founder fit (1–5)", num:c=>c.fit, ticks:[1,2,3,4,5], fmt:v=>String(v), cat:true}
+];
+const COLORBY = [
+  {id:"cluster", label:"Cluster"},
+  {id:"buyer", label:"B2B / B2C"},
+  {id:"depth", label:"Domain depth"},
+  {id:"ai", label:"AI role"},
+  {id:"build", label:"Build"},
+  {id:"flywheel", label:"Flywheel"},
+  {id:"jack", label:"Jack"}
+];
+const FILTERS = [
+  {key:"cluster", opts:CLUSTERS.map(c=>c.id), label:id=>CLUSTERS.find(c=>c.id===id).label.split(" /")[0].split(",")[0]},
+  {key:"buyer", opts:["B2B","B2C","Prosumer"]},
+  {key:"depth", opts:["Shallow","Medium","Deep"]},
+  {key:"ai", opts:["Pipe","Hybrid","Product"]},
+  {key:"build", opts:["Thin","Medium","Heavy"]},
+  {key:"flywheel", opts:["None","Weak","Moderate","Strong"]},
+  {key:"jack", opts:["Strong","Moderate","Weak"]},
+  {key:"ease", opts:[1,2,3,4,5], label:v=>"E"+v}
+];
+const PRESETS = [
+  {id:"payoff-gtm", label:"Payoff × GTM", x:"ease", y:"adj", color:"cluster"},
+  {id:"payoff-data", label:"Payoff × data", x:"fly", y:"adj", color:"cluster"},
+  {id:"build-gtm", label:"Build × GTM", x:"ease", y:"build", color:"cluster"},
+  {id:"depth-buyer", label:"Depth × buyer", x:"buyer", y:"depth", color:"cluster"},
+  {id:"ai-payoff", label:"AI × payoff", x:"ai", y:"adj", color:"buyer"},
+  {id:"jack-buyer", label:"Jack × buyer", x:"buyer", y:"jack", color:"cluster"}
+];
+const BUYER_COLOR = {B2B:"#0f766e", B2C:"#db2777", Prosumer:"#7c3aed"};
+const DEPTH_COLOR = {Shallow:"#94a3b8", Medium:"#2563eb", Deep:"#7c3aed"};
+const AI_COLOR = {Pipe:"#64748b", Hybrid:"#d97706", Product:"#db2777"};
+const BUILD_COLOR = {Thin:"#16a34a", Medium:"#d97706", Heavy:"#dc2626"};
+const FLY_COLOR = {None:"#cbd5e1", Weak:"#94a3b8", Moderate:"#2563eb", Strong:"#059669"};
+const JACK_COLOR = {Weak:"#cbd5e1", Moderate:"#c026d3", Strong:"#a21caf"};
+
+const state = {
+  view:"board", x:"ease", y:"adj", color:"cluster",
+  filters: Object.fromEntries(FILTERS.map(f=>[f.key, new Set(f.opts)])),
+  dual:false, open:null, preset:"payoff-gtm"
+};
+
+function clusterHex(id){ return (CLUSTERS.find(c=>c.id===id)||{}).hex || "#64748b"; }
+function colorOf(c){
+  switch(state.color){
+    case "buyer": return BUYER_COLOR[c.buyer];
+    case "depth": return DEPTH_COLOR[c.depth];
+    case "ai": return AI_COLOR[c.ai];
+    case "build": return BUILD_COLOR[c.build];
+    case "flywheel": return FLY_COLOR[c.flywheel];
+    case "jack": return JACK_COLOR[c.jack];
+    default: return clusterHex(c.cluster);
+  }
+}
+function pass(c){
+  return FILTERS.every(f => state.filters[f.key].has(c[f.key]));
+}
+function visible(){ return CARDS.filter(pass); }
+function inCluster(colId, c){
+  if (c.cluster===colId) return "primary";
+  if (state.dual && c.also===colId) return "also";
+  return null;
+}
+
+document.getElementById("legend").innerHTML = CLUSTERS.map(c=>`<span><i style="background:${c.hex}"></i>${c.label}</span>`).join("");
+
+const xSel = document.getElementById("xAxis");
+const ySel = document.getElementById("yAxis");
+const cSel = document.getElementById("colorBy");
+AXES.forEach(a=>{ xSel.append(new Option(a.label, a.id)); ySel.append(new Option(a.label, a.id)); });
+COLORBY.forEach(a=> cSel.append(new Option(a.label, a.id)));
+xSel.value=state.x; ySel.value=state.y; cSel.value=state.color;
+xSel.onchange=()=>{ state.x=xSel.value; state.preset=null; render(); };
+ySel.onchange=()=>{ state.y=ySel.value; state.preset=null; render(); };
+cSel.onchange=()=>{ state.color=cSel.value; state.preset=null; render(); };
+
+document.getElementById("presets").innerHTML = PRESETS.map(p=>`<button data-p="${p.id}">${p.label}</button>`).join("");
+document.getElementById("presets").onclick = e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const p=PRESETS.find(x=>x.id===b.dataset.p); if(!p) return;
+  state.preset=p.id; state.x=p.x; state.y=p.y; state.color=p.color;
+  xSel.value=p.x; ySel.value=p.y; cSel.value=p.color;
+  render();
+};
+
+document.getElementById("view").onclick = e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  state.view=b.dataset.v; render();
+};
+document.getElementById("showDual").onchange = e=>{ state.dual=e.target.checked; render(); };
+
+const filtersEl = document.getElementById("filters");
+FILTERS.forEach(f=>{
+  const wrap=document.createElement("div");
+  wrap.style.cssText="display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-right:10px";
+  f.opts.forEach(opt=>{
+    const b=document.createElement("button");
+    b.className="chip on";
+    b.dataset.key=f.key; b.dataset.opt=String(opt);
+    const lab = f.label ? f.label(opt) : String(opt);
+    b.innerHTML = `${lab}<span class="n"></span>`;
+    if (f.key==="cluster") b.style.color = clusterHex(opt);
+    b.onclick=()=>{
+      const set=state.filters[f.key];
+      const val = f.key==="ease" ? Number(opt) : opt;
+      if (set.has(val) && set.size===1) { f.opts.forEach(o=>set.add(o)); }
+      else if (set.size===f.opts.length) { set.clear(); set.add(val); }
+      else if (set.has(val)) set.delete(val);
+      else set.add(val);
+      if (!set.size) f.opts.forEach(o=>set.add(o));
+      render();
+    };
+    wrap.appendChild(b);
+  });
+  filtersEl.appendChild(wrap);
+});
+
+function openCard(id){
+  state.open=id;
+  const c=CARDS.find(x=>x.id===id);
+  const d=document.getElementById("detail");
+  const cl=CLUSTERS.find(x=>x.id===c.cluster);
+  d.className="detail on";
+  d.innerHTML = `
+    <button class="close" onclick="state.open=null;document.getElementById('detail').className='detail';render()">Close</button>
+    <div class="id" style="font-size:11px;font-weight:750;color:#6b7486">${c.id} · ${c.lane} · ${c.band}</div>
+    <h2>${c.title}</h2>
+    <div class="tags">
+      <span class="tag" style="background:${cl.hex}22;color:${cl.hex}">${cl.label}</span>
+      ${c.also?`<span class="tag also">also ${CLUSTERS.find(x=>x.id===c.also).label}</span>`:""}
+      <span class="tag">${c.buyer}</span>
+      <span class="tag">${c.depth} domain</span>
+      <span class="tag">AI: ${c.ai}</span>
+      <span class="tag">Build ${c.build}</span>
+      <span class="tag">E${c.ease} GTM</span>
+      <span class="tag">Flywheel ${c.flywheel}</span>
+      <span class="tag">Jack ${c.jack}</span>
+      <span class="tag">Fit ${c.fit}/5</span>
+      ${c.whynow?'<span class="tag">Why now</span>':''}
+    </div>
+    <div class="pitchbox">${c.pitch}</div>
+    <h4>Who hurts</h4><p>${c.who}</p>
+    <h4>Solo shape</h4><p>${c.solo}</p>
+    <h4>Constraints</h4><p>${c.cons}</p>
+    <h4>Scores</h4>
+    <p>Fit-adj <b>${c.adj}</b> · Raw <b>${c.raw}</b> · AI-fit ${c.a} · Solo-scale ${c.s} · Speed ${c.t} · Moat ${c.m}</p>
+    <p style="margin-top:10px;font-size:12px;color:#6b7486">Pipe = rules/ETL/report (AI is how you build). Product = AI is what they buy. Hybrid = both.</p>
+  `;
+  render();
+}
+
+function cardEl(c, ghost){
+  const el=document.createElement("div");
+  el.className="card"+(state.open===c.id?" on":"");
+  el.style.borderLeft = `3px solid ${clusterHex(c.cluster)}`;
+  if (ghost) el.style.opacity=".62";
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;gap:8px">
+      <span class="id">${c.id}${c.whynow?" · now":""}</span>
+      <span class="score">${c.adj}</span>
+    </div>
+    <div class="t">${c.title}</div>
+    <div class="p">${c.pitch}</div>
+    <div class="tags">
+      <span class="tag">${c.buyer}</span>
+      <span class="tag">${c.depth}</span>
+      <span class="tag">${c.ai}</span>
+      <span class="tag">${c.build}</span>
+      <span class="tag">E${c.ease}</span>
+      ${c.flywheel!=="None"?`<span class="tag">📊 ${c.flywheel}</span>`:""}
+      ${c.jack==="Strong"?`<span class="tag">Jack</span>`:""}
+      ${ghost?`<span class="tag also">overlap</span>`:""}
+    </div>`;
+  el.onclick=()=>openCard(c.id);
+  return el;
+}
+
+function renderBoard(){
+  const board=document.getElementById("board");
+  board.innerHTML="";
+  CLUSTERS.forEach(col=>{
+    const box=document.createElement("div");
+    box.className="col";
+    const items = CARDS.filter(c=>pass(c) && inCluster(col.id,c)).sort((a,b)=>b.adj-a.adj);
+    const primary = items.filter(c=>c.cluster===col.id).length;
+    box.innerHTML = `<h3 style="color:${col.hex}">${col.label}<span class="n">${primary}${items.length>primary?" +"+ (items.length-primary):""}</span></h3>
+      <div class="why">${col.why}</div>`;
+    items.forEach(c=> box.appendChild(cardEl(c, c.cluster!==col.id)));
+    board.appendChild(box);
+  });
+}
+
+function lerp(a,b,t){ return a+(b-a)*t; }
+function renderScatter(){
+  const svg=document.getElementById("plot");
+  const W=svg.clientWidth||900, H=svg.clientHeight||560;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const xa=AXES.find(a=>a.id===state.x), ya=AXES.find(a=>a.id===state.y);
+  const padL=58, padR=18, padT=18, padB=48;
+  const pts=visible();
+  const xs=pts.map(c=>xa.num(c)), ys=pts.map(c=>ya.num(c));
+  const xMin=Math.min(...xa.ticks), xMax=Math.max(...xa.ticks);
+  const yMin=Math.min(...ya.ticks), yMax=Math.max(...ya.ticks);
+  const xOf=v=> lerp(padL, W-padR, (v-xMin)/((xMax-xMin)||1));
+  const yOf=v=> lerp(H-padB, padT, (v-yMin)/((yMax-yMin)||1));
+  // jitter categorical collisions
+  const buckets={};
+  pts.forEach(c=>{
+    const key=xa.num(c)+"|"+ya.num(c);
+    (buckets[key]||(buckets[key]=[])).push(c);
+  });
+  const placed=[];
+  Object.values(buckets).forEach(arr=>{
+    arr.forEach((c,i)=>{
+      const n=arr.length;
+      const jx = (n>1 ? ((i-(n-1)/2)*7) : 0);
+      const jy = (n>1 ? ((i%2?1:-1)*Math.floor(i/2)*5) : 0);
+      placed.push({c, x:xOf(xa.num(c))+jx, y:yOf(ya.num(c))+jy});
+    });
+  });
+  let g=`<rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/>`;
+  xa.ticks.forEach(t=>{
+    const x=xOf(t);
+    g+=`<line x1="${x}" y1="${padT}" x2="${x}" y2="${H-padB}" stroke="#eef1f6"/>`;
+    g+=`<text class="tick" x="${x}" y="${H-padB+16}" text-anchor="middle">${xa.fmt(t)}</text>`;
+  });
+  ya.ticks.forEach(t=>{
+    const y=yOf(t);
+    g+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#eef1f6"/>`;
+    g+=`<text class="tick" x="${padL-8}" y="${y+3}" text-anchor="end">${ya.fmt(t)}</text>`;
+  });
+  g+=`<text class="axis" x="${W/2}" y="${H-8}" text-anchor="middle">${xa.label}</text>`;
+  g+=`<text class="axis" x="14" y="${H/2}" text-anchor="middle" transform="rotate(-90 14 ${H/2})">${ya.label}</text>`;
+  placed.forEach(({c,x,y})=>{
+    const r = state.open===c.id ? 8 : 6;
+    g+=`<circle class="dot" data-id="${c.id}" cx="${x}" cy="${y}" r="${r}" fill="${colorOf(c)}" opacity=".9"/>`;
+  });
+  svg.innerHTML=g;
+  const tip=document.getElementById("tip");
+  svg.querySelectorAll(".dot").forEach(el=>{
+    el.onmouseenter=ev=>{
+      const c=CARDS.find(x=>x.id===el.dataset.id);
+      tip.style.display="block";
+      tip.innerHTML=`<b>${c.id} · ${c.title}</b><br>${c.adj} · E${c.ease} · ${c.buyer} · ${c.ai} · ${c.build}`;
+    };
+    el.onmousemove=ev=>{ tip.style.left=(ev.clientX+12)+"px"; tip.style.top=(ev.clientY+12)+"px"; };
+    el.onmouseleave=()=>{ tip.style.display="none"; };
+    el.onclick=()=>openCard(el.dataset.id);
+  });
+}
+
+function render(){
+  const vis=visible();
+  document.getElementById("count").textContent = `${vis.length} / 56 showing`;
+  document.querySelectorAll("#view button").forEach(b=>b.classList.toggle("on", b.dataset.v===state.view));
+  document.querySelectorAll("#presets button").forEach(b=>b.classList.toggle("on", b.dataset.p===state.preset));
+  FILTERS.forEach(f=>{
+    f.opts.forEach(opt=>{
+      const val = f.key==="ease" ? Number(opt) : opt;
+      const b=[...document.querySelectorAll(`#filters .chip`)].find(x=>x.dataset.key===f.key && x.dataset.opt===String(opt));
+      if(!b) return;
+      b.classList.toggle("on", state.filters[f.key].has(val));
+      const n = CARDS.filter(c=>c[f.key]===val).length;
+      b.querySelector(".n").textContent=n;
+    });
+  });
+  document.getElementById("board").style.display = state.view==="board" ? "grid" : "none";
+  document.getElementById("scatter").style.display = state.view==="scatter" ? "block" : "none";
+  document.querySelectorAll(".sel").forEach(el=> el.style.display = state.view==="scatter" ? "inline-flex" : "none");
+  document.getElementById("presets").style.display = state.view==="scatter" ? "inline-flex" : "none";
+  if (state.view==="board") renderBoard();
+  else renderScatter();
+}
+window.addEventListener("resize", ()=>{ if(state.view==="scatter") renderScatter(); });
+render();
+</script>
+</body>
+</html>
