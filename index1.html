@@ -1,347 +1,410 @@
 <!DOCTYPE html>
-<!--
-  Ian's Job Search Dashboard — recreated in Cursor from the Cowork "ian-job-search-dashboard"
-  artifact (see context/cowork/Cowork_Export_Brief_for_Cursor.md §4.1). Fed by the
-  job-search-daily-scan and job-search-weekly-sweep skills; patched by job-search-dashboard-sync.
-
-  Data model (read this before editing JOBS or SYNCED_STATE by hand):
-  - JOBS: array of job objects, one per tracker row that reached the dashboard (A-tier only,
-    unless showB is toggled on in the UI). Fields mirror the "Job Tracker" sheet in
-    data/Job_Search_Tracker.xlsx: id, dateFound, industry, company, role, level, location,
-    comp, source, link, warmSignal, fitNotes, tier, status, notes.
-  - SYNCED_STATE: { [job.id]: { reaction: "love"|"interested"|"pass"|null, archived: bool } }
-    the last-known reaction/archive state baked in at generation time. The UI also mirrors
-    live changes into localStorage so a reaction survives a refresh even before the next sync;
-    use "Export sync JSON" to hand new reactions back to the dashboard-sync skill.
-  - No historical rows are seeded here — the old Cowork dashboard's data lived only on Ian's
-    Mac and wasn't in this repo's read scope. Starts empty pending the first live scan.
--->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ian's Job Search Dashboard</title>
 <style>
-:root { color-scheme: light;
-  --bg:#f8f9fb; --card:#ffffff; --ink:#1a2233; --muted:#6b7486; --line:#e6e9ef;
-  --a-tier:#16a34a; --b-tier:#d97706; --c-tier:#9ca3af;
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.dash { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f5f7; color: #1a1a1a; padding: 20px; }
+.dash-header { margin-bottom: 16px; }
+.dash-header h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+.dash-header p { font-size: 13px; color: #666; margin: 0; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0; }
+.filter-btn { border: 1px solid #d0d3d9; background: #fff; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: #333; }
+.filter-btn.active { background: #1F3864; color: #fff; border-color: #1F3864; }
+.toggle-btn { border: 1px solid #d0d3d9; background: #fff; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: #333; }
+.toggle-btn.on { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
+.divider { width: 1px; height: 22px; background: #d9dce1; margin: 0 2px; }
+.filter-select { border: 1px solid #d0d3d9; background: #fff; border-radius: 6px; padding: 6px 10px; font-size: 13px; color: #333; font-family: inherit; }
+.filter-select.active { border-color: #1F3864; color: #1F3864; font-weight: 600; }
+.updated-note { font-size: 11px; color: #999; margin-top: 2px; }
+.spacer { flex: 1; }
+.copy-btn { border: 1px solid #1F3864; background: #1F3864; color: #fff; border-radius: 6px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
+.copy-btn:hover { background: #16294a; }
+.summary-box { display: none; margin: 10px 0; background: #fff; border: 1px solid #d0d3d9; border-radius: 8px; padding: 12px; }
+.summary-box.show { display: block; }
+.summary-box textarea { width: 100%; height: 140px; font-family: ui-monospace, monospace; font-size: 12px; border: 1px solid #e0e2e6; border-radius: 6px; padding: 8px; resize: vertical; }
+.summary-box p { font-size: 12px; color: #666; margin: 6px 0 0; }
+.empty-note { font-size: 13px; color: #888; font-style: italic; padding: 20px 4px; }
+.card-list { display: flex; flex-direction: column; gap: 10px; }
+.card { background: #fff; border: 1px solid #e0e2e6; border-radius: 8px; padding: 14px 16px; }
+.card.archived { opacity: 0.65; }
+.card-top { cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.card-title { font-size: 14px; font-weight: 600; margin: 0 0 2px; }
+.card-company { font-size: 13px; color: #444; margin: 0; }
+.card-linkedin-note { font-size: 11px; color: #999; margin: 2px 0 0; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eef0f4; color: #444; white-space: nowrap; }
+.badge.industry { background: #E6F1FB; color: #0C447C; }
+.badge.status-New { background: #EAF3DE; color: #27500A; }
+.badge.status-Closed { background: #FCEBEB; color: #791F1F; }
+.badge.status-Monitoring { background: #FAEEDA; color: #633806; }
+.badge.status-Applied { background: #EEEDFE; color: #3C3489; }
+.badge.unreviewed { background: #1F3864; color: #fff; font-weight: 600; }
+.badge.rejected-badge { background: #FCEBEB; color: #791F1F; }
+.badge.archived-badge { background: #eef0f4; color: #666; }
+.badge.tier-b { background: #F0E9FA; color: #4B2E83; }
+.card-meta { text-align: right; font-size: 12px; color: #666; white-space: nowrap; }
+.card-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee; }
+.card-detail.open { display: block; }
+.card-detail h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: #888; margin: 10px 0 4px; }
+.card-detail p, .card-detail li { font-size: 13px; line-height: 1.55; color: #222; }
+.card-detail ul { margin: 4px 0; padding-left: 18px; }
+.caution-callout { background: #FCEBEB; border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #791F1F; margin-top: 6px; }
+.open-link { display: inline-block; margin-top: 8px; margin-right: 8px; font-size: 13px; color: #fff; background: #1F3864; padding: 7px 14px; border-radius: 6px; text-decoration: none; }
+.clear-btn { display: inline-block; margin-top: 8px; font-size: 13px; color: #1F3864; background: #fff; border: 1px solid #1F3864; padding: 6px 13px; border-radius: 6px; cursor: pointer; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.controls label { font-size: 11px; color: #666; display: block; margin-bottom: 3px; }
+.controls select, .controls textarea { width: 100%; font-size: 13px; padding: 6px 8px; border: 1px solid #d0d3d9; border-radius: 6px; font-family: inherit; }
+.controls .full { grid-column: 1 / -1; }
+.controls textarea { height: 50px; resize: vertical; }
+.no-desc { font-size: 13px; color: #888; font-style: italic; }
+
+.sync-note { font-size: 11px; color: #999; margin: 0 0 12px; }
+@media (max-width: 480px) {
+  .controls { grid-template-columns: 1fr; }
+  .card-top { flex-direction: column; }
+  .card-meta { text-align: left; }
 }
-* { box-sizing:border-box; margin:0; padding:0; }
-body { background:var(--bg); color:var(--ink); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; padding:20px 22px 60px; }
-h1 { font-size:19px; font-weight:700; letter-spacing:-.2px; }
-.sub { color:var(--muted); font-size:12.5px; margin-top:2px; }
-header { margin-bottom:14px; }
-.controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:14px 0 6px; }
-.seg { display:inline-flex; background:#eceff4; border-radius:9px; padding:3px; }
-.seg button { border:0; background:transparent; padding:6px 13px; border-radius:7px; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .15s; }
-.seg button.on { background:#fff; color:var(--ink); box-shadow:0 1px 3px rgba(20,30,60,.14); }
-select { border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; background:#fff; color:var(--ink); }
-input[type=text] { border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; min-width:180px; }
-.chip { border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 12px; font-size:12.5px; font-weight:600; color:var(--muted); cursor:pointer; }
-.chip.on { color:var(--ink); border-color:currentColor; box-shadow:inset 0 0 0 1px currentColor; }
-.spacer { flex:1; }
-.count { font-size:12px; color:var(--muted); }
-.btnrow { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
-.bulkbtn { border:1px solid #bfdbfe; background:#eff6ff; color:#1d4ed8; border-radius:999px; padding:6px 13px; font-size:12.5px; font-weight:600; cursor:pointer; }
-.bulkbtn:hover { background:#dbeafe; }
-.empty { background:var(--card); border:1px dashed var(--line); border-radius:12px; padding:40px 24px; text-align:center; color:var(--muted); }
-.empty b { color:var(--ink); }
-.row { background:var(--card); border:1px solid var(--line); border-radius:11px; margin-bottom:8px; overflow:hidden; transition:box-shadow .15s; }
-.row:hover { box-shadow:0 2px 10px rgba(20,30,60,.08); }
-.row.archived-row { opacity:.5; }
-.rowhead { display:grid; grid-template-columns:60px 1fr 140px 90px; gap:12px; align-items:center; padding:12px 14px; cursor:pointer; }
-.tier-badge { font-size:10.5px; font-weight:750; letter-spacing:.4px; padding:4px 8px; border-radius:6px; text-transform:uppercase; text-align:center; }
-.tier-a { background:#dcfce7; color:var(--a-tier); }
-.tier-b { background:#fef3c7; color:var(--b-tier); }
-.tname .t { font-weight:650; font-size:14px; }
-.tname .co { font-size:12.5px; color:#4b5568; margin-top:1px; }
-.tname .meta { font-size:11.5px; color:var(--muted); margin-top:3px; }
-.status-badge { font-size:11px; font-weight:650; color:var(--muted); text-align:center; }
-.reaction-cell { display:flex; gap:4px; justify-content:flex-end; }
-.reaction-cell button { border:1px solid var(--line); background:#fff; border-radius:7px; padding:5px 8px; font-size:13px; cursor:pointer; line-height:1; }
-.reaction-cell button.on { border-color:currentColor; }
-.reaction-cell button.love.on { background:#fee2e2; color:#dc2626; }
-.reaction-cell button.interested.on { background:#dbeafe; color:#1d4ed8; }
-.reaction-cell button.pass.on { background:#f1f2f5; color:#6b7280; }
-.detail { display:none; border-top:1px solid var(--line); padding:14px 18px; background:#fcfdff; font-size:13px; }
-.row.open .detail { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; }
-.detail h4 { font-size:10.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin:10px 0 3px; }
-.detail h4:first-child { margin-top:0; }
-.detail a { color:#2563eb; text-decoration:none; }
-.detail a:hover { text-decoration:underline; }
-.archivebtn { border:0; background:none; cursor:pointer; font-size:11.5px; color:#c9cfd9; }
-.archivebtn:hover { color:#6b7486; }
-.archivebtn.on { color:#374151; }
-@media (max-width:760px){ .rowhead{grid-template-columns:44px 1fr 76px;} .status-badge{display:none;} .row.open .detail{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
-<header>
-  <h1>Ian's Job Search Dashboard</h1>
-  <div class="sub" id="snapshot">Snapshot generated 2026-08-11 · 3 A-tier roles · A-tier shown by default · click any row for full detail &amp; link</div>
-</header>
-
-<div class="controls">
-  <div class="seg" id="tierseg">
-    <button data-t="a" class="on">A-tier</button>
-    <button data-t="ab">A + B-tier</button>
+<div class="dash">
+  <div class="dash-header">
+    <h1>Ian's job search dashboard</h1>
+    <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on the agent's side, not just untouched by you.</p>
   </div>
-  <select id="statusfilter">
-    <option value="">All statuses</option>
-    <option value="New">New</option>
-    <option value="Applied">Applied</option>
-    <option value="Interviewing">Interviewing</option>
-    <option value="Rejected">Rejected</option>
-    <option value="Closed">Closed</option>
-  </select>
-  <select id="industryfilter">
-    <option value="">All industries</option>
-  </select>
-  <input type="text" id="search" placeholder="Search company / role...">
-  <button class="chip" id="showarchived">🗄 Show archived</button>
-  <div class="spacer"></div>
-  <div class="count" id="count"></div>
+  <p class="sync-note" id="syncNote">Snapshot generated August 11, 2026 by the Cursor-managed job-search-daily-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.</p>
+  <div class="toolbar" id="filterBar"></div>
+  <div class="summary-box" id="summaryBox">
+    <textarea id="summaryText" readonly></textarea>
+    <p>Paste this into chat with Cursor to sync the xlsx tracker and taste-profile notes. Items stay in "Unreviewed" until the agent's next update confirms the sync - copying alone doesn't clear them.</p>
+  </div>
+  <div class="card-list" id="cardList"></div>
 </div>
-
-<div class="btnrow">
-  <button class="bulkbtn" id="exportstate">⬇ Export sync JSON (reactions + archives)</button>
-  <button class="bulkbtn" id="importstate">⬆ Import sync JSON</button>
-  <input type="file" id="importfile" accept="application/json" style="display:none">
-</div>
-
-<div id="list"></div>
-<div id="emptystate" class="empty" style="display:none;">
-  <p><b>No jobs yet.</b></p>
-  <p style="margin-top:6px;">Run the <b>job-search-daily-scan</b> or <b>job-search-weekly-sweep</b> skill to populate this dashboard from <code>data/Job_Search_Tracker.xlsx</code>.</p>
-</div>
-
 <script>
-// ---- DATA (populated by job-search-dashboard-sync) ----
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-11T00:00:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-daily-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
+
+
 const JOBS = [
-  {
-    id: "openai-head-of-growth-gsis-2026-08-11",
-    dateFound: "2026-08-11",
-    industry: "AI",
-    company: "OpenAI",
-    role: "Head of Growth GSIs – Cognizant, Infosys & Wipro",
-    level: "Head (Director/VP-equivalent)",
-    location: "San Francisco, CA",
-    comp: "$378K–$500K + equity",
-    source: "OpenAI careers (openai.com), cross-verified via remoterocketship.com mirror",
-    link: "https://openai.com/careers/head-of-growth-gsis-cognizant-infosys-and-wipro-san-francisco/",
-    warmSignal: "none identified this run",
-    fitNotes: "Partnerships/GTM ownership for OpenAI's GSI relationships (Cognizant, Infosys, Wipro) — strategy + partnership + revenue-impact ownership, executive-level cross-functional scope (Sales, Solutions, Product, Legal, Security). AI vertical direct match. Comp ceiling ($500K base) plus equity puts this within striking distance of the $500-600K target before equity is even counted.",
-    status: "New",
-    tier: "A",
-    notes: "openai.com returned a Cloudflare bot-block on direct fetch (timed out twice); verified via two independent live mirrors (remoterocketship.com listing + the crawled openai.com snippet returned by WebSearch) showing matching title, scope, and comp."
-  },
-  {
-    id: "alphasense-vp-partnerships-2026-08-11",
-    dateFound: "2026-08-11",
-    industry: "Market intelligence/research",
-    company: "AlphaSense",
-    role: "Vice President, Partnerships",
-    level: "VP",
-    location: "United States (remote-eligible)",
-    comp: "$230K–$280K base + bonus + equity",
-    source: "LinkedIn (specific posting, loads without login)",
-    link: "https://www.linkedin.com/jobs/view/vice-president-partnerships-at-alphasense-4359462039",
-    warmSignal: "none identified this run",
-    fitNotes: "Direct market-intelligence vertical match (AlphaSense, occupational analog to Sensor Tower). \"Principal architect\" of AlphaSense's partnership strategy — full lifecycle ownership, executive relationships, GTM — squarely the strategy+partnerships hybrid scope Ian targets.",
-    status: "New",
-    tier: "A",
-    notes: "Base comp alone is below the $500-600K target; credible path depends on bonus + equity at a high-growth, well-funded company (AlphaSense/Tegus). Softest part of the case."
-  },
-  {
-    id: "block-square-head-of-growth-partnerships-2026-08-11",
-    dateFound: "2026-08-11",
-    industry: "Fintech/payments (watch-signal)",
-    company: "Block (Square)",
-    role: "Head of Growth Partnerships, Square",
-    level: "Head (Director/VP-equivalent, team lead)",
-    location: "Remote (Bay Area, CA anchor)",
-    comp: "$239,600–$359,400 base (zone-based)",
-    source: "Block careers (block.xyz)",
-    link: "https://block.xyz/careers/jobs/5217611008",
-    warmSignal: "none identified this run",
-    fitNotes: "Fintech/payments watch-signal category. Strategy + partnerships + commercial ownership hybrid (deal structuring, executive relationships, team leadership, GTM) — strong scope match.",
-    status: "New",
-    tier: "A",
-    notes: "Base comp tops at $359K; path to $500-600K needs bonus/equity at a public company (NYSE: XYZ), plausible but not guaranteed."
-  }
+{id:"openai-head-growth-gsis-cognizant-infosys-wipro", industry:"AI", company:"OpenAI", role:"Head of Growth GSIs \u2013 Cognizant, Infosys & Wipro", level:"Head (Director/VP-equivalent)", location:"San Francisco, CA", comp:"$378K\u2013$500K + equity", link:"https://openai.com/careers/head-of-growth-gsis-cognizant-infosys-and-wipro-san-francisco/", source:"OpenAI careers (openai.com), cross-verified via remoterocketship.com mirror", status:"New", dateFound:"2026-08-11", linkedinNote:null, fitNotes:"Partnerships/GTM ownership for OpenAI's GSI relationships (Cognizant, Infosys, Wipro) - strategy + partnership + revenue-impact ownership, executive-level cross-functional scope (Sales, Solutions, Product, Legal, Security). AI vertical direct match. Comp ceiling ($500K base) plus equity puts this within striking distance of the $500-600K target before equity is even counted. openai.com itself returned a Cloudflare bot-block on direct fetch (timed out twice); verified via two independent live mirrors (remoterocketship.com listing + the crawled openai.com snippet returned by web search) showing matching title, scope, and \"$378K \u2013 $500K + Offers Equity.\"", tier:"A", description:"Own and grow OpenAI's strategic partnerships with International GSIs, with accountability for partnership health, adoption, revenue impact, and long-term growth. Define the partnership strategy and priorities for GSIs, including joint business plans, goals, execution roadmaps, and success metrics. Establish and run a durable operating model, including governance, executive alignment, escalation paths, business reviews, and execution cadence. Build and drive joint GTM plans with Sales, Solutions, and Marketing teams. Requires 15+ years of experience in enterprise technology, cloud, AI, SaaS, consulting, business development, partnerships, or ecosystem leadership."},
+{id:"alphasense-vp-partnerships", industry:"AI / Market Intelligence", company:"AlphaSense", role:"Vice President, Partnerships", level:"VP", location:"United States (remote-eligible)", comp:"$230K\u2013$280K base + bonus + equity", link:"https://www.linkedin.com/jobs/view/vice-president-partnerships-at-alphasense-4359462039", source:"LinkedIn (specific posting, loads without login)", status:"New", dateFound:"2026-08-11", linkedinNote:null, fitNotes:"Direct market-intelligence vertical match (AlphaSense, occupational analog to Sensor Tower). \"Principal architect\" of AlphaSense's partnership strategy - full lifecycle ownership, executive relationships, GTM - squarely the strategy+partnerships hybrid scope Ian targets. Base comp alone is below the $500-600K target; credible path depends on bonus + equity at a high-growth, well-funded company (AlphaSense/Tegus). Softest part of the case is that base-only comp doesn't clear the target on its own.", tier:"A", description:"Serve as the principal architect of AlphaSense's partnership strategy, with an initial focus on establishing deep, trusted alliances with key strategic partners. Responsible for the end-to-end partnership lifecycle, fostering executive relationships and driving joint go-to-market execution. 10-15+ years of experience in strategic alliances or business development within high-growth B2B SaaS or enterprise software. Base Compensation Range $230,000-$280,000 USD; may also be offered a performance-based bonus, equity, and a generous benefits program."},
+{id:"block-square-head-growth-partnerships", industry:"Fintech/Payments (watch-signal)", company:"Block (Square)", role:"Head of Growth Partnerships, Square", level:"Head (Director/VP-equivalent, team lead)", location:"Remote (Bay Area, CA anchor)", comp:"$239,600\u2013$359,400 base (zone-based)", link:"https://block.xyz/careers/jobs/5217611008", source:"Block careers (block.xyz)", status:"New", dateFound:"2026-08-11", linkedinNote:null, fitNotes:"Fintech/payments watch-signal category. Strategy + partnerships + commercial ownership hybrid (deal structuring, executive relationships, team leadership, GTM) - strong scope match. Base comp tops at $359K; path to $500-600K needs bonus/equity at a public company (NYSE: XYZ), plausible but not guaranteed.", tier:"A", description:"Square is seeking a Growth Partnerships Lead to design, negotiate, and scale global partnerships that fuel seller acquisition and business growth - technology platforms, service providers, marketplaces, referral networks, SaaS companies. Set the vision for how Square partners expand reach, lead a team of partnership managers, structure complex multi-party commercial agreements (revenue share, referral fees, co-investment), and lead executive-level negotiations. 10+ years in business development, strategic partnerships, or growth leadership, with 7+ years in senior/team lead roles. Zone A-D: $239,600-$359,400 USD."},
+{id:"openai-head-scaled-ads-solutions", industry:"AI", company:"OpenAI", role:"Head of Scaled, Ads Solutions", level:"Head (Director, per LinkedIn), reports to VP Global Ads Solutions", location:"San Francisco, CA", comp:"$302K\u2013$385K + equity", link:"https://www.linkedin.com/jobs/view/head-of-scaled-ads-solutions-at-openai-4433285976", source:"LinkedIn (specific posting, loads without login)", status:"New", dateFound:"2026-08-11", linkedinNote:null, fitNotes:"AI vertical, right level/comp, but scope reads as scaled/channel sales leadership (reseller & BPO sales organization, revenue targets, RFPs) more than the strategy+partnerships+data hybrid Ian targets - logged as B on that soft doubt, not a hard kill (no personal quota, it's org leadership not IC sales).", tier:"B", description:"Build the strategy and operating system for serving businesses at global scale. Set the scaled ads sales strategy across direct, reseller and BPO channels; own scaled sales (including resellers) revenue goals and channel performance; design and run reseller operations including market/vendor selection, RFPs, commercial negotiations, onboarding, enablement, governance. 15+ years of experience in digital advertising, media, technology, or related commercial leadership roles; 10+ years leading high-performing scaled sales, account management, or revenue teams. Base pay range $302,000-$385,000/yr."},
+{id:"kroger-8451-director-new-partnerships", industry:"Retail Media", company:"84.51\u00b0 (Kroger Precision Marketing)", role:"Director, New Partnerships (T3028)", level:"Director", location:"Cincinnati, OH", comp:"$116K\u2013$273,750 + variable comp", link:"https://www.builtinnyc.com/job/director-new-partnerships-t3028/4643860", source:"Built In NYC / Purpose Jobs (mirrors of 84.51's own posting)", status:"New", dateFound:"2026-08-11", linkedinNote:null, fitNotes:"Retail media vertical match (84.51 powers Kroger Precision Marketing) and a real strategy+BD hybrid scope (sourcing/negotiating strategic alliances that monetize Kroger's data/IP). Soft doubts: Director not VP, and the range's own top ($273,750) is thin relative to the $500-600K target with no equity mentioned (Kroger subsidiary, not a pure-tech equity story).", tier:"B", description:"Monetizing our assets through partnerships is a key part of our growth strategy. As Director of Strategic Partnerships, you will develop strategic partnerships and business development relationships to drive growth, in collaboration with business leaders and cross-functional teams throughout Kroger - initiating relationships with potential partners, assessing business opportunities, and driving the agreements, integrations, and executions necessary to maximize partnership value. Identify, evaluate, negotiate, and manage key strategic partnerships that leverage Kroger assets (data, IP, science, footprint, capability) to unlock new asset-light, margin-rich business income streams. Pay range $116,000-$273,750 USD, plus eligible for variable compensation."},
 ];
 
-const SYNCED_STATE = {};
+// SYNCED_STATE = what the agent has already processed and folded into the tracker/taste-profile.
+// A card only leaves "Unreviewed" once its live state matches this - i.e. after the agent's next update,
+// not the instant you touch a dropdown. All 5 below were logged into data/Job_Search_Tracker.xlsx on
+// 2026-08-11 (first live run) with no reaction from Ian yet, so they're marked synced-but-unreacted.
+const SYNCED_STATE = {
+"openai-head-growth-gsis-cognizant-infosys-wipro": {status:"New"},
+"alphasense-vp-partnerships": {status:"New"},
+"block-square-head-growth-partnerships": {status:"New"},
+"openai-head-scaled-ads-solutions": {status:"New"},
+"kroger-8451-director-new-partnerships": {status:"New"},
+};
 
-// ---- runtime state ----
-const LS_KEY = "jobSearchDashboardState_v1";
-function loadLocalState() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { return {}; }
+const STATE_KEY = "ian_job_dashboard_state_v1_cursor";
+function loadState() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STATE_KEY)) || {}; } catch(e) { saved = {}; }
+  const merged = {};
+  Object.keys(SYNCED_STATE).forEach(k => merged[k] = Object.assign({}, SYNCED_STATE[k]));
+  Object.keys(saved).forEach(k => merged[k] = Object.assign({}, merged[k]||{}, saved[k]));
+  return merged;
 }
-function saveLocalState(s) { localStorage.setItem(LS_KEY, JSON.stringify(s)); }
-let state = Object.assign({}, SYNCED_STATE, loadLocalState());
-
-let tierMode = "a";
-let statusFilter = "";
-let industryFilter = "";
-let searchText = "";
-let showArchived = false;
+function saveState(s) { localStorage.setItem(STATE_KEY, JSON.stringify(s)); }
+let state = loadState();
 let openId = null;
+let hideArchived = true;
+let showBTier = false;
+let unreviewedOnly = false;
+let reactionFilter = "All";
+let statusFilter = "All";
+let sortBy = "updatedDesc";
 
-function jobState(id) { return state[id] || { reaction: null, archived: false }; }
-function setJobState(id, patch) {
-  state[id] = Object.assign({}, jobState(id), patch);
-  saveLocalState(state);
-  render();
+const REACTIONS = ["Love it","Interested","Maybe","Not for me","Wrong level","Wrong comp"];
+const STATUSES = ["New","Reviewing","Pursuing (network)","Applied","Interviewing","Closed","Monitoring","Applied (past)"];
+const industries = ["All", ...Array.from(new Set(JOBS.map(j => j.industry)))];
+let activeFilter = "All";
+
+function fmtDate(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return d.toLocaleString(undefined, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
 }
 
-function populateIndustryFilter() {
-  const sel = document.getElementById("industryfilter");
-  const industries = Array.from(new Set(JOBS.map(j => j.industry).filter(Boolean))).sort();
-  sel.innerHTML = '<option value="">All industries</option>' +
-    industries.map(i => `<option value="${escapeAttr(i)}">${escapeHtml(i)}</option>`).join("");
+function isArchived(job) {
+  const st = state[job.id] || {};
+  return st.reaction === "Not for me" || st.archived === true;
+}
+function norm(s) {
+  return (s||"")
+    .replace(/[‘’ʼ`´]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/\s+/g," ")
+    .trim();
+}
+function isUnreviewed(job) {
+  const st = state[job.id] || {};
+  const synced = SYNCED_STATE[job.id] || {};
+  const hasSyncedEntry = Object.prototype.hasOwnProperty.call(SYNCED_STATE, job.id);
+  if (!hasSyncedEntry && !st.reaction) return true;
+  if (norm(st.reaction) !== norm(synced.reaction)) return true;
+  if (norm(st.notes) !== norm(synced.notes)) return true;
+  if (norm(st.status||job.status) !== norm(synced.status||job.status)) return true;
+  return false;
+}
+function archivedCount() { return JOBS.filter(isArchived).length; }
+function unreviewedCount() { return JOBS.filter(isUnreviewed).length; }
+function bTierCount() { return JOBS.filter(j => (j.tier||"A") === "B").length; }
+
+function renderFilters() {
+  const bar = document.getElementById("filterBar");
+  bar.innerHTML = "";
+  const industrySelect = document.createElement("select");
+  industrySelect.className = "filter-select" + (activeFilter !== "All" ? " active" : "");
+  industrySelect.innerHTML = industries.map(ind => {
+    const count = ind === "All" ? JOBS.length : JOBS.filter(j => j.industry === ind).length;
+    return `<option value="${escapeHtml(ind)}" ${ind === activeFilter ? "selected" : ""}>${escapeHtml(ind)} (${count})</option>`;
+  }).join("");
+  industrySelect.value = activeFilter;
+  industrySelect.onchange = (e) => { activeFilter = e.target.value; renderFilters(); renderCards(); };
+  bar.appendChild(industrySelect);
+  const div1 = document.createElement("div");
+  div1.className = "divider";
+  bar.appendChild(div1);
+
+  const unreviewedBtn = document.createElement("button");
+  unreviewedBtn.className = "toggle-btn" + (unreviewedOnly ? " on" : "");
+  unreviewedBtn.textContent = "Unreviewed only (" + unreviewedCount() + ")";
+  unreviewedBtn.onclick = () => { unreviewedOnly = !unreviewedOnly; renderFilters(); renderCards(); };
+  bar.appendChild(unreviewedBtn);
+
+  const archivedBtn = document.createElement("button");
+  archivedBtn.className = "toggle-btn" + (!hideArchived ? " on" : "");
+  archivedBtn.textContent = hideArchived ? "Show archived (" + archivedCount() + ")" : "Hide archived";
+  archivedBtn.onclick = () => { hideArchived = !hideArchived; renderFilters(); renderCards(); };
+  bar.appendChild(archivedBtn);
+
+  const bTierBtn = document.createElement("button");
+  bTierBtn.className = "toggle-btn" + (showBTier ? " on" : "");
+  bTierBtn.textContent = showBTier ? "Hide B-tier" : "Show B-tier (" + bTierCount() + ")";
+  bTierBtn.onclick = () => { showBTier = !showBTier; renderFilters(); renderCards(); };
+  bar.appendChild(bTierBtn);
+
+  const div2 = document.createElement("div");
+  div2.className = "divider";
+  bar.appendChild(div2);
+
+  const reactionSelect = document.createElement("select");
+  reactionSelect.className = "filter-select" + (reactionFilter !== "All" ? " active" : "");
+  reactionSelect.innerHTML = `<option value="All">Reaction: All</option><option value="(none)">Reaction: no reaction yet</option>` +
+    REACTIONS.map(r => `<option value="${r}" ${reactionFilter===r?"selected":""}>Reaction: ${r}</option>`).join("");
+  reactionSelect.value = reactionFilter;
+  reactionSelect.onchange = (e) => { reactionFilter = e.target.value; renderFilters(); renderCards(); };
+  bar.appendChild(reactionSelect);
+
+  const statusSelect = document.createElement("select");
+  statusSelect.className = "filter-select" + (statusFilter !== "All" ? " active" : "");
+  statusSelect.innerHTML = `<option value="All">Status: All</option>` +
+    STATUSES.map(s => `<option value="${s}" ${statusFilter===s?"selected":""}>Status: ${s}</option>`).join("");
+  statusSelect.value = statusFilter;
+  statusSelect.onchange = (e) => { statusFilter = e.target.value; renderFilters(); renderCards(); };
+  bar.appendChild(statusSelect);
+
+  const sortSelect = document.createElement("select");
+  sortSelect.className = "filter-select";
+  sortSelect.innerHTML = `
+    <option value="updatedDesc">Sort: most recently changed</option>
+    <option value="updatedAsc">Sort: least recently changed</option>
+    <option value="foundDesc">Sort: newest found</option>
+    <option value="foundAsc">Sort: oldest found</option>`;
+  sortSelect.value = sortBy;
+  sortSelect.onchange = (e) => { sortBy = e.target.value; renderCards(); };
+  bar.appendChild(sortSelect);
+
+  const spacer = document.createElement("div");
+  spacer.className = "spacer";
+  bar.appendChild(spacer);
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "copy-btn";
+  copyBtn.textContent = "Copy summary for Cursor";
+  copyBtn.onclick = copySummary;
+  bar.appendChild(copyBtn);
 }
 
-function escapeHtml(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-function escapeAttr(s) { return escapeHtml(s); }
+function escapeHtml(s) {
+  if (!s) return "";
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
 
-function matchesFilters(j) {
-  const st = jobState(j.id);
-  if (!showArchived && st.archived) return false;
-  if (tierMode === "a" && j.tier !== "A") return false;
-  if (statusFilter && j.status !== statusFilter) return false;
-  if (industryFilter && j.industry !== industryFilter) return false;
-  if (searchText) {
-    const hay = `${j.company} ${j.role}`.toLowerCase();
-    if (!hay.includes(searchText.toLowerCase())) return false;
+function renderCards() {
+  const list = document.getElementById("cardList");
+  list.innerHTML = "";
+  let jobs = JOBS.filter(j => activeFilter === "All" || j.industry === activeFilter);
+  if (hideArchived) jobs = jobs.filter(j => !isArchived(j));
+  if (!showBTier) jobs = jobs.filter(j => (j.tier||"A") !== "B");
+  if (unreviewedOnly) jobs = jobs.filter(isUnreviewed);
+  if (reactionFilter !== "All") {
+    jobs = jobs.filter(j => {
+      const r = (state[j.id]||{}).reaction || "";
+      return reactionFilter === "(none)" ? !r : r === reactionFilter;
+    });
   }
-  return true;
-}
+  if (statusFilter !== "All") {
+    jobs = jobs.filter(j => ((state[j.id]||{}).status || j.status) === statusFilter);
+  }
+  jobs.sort((a, b) => {
+    const sa = state[a.id]||{}, sb = state[b.id]||{};
+    if (sortBy === "updatedDesc" || sortBy === "updatedAsc") {
+      const va = sa.updatedAt || "", vb = sb.updatedAt || "";
+      return sortBy === "updatedDesc" ? vb.localeCompare(va) : va.localeCompare(vb);
+    }
+    const va = a.dateFound || "", vb = b.dateFound || "";
+    return sortBy === "foundDesc" ? vb.localeCompare(va) : va.localeCompare(vb);
+  });
 
-function reactionButtons(j) {
-  const st = jobState(j.id);
-  const mk = (key, label, cls) =>
-    `<button class="${cls}${st.reaction === key ? " on" : ""}" data-reaction="${key}" data-id="${escapeAttr(j.id)}" title="${label}">${label === "Love it" ? "❤" : label === "Interested" ? "👍" : "✕"}</button>`;
-  return `<div class="reaction-cell">
-    ${mk("love", "Love it", "love")}
-    ${mk("interested", "Interested", "interested")}
-    ${mk("pass", "Pass", "pass")}
-  </div>`;
-}
+  if (jobs.length === 0) {
+    const note = document.createElement("div");
+    note.className = "empty-note";
+    note.textContent = unreviewedOnly ? "Nothing unreviewed in this view." : "No postings match this filter.";
+    list.appendChild(note);
+    return;
+  }
 
-function renderRow(j) {
-  const st = jobState(j.id);
-  const open = openId === j.id;
-  return `<div class="row${open ? " open" : ""}${st.archived ? " archived-row" : ""}" data-id="${escapeAttr(j.id)}">
-    <div class="rowhead" data-toggle="${escapeAttr(j.id)}">
-      <div class="tier-badge tier-${j.tier === "A" ? "a" : "b"}">${escapeHtml(j.tier)}</div>
-      <div class="tname">
-        <div class="t">${escapeHtml(j.role)}</div>
-        <div class="co">${escapeHtml(j.company)}${j.level ? " · " + escapeHtml(j.level) : ""}</div>
-        <div class="meta">${escapeHtml(j.location || "")}${j.comp ? " · " + escapeHtml(j.comp) : ""}</div>
+  jobs.forEach(job => {
+    const st = state[job.id] || {};
+    const isOpen = openId === job.id;
+    const archived = isArchived(job);
+    const card = document.createElement("div");
+    card.className = "card" + (archived ? " archived" : "");
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <p class="card-title">${escapeHtml(job.role)}</p>
+          <p class="card-company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</p>
+          ${job.linkedinNote ? `<p class="card-linkedin-note">${escapeHtml(job.linkedinNote)}</p>` : ""}
+          <div class="badges">
+            ${isUnreviewed(job) ? `<span class="badge unreviewed">NEW - unreviewed</span>` : ""}
+            ${(job.tier||"A") === "B" ? `<span class="badge tier-b">B-tier</span>` : ""}
+            <span class="badge industry">${escapeHtml(job.industry)}</span>
+            <span class="badge">${escapeHtml(job.level)}</span>
+            <span class="badge status-${job.status.replace(/[^A-Za-z]/g,'')}">${escapeHtml(job.status)}</span>
+            ${st.reaction ? `<span class="badge ${st.reaction==='Not for me'?'rejected-badge':''}">${escapeHtml(st.reaction)}</span>` : ""}
+            ${st.archived ? `<span class="badge archived-badge">cleared from list</span>` : ""}
+          </div>
+        </div>
+        <div class="card-meta">${escapeHtml(job.comp)}<br>${escapeHtml(job.source)}${fmtDate(st.updatedAt) ? `<div class="updated-note">Updated ${escapeHtml(fmtDate(st.updatedAt))}</div>` : ""}</div>
       </div>
-      <div class="status-badge">${escapeHtml(j.status || "")}</div>
-      ${reactionButtons(j)}
-    </div>
-    <div class="detail">
-      <div>
-        <h4>Fit notes</h4><p>${escapeHtml(j.fitNotes || "—")}</p>
-        <h4>Warm network signal</h4><p>${escapeHtml(j.warmSignal || "—")}</p>
-        <h4>Notes</h4><p>${escapeHtml(j.notes || "—")}</p>
+      <div class="card-detail ${isOpen ? "open" : ""}" id="detail-${job.id}">
+        <h4>Fit notes</h4>
+        <p>${escapeHtml(job.fitNotes)}</p>
+        ${job.description ? `<h4>Job description</h4><p>${escapeHtml(job.description)}</p>` : `<p class="no-desc">Full description not pulled for this one - use the link below.</p>`}
+        ${job.source && job.source.indexOf("not independently re-verified") > -1 ? `<div class="caution-callout">This link was not re-checked on LinkedIn - confirm it resolves before relying on it.</div>` : ""}
+        ${st.notes ? `<h4>Your notes</h4><p>${escapeHtml(st.notes)}</p>` : ""}
+        <a class="open-link" href="${job.link}" target="_blank" rel="noopener">Open original posting &#8599;</a>
+        <button class="clear-btn" data-clear="${job.id}">${st.archived ? "Restore to list" : "Clear from list"}</button>
+        <div class="controls">
+          <div>
+            <label>Your reaction</label>
+            <select data-field="reaction" data-id="${job.id}">
+              <option value="">-- pick one --</option>
+              ${["Love it","Interested","Maybe","Not for me","Wrong level","Wrong comp"].map(r => `<option value="${r}" ${st.reaction===r?"selected":""}>${r}</option>`).join("")}
+            </select>
+          </div>
+          <div>
+            <label>Status</label>
+            <select data-field="status" data-id="${job.id}">
+              ${["New","Reviewing","Pursuing (network)","Applied","Interviewing","Closed","Monitoring","Applied (past)"].map(s => `<option value="${s}" ${(st.status||job.status)===s?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+          <div class="full">
+            <label>Notes (warm contacts you actually know, reasons, anything worth remembering)</label>
+            <textarea data-field="notes" data-id="${job.id}" placeholder="e.g. Jane from my old Uber team works here now">${escapeHtml(st.notes||"")}</textarea>
+          </div>
+        </div>
       </div>
-      <div>
-        <h4>Source</h4><p>${escapeHtml(j.source || "—")}</p>
-        <h4>Link</h4><p>${j.link ? `<a href="${escapeAttr(j.link)}" target="_blank" rel="noopener">${escapeHtml(j.link)}</a>` : "—"}</p>
-        <h4>Date found</h4><p>${escapeHtml(j.dateFound || "—")}</p>
-        <h4>Industry</h4><p>${escapeHtml(j.industry || "—")}</p>
-        <p style="margin-top:10px;"><button class="archivebtn${st.archived ? " on" : ""}" data-archive="${escapeAttr(j.id)}">${st.archived ? "🗄 Unarchive" : "🗄 Archive"}</button></p>
-      </div>
-    </div>
-  </div>`;
+    `;
+    card.querySelector(".card-top").onclick = () => {
+      openId = isOpen ? null : job.id;
+      renderCards();
+    };
+    list.appendChild(card);
+  });
+  list.querySelectorAll("select[data-field]").forEach(el => {
+    el.addEventListener("click", e => e.stopPropagation());
+    el.addEventListener("change", handleFieldChange);
+  });
+  list.querySelectorAll("textarea[data-field]").forEach(el => {
+    el.addEventListener("click", e => e.stopPropagation());
+    el.addEventListener("input", handleNotesInput);
+    el.addEventListener("blur", handleNotesBlur);
+  });
+  list.querySelectorAll("[data-clear]").forEach(el => {
+    el.addEventListener("click", e => {
+      e.stopPropagation();
+      const id = el.getAttribute("data-clear");
+      state[id] = state[id] || {};
+      state[id].archived = !state[id].archived;
+      state[id].updatedAt = new Date().toISOString();
+      saveState(state);
+      renderFilters();
+      renderCards();
+    });
+  });
 }
 
-function render() {
-  const filtered = JOBS.filter(matchesFilters);
-  const list = document.getElementById("list");
-  const empty = document.getElementById("emptystate");
-  if (JOBS.length === 0) {
-    list.innerHTML = "";
-    empty.style.display = "block";
-    document.getElementById("count").textContent = "";
-    return;
-  }
-  empty.style.display = "none";
-  list.innerHTML = filtered.map(renderRow).join("") || `<div class="empty">No jobs match the current filters.</div>`;
-  document.getElementById("count").textContent = `${filtered.length} of ${JOBS.length} shown`;
+function handleFieldChange(e) {
+  const id = e.target.getAttribute("data-id");
+  const field = e.target.getAttribute("data-field");
+  state[id] = state[id] || {};
+  state[id][field] = e.target.value;
+  state[id].updatedAt = new Date().toISOString();
+  saveState(state);
+  renderFilters();
+  renderCards();
 }
 
-document.addEventListener("click", (e) => {
-  const toggle = e.target.closest("[data-toggle]");
-  if (toggle && !e.target.closest("button")) {
-    const id = toggle.getAttribute("data-toggle");
-    openId = openId === id ? null : id;
-    render();
-    return;
-  }
-  const reactBtn = e.target.closest("[data-reaction]");
-  if (reactBtn) {
-    const id = reactBtn.getAttribute("data-id");
-    const key = reactBtn.getAttribute("data-reaction");
-    const cur = jobState(id).reaction;
-    setJobState(id, { reaction: cur === key ? null : key });
-    return;
-  }
-  const archBtn = e.target.closest("[data-archive]");
-  if (archBtn) {
-    const id = archBtn.getAttribute("data-archive");
-    setJobState(id, { archived: !jobState(id).archived });
-    return;
-  }
-});
+// Notes typing must NOT trigger a full re-render (renderCards rebuilds the DOM
+// and would steal focus out of the textarea on every keystroke). Just persist
+// the value silently while typing, and only refresh badges/counts on blur.
+function handleNotesInput(e) {
+  const id = e.target.getAttribute("data-id");
+  state[id] = state[id] || {};
+  state[id].notes = e.target.value;
+  state[id].updatedAt = new Date().toISOString();
+  saveState(state);
+}
+function handleNotesBlur() {
+  renderFilters();
+  renderCards();
+}
 
-document.getElementById("tierseg").addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-t]");
-  if (!btn) return;
-  tierMode = btn.getAttribute("data-t");
-  document.querySelectorAll("#tierseg button").forEach(b => b.classList.toggle("on", b === btn));
-  render();
-});
-document.getElementById("statusfilter").addEventListener("change", (e) => { statusFilter = e.target.value; render(); });
-document.getElementById("industryfilter").addEventListener("change", (e) => { industryFilter = e.target.value; render(); });
-document.getElementById("search").addEventListener("input", (e) => { searchText = e.target.value; render(); });
-document.getElementById("showarchived").addEventListener("click", (e) => {
-  showArchived = !showArchived;
-  e.target.classList.toggle("on", showArchived);
-  render();
-});
+function copySummary() {
+  const lines = [];
+  JOBS.forEach(job => {
+    if (isUnreviewed(job)) {
+      const st = state[job.id] || {};
+      lines.push(`${job.company} - ${job.role}: reaction=${st.reaction||"(none)"}, status=${st.status||job.status}${st.notes ? ", notes=\"" + st.notes + "\"" : ""}`);
+    }
+  });
+  const box = document.getElementById("summaryBox");
+  const text = document.getElementById("summaryText");
+  text.value = lines.length ? lines.join("\n") : "Nothing pending sync right now.";
+  box.classList.add("show");
+  text.focus();
+  text.select();
+}
 
-document.getElementById("exportstate").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `job-search-dashboard-sync-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-});
-document.getElementById("importstate").addEventListener("click", () => document.getElementById("importfile").click());
-document.getElementById("importfile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const imported = JSON.parse(reader.result);
-      state = Object.assign({}, state, imported);
-      saveLocalState(state);
-      render();
-    } catch (err) { alert("Could not parse that file as JSON."); }
-  };
-  reader.readAsText(file);
-});
-
-populateIndustryFilter();
-render();
+renderFilters();
+renderCards();
 </script>
 </body>
 </html>
