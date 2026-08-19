@@ -70,14 +70,12 @@ body { margin: 0; }
   .card-meta { text-align: left; }
 }
 </style>
-</head>
-<body>
 <div class="dash">
   <div class="dash-header">
     <h1>Ian's job search dashboard</h1>
     <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on Claude's side, not just untouched by you.</p>
   </div>
-  <p class="sync-note" id="syncNote">Snapshot generated August 18, 2026 from the live desktop dashboard. Ask Claude to refresh this file any time it looks out of date.</p>
+  <p class="sync-note" id="syncNote">Snapshot generated August 19, 2026 from the live desktop dashboard. Ask Claude to refresh this file any time it looks out of date.</p>
   <div class="toolbar" id="filterBar"></div>
   <div class="summary-box" id="summaryBox">
     <textarea id="summaryText" readonly></textarea>
@@ -86,7 +84,7 @@ body { margin: 0; }
   <div class="card-list" id="cardList"></div>
 </div>
 <script>
-document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-18T00:00:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " from the live desktop dashboard. Ask Claude to refresh this file any time it looks out of date.";
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-19T00:00:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " from the live desktop dashboard. Ask Claude to refresh this file any time it looks out of date.";
 
 
 const JOBS = [
@@ -192,6 +190,7 @@ const JOBS = [
 {id:"hearst-tv-vp-strategy-distribution", industry:"Media", company:"Hearst Television", role:"Vice President, Strategy and Distribution", level:"VP", location:"New York, NY", comp:"$300,000-$315,000 base", link:"https://www.indeed.com/jobs?q=VP+Alliances&fromage=7&sort=date", source:"Indeed", status:"New", dateFound:"2026-08-14", linkedinNote:null, fitNotes:"Real strategy+BD hybrid shape (business development, financial analysis, deal execution supporting Hearst's TV/streaming distribution) at VP level with strong comp ($300K-$315K), but local-TV/broadcast distribution sits outside Ian's four named verticals and the fintech/DSP watch signals - soft vertical doubt, not a skills or level doubt.", tier:"B", description:null},
 {id:"amd-director-gsi-partner-dev-mgr-deloitte", industry:"AI", company:"AMD", role:"Director, GSI Partner Development Manager (Deloitte)", level:"Director", location:"New York, United States (On-site)", comp:"$284,200-$426,400/yr", link:"https://www.linkedin.com/jobs/view/4443086485/", source:"LinkedIn", status:"New", dateFound:"2026-08-16", linkedinNote:null, fitNotes:"Found via the daily 'VP Alliances GSI' search - the named-GSI-alliance shape that has scored well elsewhere (OpenAI HCL/Wipro/Cognizant, C3 AI VP Alliances, Salesforce/Accenture). Director title and strong comp clearing the floor comfortably. Real doubt: LinkedIn's JD pane failed to render; a mirrored posting (Remotive) describes the role as working with GSI executives on pipeline reporting, partnership-fund (MDF) management, and executing joint sales campaigns/workshops - reads closer to tactical GSI-partner execution than the single-accountable-executive-owns-the-C-suite-relationship shape that has landed well elsewhere. B on that scope doubt.", tier:"B", description:null},
 {id:"samsclub-connect-sr-director-business-strategy", industry:"Retail Media", company:"Sam's Club Connect", role:"Senior Director, Business Strategy", level:"Sr Director", location:"Hoboken, NJ", comp:"$156,000-$312,000 base + performance bonus", link:"https://careers.walmart.com/us/en/jobs/R-2538514", source:"Walmart/Sam's Club careers site (verified live, full JD read, req R-2538514)", status:"New", dateFound:"2026-08-17", linkedinNote:null, fitNotes:"Senior strategy leadership role for Sam's Club Connect (Sam's Club's retail media arm, closed-loop membership-data network) - leads a small strategy team, owns long-range planning, competitive intelligence and market assessments for where retail media goes next. Same shape and arm-of-the-retailer pattern as the Walmart Connect Sr Director Business Strategy & Partnerships role Ian loved (Dec 2025 application) - strategy/builder mandate, not sales or PM. Requires 10+ years in advertising/media/commerce/retail-media strategy or corporate strategy/consulting/banking; no media-buying/selling background required.", tier:"A", description:null},
+{id:"openai-business-lead-special-situations", industry:"AI", company:"OpenAI", role:"Business Lead, Special Situations", level:"Director-equiv (title 'Business Lead' is ambiguous, but comp band implies senior)", location:"New York, NY (Hybrid)", comp:"$333,000-$370,000 base", link:"https://www.linkedin.com/jobs/view/4446029317", source:"LinkedIn", status:"New", dateFound:"2026-08-19", linkedinNote:null, fitNotes:"Found via the Step 2.5 'VP + professional services' 24h sweep. Operating-leader role for a strategically important initiative anchored in a major partnership - combines strategy, operations, product judgment and commercial skills, personally driving execution across both organizations. Explicitly states 'a formal business development or partnerships background is not required,' directly answering the technical/formal-BD-depth worry raised on other AI roles (Pacvue, Tribe AI pattern). Comp band is among the highest in the tracker and near the top of Ian's stated $500-600K target trajectory. No sales-quota or formal PM framing - pure strategy/ops/GM scope.", tier:"A", description:null},
 ];
 
 // SYNCED_STATE = what Claude has already processed and folded into the tracker/taste-profile.
@@ -210,7 +209,7 @@ const SYNCED_STATE = {
 "walmart-business-strategy-director": {reaction:"Maybe", status:"New", notes:"i'm not really interested in working for walmart the retailer."},
 "walmart-connect-sr-director": {reaction:"Love it", status:"Applied (past)"},
 "kroger-strategic-partnerships": {reaction:"Interested", status:"Closed"},
-"kroger-ai-platform-pm": {reaction:"Not for me", status:"New", notes:"This is really really tricky. I ran the innovation team at sensor tower and developed new products that are now being sold. But this was not a formal product org, I don't like the rigidity of the product team, setting guidelines for when and why a product would get made or what thresholds I'd need to look at a product. The innovation team was scrappy and unstructured. product teams are by definition very structured. Most people have technical experience, which I do not. So I need to be careful about putting myself up for a product role - the role needs to be strategic and less about the development of products on a lifecycle or managing the time of engineering."},
+"kroger-ai-platform-pm": {reaction:"Not for me", status:"New", notes:"This is a formal product management role. I shouldn't be applying for these."},
 "albertsons-product-marketing": {reaction:"Not for me", status:"New", notes:"I don't think I should be going out for marketing or product marketing roles."},
 "criteo-strategic-partnerships": {reaction:"Maybe", status:"New", notes:"the link to the job posting didn't work. can you check it? In general, a company the size of criteo I would prefer VP to Sr Director, but I'd review it for sure."},
 "criteo-vp-commercialization": {reaction:"Love it", status:"New"},
@@ -262,7 +261,7 @@ const SYNCED_STATE = {
 "ebay-live-strategy-operations-head": {reaction:"Not for me", status:"New"},
 "openai-gtm-strategy-ops-lead-ads": {reaction:"Maybe", status:"New"},
 "openai-international-strategy-ops-lead": {reaction:"Maybe", status:"New"},
-"anthropic-strategy-ops-applied-ai-amer": {reaction:"Not for me", status:"Closed", notes:"Here's the lesson from this one. The full job description describes the comp as \"For sales roles, the range provided is the role's On Target Earnings (\"OTE\") range, meaning that the range includes both the sales commissions/sales bonuses target and annual base salary for the role.\" In my last role, with commissions, my comp was ~$390k. So it's fine if the base is below 300 if there's a bonus structure, but if OTE is below $350k, then it's probably not right for me."},
+"anthropic-strategy-ops-applied-ai-amer": {reaction:"Maybe", status:"New"},
 "tradedesk-svp-strategic-partnerships": {reaction:"Love it", status:"New"},
 "sephora-vp-media-network": {reaction:"Maybe", status:"New"},
 "profound-vp-strategic-partnerships": {reaction:"Love it", status:"New"},
@@ -300,8 +299,7 @@ const SYNCED_STATE = {
 "hearst-tv-vp-strategy-distribution": {reaction:"Not for me", status:"New"},
 "amd-director-gsi-partner-dev-mgr-deloitte": {reaction:"Not for me", status:"New"},
 };
-
-const STATE_KEY = "ian_job_dashboard_state_v1_mobile";
+const STATE_KEY = "ian_job_dashboard_state_v1";
 function loadState() {
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(STATE_KEY)) || {}; } catch(e) { saved = {}; }
@@ -319,19 +317,16 @@ let unreviewedOnly = false;
 let reactionFilter = "All";
 let statusFilter = "All";
 let sortBy = "updatedDesc";
-
 const REACTIONS = ["Love it","Interested","Maybe","Not for me","Wrong level","Wrong comp"];
 const STATUSES = ["New","Reviewing","Pursuing (network)","Applied","Interviewing","Closed","Monitoring","Applied (past)"];
 const industries = ["All", ...Array.from(new Set(JOBS.map(j => j.industry)))];
 let activeFilter = "All";
-
 function fmtDate(iso) {
   if (!iso) return null;
   const d = new Date(iso);
   if (isNaN(d.getTime())) return null;
   return d.toLocaleString(undefined, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
 }
-
 function isArchived(job) {
   const st = state[job.id] || {};
   return st.reaction === "Not for me" || st.archived === true;
@@ -356,7 +351,6 @@ function isUnreviewed(job) {
 function archivedCount() { return JOBS.filter(isArchived).length; }
 function unreviewedCount() { return JOBS.filter(isUnreviewed).length; }
 function bTierCount() { return JOBS.filter(j => (j.tier||"A") === "B").length; }
-
 function renderFilters() {
   const bar = document.getElementById("filterBar");
   bar.innerHTML = "";
@@ -372,29 +366,24 @@ function renderFilters() {
   const div1 = document.createElement("div");
   div1.className = "divider";
   bar.appendChild(div1);
-
   const unreviewedBtn = document.createElement("button");
   unreviewedBtn.className = "toggle-btn" + (unreviewedOnly ? " on" : "");
   unreviewedBtn.textContent = "Unreviewed only (" + unreviewedCount() + ")";
   unreviewedBtn.onclick = () => { unreviewedOnly = !unreviewedOnly; renderFilters(); renderCards(); };
   bar.appendChild(unreviewedBtn);
-
   const archivedBtn = document.createElement("button");
   archivedBtn.className = "toggle-btn" + (!hideArchived ? " on" : "");
   archivedBtn.textContent = hideArchived ? "Show archived (" + archivedCount() + ")" : "Hide archived";
   archivedBtn.onclick = () => { hideArchived = !hideArchived; renderFilters(); renderCards(); };
   bar.appendChild(archivedBtn);
-
   const bTierBtn = document.createElement("button");
   bTierBtn.className = "toggle-btn" + (showBTier ? " on" : "");
   bTierBtn.textContent = showBTier ? "Hide B-tier" : "Show B-tier (" + bTierCount() + ")";
   bTierBtn.onclick = () => { showBTier = !showBTier; renderFilters(); renderCards(); };
   bar.appendChild(bTierBtn);
-
   const div2 = document.createElement("div");
   div2.className = "divider";
   bar.appendChild(div2);
-
   const reactionSelect = document.createElement("select");
   reactionSelect.className = "filter-select" + (reactionFilter !== "All" ? " active" : "");
   reactionSelect.innerHTML = `<option value="All">Reaction: All</option><option value="(none)">Reaction: no reaction yet</option>` +
@@ -402,7 +391,6 @@ function renderFilters() {
   reactionSelect.value = reactionFilter;
   reactionSelect.onchange = (e) => { reactionFilter = e.target.value; renderFilters(); renderCards(); };
   bar.appendChild(reactionSelect);
-
   const statusSelect = document.createElement("select");
   statusSelect.className = "filter-select" + (statusFilter !== "All" ? " active" : "");
   statusSelect.innerHTML = `<option value="All">Status: All</option>` +
@@ -410,7 +398,6 @@ function renderFilters() {
   statusSelect.value = statusFilter;
   statusSelect.onchange = (e) => { statusFilter = e.target.value; renderFilters(); renderCards(); };
   bar.appendChild(statusSelect);
-
   const sortSelect = document.createElement("select");
   sortSelect.className = "filter-select";
   sortSelect.innerHTML = `
@@ -421,7 +408,6 @@ function renderFilters() {
   sortSelect.value = sortBy;
   sortSelect.onchange = (e) => { sortBy = e.target.value; renderCards(); };
   bar.appendChild(sortSelect);
-
   const spacer = document.createElement("div");
   spacer.className = "spacer";
   bar.appendChild(spacer);
@@ -431,12 +417,10 @@ function renderFilters() {
   copyBtn.onclick = copySummary;
   bar.appendChild(copyBtn);
 }
-
 function escapeHtml(s) {
   if (!s) return "";
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
-
 function renderCards() {
   const list = document.getElementById("cardList");
   list.innerHTML = "";
@@ -462,7 +446,6 @@ function renderCards() {
     const va = a.dateFound || "", vb = b.dateFound || "";
     return sortBy === "foundDesc" ? vb.localeCompare(va) : va.localeCompare(vb);
   });
-
   if (jobs.length === 0) {
     const note = document.createElement("div");
     note.className = "empty-note";
@@ -470,7 +453,6 @@ function renderCards() {
     list.appendChild(note);
     return;
   }
-
   jobs.forEach(job => {
     const st = state[job.id] || {};
     const isOpen = openId === job.id;
@@ -552,7 +534,6 @@ function renderCards() {
     });
   });
 }
-
 function handleFieldChange(e) {
   const id = e.target.getAttribute("data-id");
   const field = e.target.getAttribute("data-field");
@@ -563,7 +544,6 @@ function handleFieldChange(e) {
   renderFilters();
   renderCards();
 }
-
 // Notes typing must NOT trigger a full re-render (renderCards rebuilds the DOM
 // and would steal focus out of the textarea on every keystroke). Just persist
 // the value silently while typing, and only refresh badges/counts on blur.
@@ -578,7 +558,6 @@ function handleNotesBlur() {
   renderFilters();
   renderCards();
 }
-
 function copySummary() {
   const lines = [];
   JOBS.forEach(job => {
@@ -594,9 +573,9 @@ function copySummary() {
   text.focus();
   text.select();
 }
-
 renderFilters();
 renderCards();
 </script>
+
 </body>
 </html>
