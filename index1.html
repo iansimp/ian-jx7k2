@@ -78,7 +78,7 @@ body { margin: 0; }
     <h1>Ian's job search dashboard</h1>
     <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on the agent's side, not just untouched by you. Open a card and use <strong>Prep with Cursor</strong> to pull the live JD, compare it to your resume, and list unique apply-form questions.</p>
   </div>
-  <p class="sync-note" id="syncNote">Snapshot generated August 24, 2026 by the Cursor-managed job-search-dashboard-sync skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.</p>
+  <p class="sync-note" id="syncNote">Snapshot generated August 25, 2026 by the Cursor-managed job-search-dashboard-sync skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.</p>
   <div class="toolbar" id="filterBar"></div>
   <div class="summary-box" id="summaryBox">
     <textarea id="summaryText" readonly></textarea>
@@ -87,7 +87,7 @@ body { margin: 0; }
   <div class="card-list" id="cardList"></div>
 </div>
 <script>
-document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-25T13:20:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-login-gated-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-25T16:55:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-dashboard-sync skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
 
 
 const JOBS = [
@@ -182,6 +182,8 @@ const SYNCED_STATE = {
 "anthropic-global-technology-partner-lead": {reaction:"Interested", status:"New"},
 "anthropic-senior-pam-gsi-alliances": {reaction:"Not for me", status:"New"},
 "openai-head-of-marketplace": {reaction:"Not for me", status:"New"},
+"criteo-vp-retail-media-measurements-insights": {reaction:"Love it", status:"New"},
+"mastercard-vp-bd-global-business-platforms": {reaction:"Interested", status:"New"},
 };
 
 const STATE_KEY = "ian_job_dashboard_state_v1_cursor";
