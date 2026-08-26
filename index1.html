@@ -87,7 +87,7 @@ body { margin: 0; }
   <div class="card-list" id="cardList"></div>
 </div>
 <script>
-document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-26T16:00:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-daily-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-08-26T16:15:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-dashboard-sync skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
 
 
 const JOBS = [
@@ -189,6 +189,10 @@ const SYNCED_STATE = {
 "openai-head-of-marketplace": {reaction:"Not for me", status:"New"},
 "criteo-vp-retail-media-measurements-insights": {reaction:"Love it", status:"New"},
 "mastercard-vp-bd-global-business-platforms": {reaction:"Interested", status:"New"},
+"bandwidth-director-strategic-ai-partnerships": {reaction:"Not for me", status:"New"},
+"sentinelone-sr-director-oem-technology-partnerships": {reaction:"Not for me", status:"New"},
+"anthropic-aws-gtm-partnership-lead-enterprise": {reaction:"Maybe", status:"New"},
+"anthropic-aws-gtm-partnership-lead-startups": {reaction:"Maybe", status:"New"},
 };
 
 const STATE_KEY = "ian_job_dashboard_state_v1_cursor";
