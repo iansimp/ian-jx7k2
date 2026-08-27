@@ -76,7 +76,7 @@ body { margin: 0; }
 <div class="dash">
   <div class="dash-header">
     <h1>Ian's job search dashboard</h1>
-    <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on the agent's side, not just untouched by you. Open a card and use <strong>Prep with Cursor</strong> to pull the live JD, compare it to your resume, and list unique apply-form questions.</p>
+    <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on the agent's side, not just untouched by you. Open a card and use <strong>Prep with Cursor</strong> to pull the live JD, name the gaps, and produce a specialized resume plus cover letter for that job (later jobs keep what you already changed, they do not start over).</p>
   </div>
   <p class="sync-note" id="syncNote">Snapshot generated August 27, 2026 by the Cursor-managed job-search-dashboard-sync skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.</p>
   <div class="toolbar" id="filterBar"></div>
@@ -340,11 +340,12 @@ function escapeHtml(s) {
 
 function cursorPrepHref(job) {
   const prompt = [
-    "Job-fit prep for " + job.company + " — " + job.role + ".",
+    "Prep materials for " + job.company + " - " + job.role + ".",
     "Posting: " + job.link,
     "Tracker id: " + job.id + ".",
-    "Read and follow .cursor/skills/job-search-role-fit/SKILL.md.",
-    "Fetch the live JD and any unique application-form questions, cross-reference my resume in context/job-search/, and tell me how aligned I am plus what to prep for the apply form."
+    "Read and follow .cursor/skills/job-search-role-fit/SKILL.md end to end.",
+    "Fetch the live JD and unique apply-form questions, compare to my base 2026 resume, identify gaps, then produce a specialized resume and cover letter for this job.",
+    "Read context/job-search/Resume_Cover_Letter_Playbook.md first so this version builds on prior jobs. Do not start from scratch. Do not stop after the fit verdict."
   ].join(" ");
   return "https://cursor.com/link/prompt?text=" + encodeURIComponent(prompt);
 }
