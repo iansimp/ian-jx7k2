@@ -78,7 +78,7 @@ body { margin: 0; }
     <h1>Ian's job search dashboard</h1>
     <p>Click a card for full details. Archived posts (rejected, or manually cleared) stay out of the default view - toggle "Show archived" to see them. B-tier roles (real matches with a soft doubt) are hidden by default too - toggle "Show B-tier" to see them. "Unreviewed" now means genuinely pending on the agent's side, not just untouched by you. Open a card and use <strong>Prep with Cursor</strong> to pull the live JD, name the gaps, and produce a specialized resume plus cover letter for that job (later jobs keep what you already changed, they do not start over).</p>
   </div>
-  <p class="sync-note" id="syncNote">Snapshot generated September 1, 2026 by the Cursor-managed job-search-login-gated-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.</p>
+  <p class="sync-note" id="syncNote">Snapshot generated September 8, 2026 by the Cursor-managed job-search-dashboard-sync skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.</p>
   <div class="toolbar" id="filterBar"></div>
   <div class="summary-box" id="summaryBox">
     <textarea id="summaryText" readonly></textarea>
@@ -87,7 +87,7 @@ body { margin: 0; }
   <div class="card-list" id="cardList"></div>
 </div>
 <script>
-document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-09-08T13:30:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-login-gated-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-09-08T22:00:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + " by the Cursor-managed job-search-login-gated-scan skill. This is the index1.html fork - the live desktop/Cowork dashboard at index.html is a separate system. Ask Cursor to refresh this file any time it looks out of date.";
 
 
 const JOBS = [
@@ -231,6 +231,35 @@ const SYNCED_STATE = {
 "mastercard-ai-strategic-partnerships-director": {reaction:"Interested", status:"New"},
 "jpmorgan-vp-product-partnerships-connected-commerce": {reaction:"Not for me", status:"New"},
 "openrouter-director-business-development": {reaction:"Interested", status:"New"},
+"box-ai-partnerships": {reaction:"Wrong comp", status:"New"},
+"anthropic-aws-gtm-partnership-lead-gsi": {reaction:"Not for me", status:"New"},
+"doordash-director-strategy-ops-local-markets": {reaction:"Not for me", status:"New"},
+"aeris-vp-strategic-partnerships-ecosystem": {reaction:"Not for me", status:"New"},
+"openai-partnerships-lead-cyber": {reaction:"Maybe", status:"New"},
+"gong-director-partnerships-hyperscalers": {reaction:"Not for me", status:"New"},
+"productai-head-of-commercial-agent-economy": {reaction:"Not for me", status:"New"},
+"boozallen-vp-strategic-partnerships": {reaction:"Not for me", status:"New"},
+"index-exchange-sr-director-platform-partnerships": {reaction:"Not for me", status:"New"},
+"amazon-ads-principal-social-commerce-partnerships": {reaction:"Not for me", status:"New"},
+"google-vp-strategic-alliances-cloud-hardware": {reaction:"Not for me", status:"New"},
+"yipitdata-director-strategic-data-partnerships": {reaction:"Maybe", status:"New"},
+"openai-deal-lead-special-situations-semiconductors": {reaction:"Not for me", status:"New"},
+"amazon-ads-principal-ctv-measurement": {reaction:"Interested", status:"New"},
+"microsoft-director-industry-strategy-co-sell-lead": {reaction:"Maybe", status:"New"},
+"google-head-strategic-partner-dev-gemini-genai": {reaction:"Not for me", status:"New"},
+"anthropic-head-partner-account-mgmt-ecosystem-bd": {reaction:"Interested", status:"New"},
+"automation-anywhere-vp-strategic-partnerships": {reaction:"Not for me", status:"New"},
+"roku-director-commerce-performance-partnerships": {reaction:"Interested", status:"New"},
+"coast-head-of-partnerships": {reaction:"Not for me", status:"New"},
+"tradedesk-sr-director-inventory-development-audio": {reaction:"Not for me", status:"New"},
+"adobe-sr-director-partnership-3p-ecosystem": {reaction:"Not for me", status:"New"},
+"flex-sr-director-product-partnerships": {reaction:"Not for me", status:"New"},
+"amex-vp-capabilities-strategy-partnerships": {reaction:"Not for me", status:"New"},
+"oscilar-director-of-partnerships": {reaction:"Not for me", status:"New"},
+"ravenpack-vp-content-partnerships": {reaction:"Not for me", status:"New"},
+"cisco-director-strategic-alliances-cloud": {reaction:"Not for me", status:"New"},
+"pure-storage-bd-director-ai-ecosystems-tech-partnerships": {reaction:"Not for me", status:"New"},
+"ladders-vp-head-strategy-bizops-media": {reaction:"Maybe", status:"New"},
 };
 
 const STATE_KEY = "ian_job_dashboard_state_v1_cursor";
