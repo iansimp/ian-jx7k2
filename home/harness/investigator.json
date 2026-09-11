@@ -1,0 +1,210 @@
+{
+  "updated": "2026-09-11",
+  "run_id": "inv-2026-09-11",
+  "model": "Grok 4.6 High Fast",
+  "cost_usd": null,
+  "cost_note": "Cheap pass. Metadata + Gmail receipts. Did not read every cloud-agent transcript.",
+  "window": "2026-08-23 to 2026-09-11",
+  "public_note": "This page is public. Personal threads use generic titles. Chat bodies from Claude and ChatGPT are not in GitHub yet.",
+  "blind_spots": [
+    "Claude chat bodies: need the official export ZIP in Drive usage-exports/.",
+    "ChatGPT chat bodies: same, official export ZIP.",
+    "Cursor dollars per chat: no API on this plan. Usage CSV from the dashboard would give tokens by model, still not a perfect per-prompt table.",
+    "Cursor desktop chats that never became a cloud agent are invisible here.",
+    "Anthropic auto-recharge receipts do not say which chat burned the credits."
+  ],
+  "doors": [
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "what_we_see": "52 cloud agents in this environment. Name, model, source, date. 20 of them are the standing job-search scan.",
+      "what_we_do_not": "Tokens and $. Desktop-only chats.",
+      "spend": "Plan $60/month. On-demand unknown unless you paste a number. Hit a Cloud Agent usage limit on 22 Aug (email)."
+    },
+    {
+      "id": "claude",
+      "label": "Claude",
+      "what_we_see": "Gmail: Anthropic auto-recharge credits. Ian named a personal school-enrollment thread on 10–11 Sep.",
+      "what_we_do_not": "Any Claude transcript. Which product (claude.ai vs API vs Claude Code) tripped auto-recharge.",
+      "spend": "Claude Pro amount not logged. Extra: 16 auto-recharge receipts in 21 days. Three opened: $10.00 (11 Sep), $10.04 (9 Sep), $10.06 (2 Sep). If the rest match, about $160 extra; that sum is an estimate until the other receipts are opened or an export lands."
+    },
+    {
+      "id": "openai",
+      "label": "ChatGPT",
+      "what_we_see": "Plus started 9 Sep, first month free. Astra did the Dibs Stripe activate. GitHub read is on.",
+      "what_we_do_not": "ChatGPT transcripts. Per-chat tokens.",
+      "spend": "$20/month after the free month. $0 extra known."
+    }
+  ],
+  "models": [
+    {
+      "model": "Grok 4.6 Fast",
+      "door": "Cursor",
+      "runs": 28,
+      "note": "26 from the first page of cloud agents plus 2 older daily scans. Includes automations and the named desktop jobs."
+    },
+    {
+      "model": "unknown (Cursor internal helpers)",
+      "door": "Cursor",
+      "runs": 24,
+      "note": "Source=internal, no model field. Browser/video helpers. Do not treat as Sol."
+    },
+    {
+      "model": "Sol",
+      "door": "Cursor",
+      "runs": 1,
+      "note": "Ian: most of 10 Sep architecture/planning, ≥$30. Not in the cloud-agent model field."
+    },
+    {
+      "model": "Astra",
+      "door": "ChatGPT",
+      "runs": 1,
+      "note": "Stripe test → live for calldibs.us."
+    },
+    {
+      "model": "Claude (unnamed)",
+      "door": "Claude",
+      "runs": 1,
+      "note": "Personal school-enrollment thread Ian named. Body not exported. Prompt-level scoring waits on the ZIP."
+    }
+  ],
+  "projects": [
+    {
+      "id": "job-search",
+      "label": "Job search",
+      "summary": "Most of the Cursor cloud volume. Daily automation on Grok Fast, plus Pacvue and Profound packets from desktop.",
+      "threads": [
+        {
+          "door": "Cursor",
+          "title": "Job search daily scan (automation)",
+          "dates": "2026-08-23 – 2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast or Composer",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "Mechanical recurring scan. Right pool. Do not put this on Sol.",
+          "evidence": "metadata",
+          "url": "https://cursor.com/agents/bc-81a417b8-042a-4791-92f5-1c611ee7d091"
+        },
+        {
+          "door": "Cursor",
+          "title": "Pacvue AI VP application",
+          "dates": "2026-09-10",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast; Sol only if you name a judgment pass",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "Execution against an existing playbook. Files landed in applications/.",
+          "evidence": "metadata + git",
+          "url": null
+        },
+        {
+          "door": "Cursor",
+          "title": "Profound VP strategic partnerships",
+          "dates": "2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "Same shape as Pacvue. Desktop cloud agent.",
+          "evidence": "metadata + git",
+          "url": "https://cursor.com/agents/bc-5de4a4fa-1d51-4a98-accc-480f51f03049"
+        }
+      ]
+    },
+    {
+      "id": "ai-home",
+      "label": "This home",
+      "summary": "Architecture, Home/Cost rewrite, Pages publish, this investigator. Mix of Grok Fast cloud work and a Sol planning day.",
+      "threads": [
+        {
+          "door": "Cursor",
+          "title": "Architecture / planning day",
+          "dates": "2026-09-10",
+          "model_used": "Sol",
+          "fit": "unknown",
+          "ideal": "unknown — Sol if you wanted judgment; Grok if it was mostly file-map",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "You said it cost ≥$30 and switched back. We will not invent a Sol-vs-Grok winner.",
+          "evidence": "ian",
+          "url": null
+        },
+        {
+          "door": "Cursor",
+          "title": "Home board, cost, GitHub Pages",
+          "dates": "2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast",
+          "prompt_ok": "good",
+          "project_contribution": "helped",
+          "why": "Mechanical publish + copy. Right pool.",
+          "evidence": "metadata + git",
+          "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+        },
+        {
+          "door": "Cursor",
+          "title": "Usage investigator (this pass)",
+          "dates": "2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast or Composer",
+          "prompt_ok": "good",
+          "project_contribution": "helped",
+          "why": "The standing rule: this job stays cheap.",
+          "evidence": "this run",
+          "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+        }
+      ]
+    },
+    {
+      "id": "dibs",
+      "label": "Dibs",
+      "summary": "Live site already. Stripe went live via Astra. Product source still on loupe branches.",
+      "threads": [
+        {
+          "door": "ChatGPT",
+          "title": "Stripe test to live",
+          "dates": "2026-09-10 – 2026-09-11",
+          "model_used": "Astra",
+          "fit": "good",
+          "ideal": "Astra",
+          "prompt_ok": "good",
+          "project_contribution": "helped",
+          "why": "Dashboard / passkey / phone. Cursor cloud cannot click that.",
+          "evidence": "gmail + ledger",
+          "url": null
+        }
+      ]
+    },
+    {
+      "id": "personal",
+      "label": "Personal / side threads",
+      "summary": "Not a git project. Still belongs on this board. Chat body is not here until the Claude export lands.",
+      "threads": [
+        {
+          "door": "Claude",
+          "title": "School enrollment",
+          "dates": "2026-09-10 – 2026-09-11",
+          "model_used": "Claude (unnamed)",
+          "fit": "good",
+          "ideal": "Claude Pro (included) or any cheap chat. Not Sol. Not Cursor cloud.",
+          "prompt_ok": "unknown",
+          "project_contribution": "n/a — not a repo project",
+          "why": "Ian said he used Claude for this. Life-admin. Prompt-by-prompt scoring waits on the export ZIP. Public title is generic on purpose.",
+          "evidence": "ian",
+          "url": null
+        }
+      ]
+    }
+  ],
+  "next": [
+    "Needs the Mac: drop Claude ZIP, ChatGPT ZIP, and Cursor Usage CSV into Drive usage-exports/ (Copy for Astra on Home).",
+    "Next cheap investigator pass reads those files and fills prompt-level rows.",
+    "Optional: paste a Cursor on-demand number from Spending."
+  ]
+}

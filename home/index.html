@@ -56,7 +56,7 @@
     .panel { display: none; }
     .panel.active { display: block; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card);
-      border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+      border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 16px; }
     th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
     th { color: var(--muted); font-size: 12px; font-weight: 650; background: #fafbfc; }
     tr:last-child td { border-bottom: 0; }
@@ -82,6 +82,7 @@
   <div class="wrap">
     <nav aria-label="Home">
       <button type="button" data-panel="home" aria-current="page">Home</button>
+      <button type="button" data-panel="threads">Threads</button>
       <button type="button" data-panel="cost">Cost</button>
     </nav>
 
@@ -122,6 +123,23 @@
       </ol>
     </section>
 
+    <section id="threads" class="panel">
+      <p class="date">Threads</p>
+      <h1>What ran, and whether the model fit</h1>
+      <p class="lead" id="threadsLead">Cheap investigator. We can see Cursor cloud jobs and billing mail. Claude and ChatGPT chat bodies wait on a Mac export.</p>
+      <p class="quiet" id="threadsMeta"></p>
+      <h2>By door</h2>
+      <div id="threadDoors"></div>
+      <h2>By project</h2>
+      <div id="threadProjects"></div>
+      <h2>Models this window</h2>
+      <div id="threadModels"></div>
+      <h2>What this pass cannot see</h2>
+      <div class="warn" id="threadBlind"></div>
+      <h2>Next</h2>
+      <div id="threadNext"></div>
+    </section>
+
     <section id="cost" class="panel">
       <p class="date">Cost</p>
       <h1>By project</h1>
@@ -150,7 +168,7 @@
       <a href="https://iansimp.github.io/ian-jx7k2/home/">This page, live</a>
       <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/NOW.md">What’s live</a>
       <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/DOORS.md">Cursor and Astra</a>
-      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/HARNESS.md">How we log cost</a>
+      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/INVESTIGATOR.md">How we score threads</a>
       <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/DECISIONS.md">Comments</a>
       <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/FROM-IAN.md">Only you can do these</a>
       <a href="https://calldibs.us">Dibs</a>
@@ -168,7 +186,7 @@
     "Do not split the $60 Cursor subscription across projects.",
     "ChatGPT Astra sits in the $20 Plus unless Ian says he was billed extra.",
     "A model switch after the fact cannot be A/B tested. Log outcome as unknown unless Ian judges it.",
-    "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords or live keys in Mac job prompts."
+    "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords, live keys, or family/school detail in Mac job prompts or in investigator.json."
   ],
   "project_labels": {
     "ai-home": "This home",
@@ -176,7 +194,8 @@
     "dibs": "Dibs",
     "solopreneur": "Ideas",
     "email-triage": "Mail",
-    "other": "Other"
+    "other": "Other",
+    "personal": "Personal"
   },
   "subscriptions": [
     {
@@ -187,12 +206,12 @@
     {
       "name": "ChatGPT Plus",
       "usd_month": 20,
-      "note": "Flat. Astra lives here. GitHub read is on. Codex write still off."
+      "note": "Flat. First month free as of 9 Sep 2026. Astra lives here. GitHub read is on. Codex write still off."
     },
     {
       "name": "Claude Pro",
       "usd_month": null,
-      "note": "Still paying. Ends last. Monthly amount not logged yet."
+      "note": "Still paying. Ends last. Monthly amount not logged yet. Extra auto-recharge credits are on top of Pro — see Threads."
     }
   ],
   "routing": {
@@ -225,6 +244,18 @@
       "result": "Stripe emailed 11 Sep that live payments are on. calldibs.us can charge real cards.",
       "handoff": "handoffs/2026-09-11-stripe-live.md",
       "astra_prompt": "You are Astra on my Mac. Do this computer job. Do not edit git unless this packet says so. Project: dibs. Goal: Take Stripe from test to live so calldibs.us can charge real cards. Why this is a computer job: Stripe Dashboard activate, passkey, phone. Cursor cloud cannot click that. Read iansimp/cursor file: context/ai-system/handoffs/2026-09-11-stripe-live.md When done, reply with: what changed, what you did not do, exact next step. I will paste that back into Cursor."
+    },
+    {
+      "id": "job-2026-09-11-usage-exports",
+      "date": "2026-09-11",
+      "project": "ai-home",
+      "title": "Drop Claude, ChatGPT, and Cursor usage exports in Drive",
+      "status": "needs_computer",
+      "door": "ChatGPT Astra",
+      "why_computer": "Official export buttons and the Cursor Usage page need a logged-in Mac browser. Do not commit the files to git.",
+      "result": null,
+      "handoff": "handoffs/2026-09-11-usage-exports.md",
+      "astra_prompt": "You are Astra on my Mac. Do this computer job. Do not edit git. Project: ai-home. Goal: Three exports into Google Drive, folder Ian AI Home / usage-exports (create that subfolder if needed). Parent folder: https://drive.google.com/drive/folders/1w-EhHcXIAYUHcLO-qWjBDLdDsg4iTN06 1. Claude: claude.ai → Settings → Privacy (or Account) → Export data. Wait for the email. Download the ZIP. Upload it. Name it claude-export-YYYY-MM-DD.zip. 2. ChatGPT: chatgpt.com → Settings → Data controls → Export. Wait for the email. Download the ZIP. Upload it. Name it chatgpt-export-YYYY-MM-DD.zip. 3. Cursor: https://cursor.com/dashboard/usage → download the CSV if offered, otherwise screenshot Spending and Usage. Name cursor-usage-YYYY-MM-DD.csv or .png. When done, reply with: what landed in Drive (filenames only), what you could not export, exact next step. I will paste that back into Cursor."
     }
   ],
   "spend_notes": [
@@ -240,6 +271,19 @@
       "project": "ai-home",
       "task": "Most of the day's architecture / planning",
       "note": "Ian reported this after the fact. No token breakdown. Cannot compare to Grok on the same day."
+    },
+    {
+      "id": "spend-2026-09-11-anthropic-autorecharge-sample",
+      "date": "2026-09-11",
+      "source": "gmail-receipt",
+      "usd": 10,
+      "operator": null,
+      "tokens": null,
+      "model": "Anthropic credits",
+      "door": "Claude",
+      "project": "other",
+      "task": "Auto-recharge credits (one opened receipt)",
+      "note": "Opened 11 Sep receipt: $10.00. Also opened 9 Sep $10.04 and 2 Sep $10.06. 16 similar receipts in 21 days. Do not sum the rest until opened. Does not say which chat."
     }
   ],
   "tweaks": [
@@ -376,10 +420,238 @@
       "outcome": "shipped",
       "tweak_id": null,
       "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-11-usage-investigator",
+      "date": "2026-09-11",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "First usage investigator: threads, model fit, side chats, export job",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "INVESTIGATOR.md, Threads tab, computer job for exports",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
     }
   ]
 }
 
+</script>
+  <script id="EMBEDDED_INVESTIGATOR" type="application/json">
+{
+  "updated": "2026-09-11",
+  "run_id": "inv-2026-09-11",
+  "model": "Grok 4.6 High Fast",
+  "cost_usd": null,
+  "cost_note": "Cheap pass. Metadata + Gmail receipts. Did not read every cloud-agent transcript.",
+  "window": "2026-08-23 to 2026-09-11",
+  "public_note": "This page is public. Personal threads use generic titles. Chat bodies from Claude and ChatGPT are not in GitHub yet.",
+  "blind_spots": [
+    "Claude chat bodies: need the official export ZIP in Drive usage-exports/.",
+    "ChatGPT chat bodies: same, official export ZIP.",
+    "Cursor dollars per chat: no API on this plan. Usage CSV from the dashboard would give tokens by model, still not a perfect per-prompt table.",
+    "Cursor desktop chats that never became a cloud agent are invisible here.",
+    "Anthropic auto-recharge receipts do not say which chat burned the credits."
+  ],
+  "doors": [
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "what_we_see": "52 cloud agents in this environment. Name, model, source, date. 20 of them are the standing job-search scan.",
+      "what_we_do_not": "Tokens and $. Desktop-only chats.",
+      "spend": "Plan $60/month. On-demand unknown unless you paste a number. Hit a Cloud Agent usage limit on 22 Aug (email)."
+    },
+    {
+      "id": "claude",
+      "label": "Claude",
+      "what_we_see": "Gmail: Anthropic auto-recharge credits. Ian named a personal school-enrollment thread on 10–11 Sep.",
+      "what_we_do_not": "Any Claude transcript. Which product (claude.ai vs API vs Claude Code) tripped auto-recharge.",
+      "spend": "Claude Pro amount not logged. Extra: 16 auto-recharge receipts in 21 days. Three opened: $10.00 (11 Sep), $10.04 (9 Sep), $10.06 (2 Sep). If the rest match, about $160 extra; that sum is an estimate until the other receipts are opened or an export lands."
+    },
+    {
+      "id": "openai",
+      "label": "ChatGPT",
+      "what_we_see": "Plus started 9 Sep, first month free. Astra did the Dibs Stripe activate. GitHub read is on.",
+      "what_we_do_not": "ChatGPT transcripts. Per-chat tokens.",
+      "spend": "$20/month after the free month. $0 extra known."
+    }
+  ],
+  "models": [
+    {
+      "model": "Grok 4.6 Fast",
+      "door": "Cursor",
+      "runs": 28,
+      "note": "26 from the first page of cloud agents plus 2 older daily scans. Includes automations and the named desktop jobs."
+    },
+    {
+      "model": "unknown (Cursor internal helpers)",
+      "door": "Cursor",
+      "runs": 24,
+      "note": "Source=internal, no model field. Browser/video helpers. Do not treat as Sol."
+    },
+    {
+      "model": "Sol",
+      "door": "Cursor",
+      "runs": 1,
+      "note": "Ian: most of 10 Sep architecture/planning, ≥$30. Not in the cloud-agent model field."
+    },
+    {
+      "model": "Astra",
+      "door": "ChatGPT",
+      "runs": 1,
+      "note": "Stripe test → live for calldibs.us."
+    },
+    {
+      "model": "Claude (unnamed)",
+      "door": "Claude",
+      "runs": 1,
+      "note": "Personal school-enrollment thread Ian named. Body not exported. Prompt-level scoring waits on the ZIP."
+    }
+  ],
+  "projects": [
+    {
+      "id": "job-search",
+      "label": "Job search",
+      "summary": "Most of the Cursor cloud volume. Daily automation on Grok Fast, plus Pacvue and Profound packets from desktop.",
+      "threads": [
+        {
+          "door": "Cursor",
+          "title": "Job search daily scan (automation)",
+          "dates": "2026-08-23 – 2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast or Composer",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "Mechanical recurring scan. Right pool. Do not put this on Sol.",
+          "evidence": "metadata",
+          "url": "https://cursor.com/agents/bc-81a417b8-042a-4791-92f5-1c611ee7d091"
+        },
+        {
+          "door": "Cursor",
+          "title": "Pacvue AI VP application",
+          "dates": "2026-09-10",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast; Sol only if you name a judgment pass",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "Execution against an existing playbook. Files landed in applications/.",
+          "evidence": "metadata + git",
+          "url": null
+        },
+        {
+          "door": "Cursor",
+          "title": "Profound VP strategic partnerships",
+          "dates": "2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "Same shape as Pacvue. Desktop cloud agent.",
+          "evidence": "metadata + git",
+          "url": "https://cursor.com/agents/bc-5de4a4fa-1d51-4a98-accc-480f51f03049"
+        }
+      ]
+    },
+    {
+      "id": "ai-home",
+      "label": "This home",
+      "summary": "Architecture, Home/Cost rewrite, Pages publish, this investigator. Mix of Grok Fast cloud work and a Sol planning day.",
+      "threads": [
+        {
+          "door": "Cursor",
+          "title": "Architecture / planning day",
+          "dates": "2026-09-10",
+          "model_used": "Sol",
+          "fit": "unknown",
+          "ideal": "unknown — Sol if you wanted judgment; Grok if it was mostly file-map",
+          "prompt_ok": "unknown",
+          "project_contribution": "helped",
+          "why": "You said it cost ≥$30 and switched back. We will not invent a Sol-vs-Grok winner.",
+          "evidence": "ian",
+          "url": null
+        },
+        {
+          "door": "Cursor",
+          "title": "Home board, cost, GitHub Pages",
+          "dates": "2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast",
+          "prompt_ok": "good",
+          "project_contribution": "helped",
+          "why": "Mechanical publish + copy. Right pool.",
+          "evidence": "metadata + git",
+          "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+        },
+        {
+          "door": "Cursor",
+          "title": "Usage investigator (this pass)",
+          "dates": "2026-09-11",
+          "model_used": "Grok 4.6 Fast",
+          "fit": "good",
+          "ideal": "Grok 4.6 Fast or Composer",
+          "prompt_ok": "good",
+          "project_contribution": "helped",
+          "why": "The standing rule: this job stays cheap.",
+          "evidence": "this run",
+          "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+        }
+      ]
+    },
+    {
+      "id": "dibs",
+      "label": "Dibs",
+      "summary": "Live site already. Stripe went live via Astra. Product source still on loupe branches.",
+      "threads": [
+        {
+          "door": "ChatGPT",
+          "title": "Stripe test to live",
+          "dates": "2026-09-10 – 2026-09-11",
+          "model_used": "Astra",
+          "fit": "good",
+          "ideal": "Astra",
+          "prompt_ok": "good",
+          "project_contribution": "helped",
+          "why": "Dashboard / passkey / phone. Cursor cloud cannot click that.",
+          "evidence": "gmail + ledger",
+          "url": null
+        }
+      ]
+    },
+    {
+      "id": "personal",
+      "label": "Personal / side threads",
+      "summary": "Not a git project. Still belongs on this board. Chat body is not here until the Claude export lands.",
+      "threads": [
+        {
+          "door": "Claude",
+          "title": "School enrollment",
+          "dates": "2026-09-10 – 2026-09-11",
+          "model_used": "Claude (unnamed)",
+          "fit": "good",
+          "ideal": "Claude Pro (included) or any cheap chat. Not Sol. Not Cursor cloud.",
+          "prompt_ok": "unknown",
+          "project_contribution": "n/a — not a repo project",
+          "why": "Ian said he used Claude for this. Life-admin. Prompt-by-prompt scoring waits on the export ZIP. Public title is generic on purpose.",
+          "evidence": "ian",
+          "url": null
+        }
+      ]
+    }
+  ],
+  "next": [
+    "Needs the Mac: drop Claude ZIP, ChatGPT ZIP, and Cursor Usage CSV into Drive usage-exports/ (Copy for Astra on Home).",
+    "Next cheap investigator pass reads those files and fills prompt-level rows.",
+    "Optional: paste a Cursor on-demand number from Spending."
+  ]
+}
 </script>
   <script>
     const toast = document.getElementById("toast");
@@ -402,6 +674,7 @@
 
     const panels = {
       home: document.getElementById("home"),
+      threads: document.getElementById("threads"),
       cost: document.getElementById("cost")
     };
     function showPanel(name) {
@@ -527,23 +800,68 @@
       }
     }
 
+    function renderThreads(inv) {
+      if (!inv) {
+        document.getElementById("threadsLead").textContent = "No investigator file yet.";
+        return;
+      }
+      document.getElementById("threadsLead").textContent = inv.public_note || "";
+      document.getElementById("threadsMeta").textContent =
+        (inv.window ? "Window " + inv.window + ". " : "") +
+        "Ran on " + (inv.model || "unknown") +
+        (inv.cost_note ? ". " + inv.cost_note : "");
+      document.getElementById("threadDoors").innerHTML = (inv.doors || []).map((d) =>
+        '<article class="proj"><h3>' + esc(d.label) + "</h3><p>" + esc(d.what_we_see) +
+        '</p><p class="next">' + esc(d.spend) + '</p><p class="next">' + esc(d.what_we_do_not) +
+        "</p></article>"
+      ).join("");
+      document.getElementById("threadProjects").innerHTML = (inv.projects || []).map((p) => {
+        const rows = (p.threads || []).map((t) =>
+          "<tr><td>" + esc(t.door) + "</td><td>" + esc(t.title) +
+          "</td><td>" + esc(t.model_used) + "</td><td>" + esc(t.fit) +
+          "</td><td>" + esc(t.ideal) + "</td><td>" + esc(t.why) + "</td></tr>"
+        ).join("");
+        return '<article class="proj"><h3>' + esc(p.label) + "</h3><p>" + esc(p.summary) +
+          "</p></article><table><thead><tr><th>Door</th><th>Thread</th><th>Used</th><th>Fit</th><th>Ideal</th><th>Why</th></tr></thead><tbody>" +
+          rows + "</tbody></table>";
+      }).join("");
+      document.getElementById("threadModels").innerHTML =
+        "<table><thead><tr><th>Model</th><th>Door</th><th>Runs</th><th>Note</th></tr></thead><tbody>" +
+        (inv.models || []).map((m) =>
+          "<tr><td>" + esc(m.model) + "</td><td>" + esc(m.door) + "</td><td>" + esc(m.runs) +
+          "</td><td>" + esc(m.note) + "</td></tr>"
+        ).join("") + "</tbody></table>";
+      document.getElementById("threadBlind").innerHTML =
+        "<ul>" + (inv.blind_spots || []).map((x) => "<li>" + esc(x) + "</li>").join("") + "</ul>";
+      document.getElementById("threadNext").innerHTML =
+        "<ol class=\"plate\">" + (inv.next || []).map((x) => "<li>" + esc(x) + "</li>").join("") + "</ol>";
+    }
+
     function render(data) {
       renderMac(data);
       renderCost(data);
     }
 
-    async function loadLedger() {
+    async function loadJson(url, embedId) {
       try {
-        const res = await fetch("harness/ledger.json", { cache: "no-store" });
-        if (res.ok) { render(await res.json()); return; }
+        const res = await fetch(url, { cache: "no-store" });
+        if (res.ok) return await res.json();
       } catch (e) { /* file:// */ }
       try {
-        render(JSON.parse(document.getElementById("EMBEDDED_LEDGER").textContent));
+        return JSON.parse(document.getElementById(embedId).textContent);
       } catch (e) {
-        document.getElementById("macJobs").innerHTML = '<p class="quiet">Could not load the work log.</p>';
+        return null;
       }
     }
-    loadLedger();
+
+    async function loadAll() {
+      const ledger = await loadJson("harness/ledger.json", "EMBEDDED_LEDGER");
+      if (ledger) render(ledger);
+      else document.getElementById("macJobs").innerHTML = '<p class="quiet">Could not load the work log.</p>';
+      const inv = await loadJson("harness/investigator.json", "EMBEDDED_INVESTIGATOR");
+      renderThreads(inv);
+    }
+    loadAll();
   </script>
 </body>
 </html>
