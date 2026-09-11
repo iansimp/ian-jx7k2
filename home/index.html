@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Home</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="canonical" href="https://iansimp.github.io/ian-jx7k2/home/" />
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #5c6570;
+      --bg: #f4f5f7;
+      --card: #fff;
+      --line: #e0e2e6;
+      --navy: #1F3864;
+      --ok: #27500A;
+      --wait: #633806;
+      --warn-bg: #FAEEDA;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { min-height: 100vh; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
+    nav { display: flex; gap: 8px; margin-bottom: 28px; }
+    nav button {
+      border: 1px solid var(--line); background: var(--card); color: var(--ink);
+      border-radius: 8px; padding: 8px 14px; font: inherit; font-size: 14px; cursor: pointer;
+    }
+    nav button[aria-current="page"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .date { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+    h1 { font-size: 28px; font-weight: 650; letter-spacing: -0.03em; margin: 0 0 10px; }
+    h2 { font-size: 15px; font-weight: 650; margin: 32px 0 10px; color: var(--muted);
+      text-transform: none; letter-spacing: 0; }
+    p, li { line-height: 1.5; color: #333; }
+    .lead { font-size: 17px; color: var(--ink); margin: 0 0 8px; max-width: 40em; }
+    a { color: var(--navy); }
+    .proj, .job, .note {
+      background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+      padding: 14px 16px; margin: 0 0 10px;
+    }
+    .proj h3, .job h3 { margin: 0 0 4px; font-size: 16px; }
+    .proj p, .job p, .note p { margin: 0; font-size: 14px; color: #444; }
+    .proj .next, .job .why { margin-top: 6px; color: var(--muted); font-size: 13px; }
+    .ok { color: var(--ok); font-size: 12px; font-weight: 650; }
+    .wait { color: var(--wait); font-size: 12px; font-weight: 650; }
+    .btn {
+      display: inline-block; margin-top: 10px; border: 1px solid var(--navy);
+      background: var(--navy); color: #fff; border-radius: 8px; padding: 7px 12px;
+      font: inherit; font-size: 13px; cursor: pointer;
+    }
+    .btn.ghost { background: #fff; color: var(--navy); }
+    .quiet { font-size: 13px; color: var(--muted); }
+    .plate li { margin: 8px 0; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card);
+      border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; font-weight: 650; background: #fafbfc; }
+    tr:last-child td { border-bottom: 0; }
+    .warn { background: var(--warn-bg); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--wait); }
+    .warn ul { margin: 6px 0 0; padding-left: 18px; }
+    .links { margin-top: 28px; font-size: 13px; }
+    .links a { display: inline-block; margin: 0 14px 8px 0; }
+    .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: var(--navy); color: #fff; padding: 8px 14px; border-radius: 999px;
+      font-size: 13px; font-weight: 650; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .toast.show { opacity: 1; }
+    .phrase { display: block; width: 100%; text-align: left; background: var(--card); color: var(--ink);
+      border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin: 8px 0;
+      cursor: pointer; font: inherit; font-size: 14px; }
+    @media (max-width: 520px) {
+      .wrap { padding: 18px 14px 48px; }
+      h1 { font-size: 24px; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav aria-label="Home">
+      <button type="button" data-panel="home" aria-current="page">Home</button>
+      <button type="button" data-panel="cost">Cost</button>
+    </nav>
+
+    <section id="home" class="panel active">
+      <p class="date" id="homeDate">11 Sep 2026</p>
+      <h1>Home</h1>
+      <p class="lead">Dibs can take real money. Stripe went live last night. The job board is still one page.</p>
+
+      <h2>Projects</h2>
+      <article class="proj">
+        <h3>Dibs</h3>
+        <p>Live at <a href="https://calldibs.us">calldibs.us</a>. Stripe can charge real cards as of this morning. Source is still on the loupe branches, not main.</p>
+        <p class="next">Next: a real $9.99 checkout when you want to see it through.</p>
+      </article>
+      <article class="proj">
+        <h3>Job search</h3>
+        <p>One board. 229 cards. Claude’s sweeps are paused. Pacvue and Profound packets are in applications/.</p>
+        <p class="next">Next: say if you want another scan or a tweak. <a href="https://iansimp.github.io/ian-jx7k2/">Open the board</a></p>
+      </article>
+      <article class="proj">
+        <h3>Mail</h3>
+        <p>Still sorting every five minutes. Leave it.</p>
+      </article>
+      <article class="proj">
+        <h3>Ideas</h3>
+        <p>Opportunity dashboard. Last card batch was mid-August.</p>
+        <p class="next"><a href="https://iansimp.github.io/ian-jx7k2/solopreneur/">Open the ideas board</a></p>
+      </article>
+
+      <h2>Needs the Mac</h2>
+      <div id="macJobs"></div>
+
+      <h2>On your plate</h2>
+      <ol class="plate">
+        <li>Optional: a Cursor spend number from <a href="https://cursor.com/dashboard">Spending / Usage</a>. Say it in chat, like “On-demand this cycle is $73.”</li>
+        <li>Optional: unload the unused OpenClaw gateway. Prompt is in <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/FROM-IAN.md">FROM-IAN.md</a>.</li>
+        <li>Optional: a real Dibs checkout when you want to see $9.99 end to end.</li>
+      </ol>
+    </section>
+
+    <section id="cost" class="panel">
+      <p class="date">Cost</p>
+      <h1>By project</h1>
+      <p class="lead">We can group work. We cannot invent the dollars Cursor will not show us.</p>
+      <div id="byProject"></div>
+
+      <h2>What you pay monthly</h2>
+      <div id="money"></div>
+
+      <h2>Numbers you told us</h2>
+      <div id="namedSpend"></div>
+
+      <h2>Recent work</h2>
+      <div id="runs"></div>
+
+      <h2>If you have a number</h2>
+      <p class="quiet">Click to copy, then paste into this Cursor chat.</p>
+      <button class="phrase" type="button">On-demand this cycle is $X.</button>
+      <button class="phrase" type="button">Sol cost me $X today on [project]. Outcome vs Grok: unknown.</button>
+
+      <div class="warn" id="honest" style="margin-top:22px"></div>
+      <p class="quiet" id="ratesLine"></p>
+    </section>
+
+    <p class="links">
+      <a href="https://iansimp.github.io/ian-jx7k2/home/">This page, live</a>
+      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/NOW.md">What’s live</a>
+      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/DOORS.md">Cursor and Astra</a>
+      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/HARNESS.md">How we log cost</a>
+      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/DECISIONS.md">Comments</a>
+      <a href="https://github.com/iansimp/cursor/blob/main/context/ai-system/FROM-IAN.md">Only you can do these</a>
+      <a href="https://calldibs.us">Dibs</a>
+      <a href="https://iansimp.github.io/ian-jx7k2/">Job board</a>
+    </p>
+  </div>
+  <div class="toast" id="toast">Copied</div>
+  <script id="EMBEDDED_LEDGER" type="application/json">
+{
+  "updated": "2026-09-11",
+  "honest_limits": [
+    "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
+    "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
+    "Do not invent token counts or dollar amounts. Blank means unknown.",
+    "Do not split the $60 Cursor subscription across projects.",
+    "ChatGPT Astra sits in the $20 Plus unless Ian says he was billed extra.",
+    "A model switch after the fact cannot be A/B tested. Log outcome as unknown unless Ian judges it.",
+    "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords or live keys in Mac job prompts."
+  ],
+  "project_labels": {
+    "ai-home": "This home",
+    "job-search": "Job search",
+    "dibs": "Dibs",
+    "solopreneur": "Ideas",
+    "email-triage": "Mail",
+    "other": "Other"
+  },
+  "subscriptions": [
+    {
+      "name": "Cursor Pro Plus",
+      "usd_month": 60,
+      "note": "Two pools. Grok and Composer draw the cheap included pool. Sol, Claude, and GPT draw the expensive one."
+    },
+    {
+      "name": "ChatGPT Plus",
+      "usd_month": 20,
+      "note": "Flat. Astra lives here. GitHub read is on. Codex write still off."
+    },
+    {
+      "name": "Claude Pro",
+      "usd_month": null,
+      "note": "Still paying. Ends last. Monthly amount not logged yet."
+    }
+  ],
+  "routing": {
+    "mechanical": "cheap-fast (Composer / Luna class)",
+    "daily": "Grok 4.6",
+    "judgment": "Sol, only when Ian names a judgment job",
+    "computer_control": "Astra when the next step is a real screen"
+  },
+  "default_builder": "Grok 4.6",
+  "default_builder_since": "2026-09-10",
+  "rates_per_million_usd": {
+    "as_of": "2026-09-10",
+    "source": "https://cursor.com/docs/account/pricing",
+    "models": [
+      {"id": "grok-4.6", "pool": "Cursor Models", "input": 2, "output": 6, "note": "Included pool. Default builder."},
+      {"id": "grok-4.6-fast", "pool": "Cursor Models", "input": 4, "output": 12, "note": "Included pool, faster, 2x."},
+      {"id": "composer-2.5", "pool": "Cursor Models", "input": 0.5, "output": 2.5, "note": "Mechanical."},
+      {"id": "gpt-5.6-sol", "pool": "Other Models", "input": 4, "output": 20, "note": "Judgment. A long planning day burns this pool."}
+    ]
+  },
+  "computer_jobs": [
+    {
+      "id": "job-2026-09-11-stripe-live",
+      "date": "2026-09-11",
+      "project": "dibs",
+      "title": "Turn Stripe on for real payments",
+      "status": "done",
+      "door": "ChatGPT Astra",
+      "why_computer": "Stripe Dashboard: activate the business profile, passkey, phone. Not a git job.",
+      "result": "Stripe emailed 11 Sep that live payments are on. calldibs.us can charge real cards.",
+      "handoff": "handoffs/2026-09-11-stripe-live.md",
+      "astra_prompt": "You are Astra on my Mac. Do this computer job. Do not edit git unless this packet says so. Project: dibs. Goal: Take Stripe from test to live so calldibs.us can charge real cards. Why this is a computer job: Stripe Dashboard activate, passkey, phone. Cursor cloud cannot click that. Read iansimp/cursor file: context/ai-system/handoffs/2026-09-11-stripe-live.md When done, reply with: what changed, what you did not do, exact next step. I will paste that back into Cursor."
+    }
+  ],
+  "spend_notes": [
+    {
+      "id": "spend-2026-09-10-sol-planning",
+      "date": "2026-09-10",
+      "source": "ian",
+      "usd": 30,
+      "operator": ">=",
+      "tokens": null,
+      "model": "Sol",
+      "door": "Cursor",
+      "project": "ai-home",
+      "task": "Most of the day's architecture / planning",
+      "note": "Ian reported this after the fact. No token breakdown. Cannot compare to Grok on the same day."
+    }
+  ],
+  "tweaks": [
+    {
+      "id": "tweak-2026-09-10-sol-then-grok",
+      "date": "2026-09-10",
+      "who": "Ian",
+      "change": "Used Sol for most of the day's planning (more than $30). Switched default builder back to Grok.",
+      "hypothesis": "Sol would produce a better architecture than Grok for this planning.",
+      "outcome": "unknown",
+      "outcome_note": "No parallel Grok run. Do not guess. Standing rule after this: Sol only for a named judgment job, not an all-day default.",
+      "spend_note_id": "spend-2026-09-10-sol-planning"
+    },
+    {
+      "id": "tweak-2026-09-10-one-job-board",
+      "date": "2026-09-10",
+      "who": "Ian",
+      "change": "Consolidate job search to one Cursor writer. Stop skipping Cowork dupes. Union Cowork-only cards into the Cursor board.",
+      "hypothesis": "Two writers plus Cowork-skip made the Cursor board stale; one board will stay current.",
+      "outcome": "unknown",
+      "outcome_note": "Union shipped. Claude paused same day. Later folded city/import copies. Proof is later scans, not one empty pass.",
+      "spend_note_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": "run-2026-09-10-harness",
+      "date": "2026-09-10",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "Stand up the cost ledger after Ian asked how we track usage",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "harness/ + Cost tab",
+      "outcome": "shipped",
+      "tweak_id": "tweak-2026-09-10-sol-then-grok",
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-job-search-daily-pattern",
+      "date": "2026-09-10",
+      "door": "Cursor automations",
+      "source": "automations",
+      "model": "Grok 4.6 High Fast",
+      "project": "job-search",
+      "task": "Standing daily scan",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "Job board, when the scan finds cards",
+      "outcome": "ongoing",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-97b450dd-765c-4a55-ac0a-441792990199"
+    },
+    {
+      "id": "run-2026-09-10-one-job-board",
+      "date": "2026-09-10",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "job-search",
+      "task": "One job board after Ian said it had gotten stale",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "Union Cowork cards; both Pages URLs",
+      "outcome": "shipped",
+      "tweak_id": "tweak-2026-09-10-one-job-board",
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-10-afternoon-scan",
+      "date": "2026-09-10",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "job-search",
+      "task": "Afternoon cloud scan after Claude pause",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "0 new A / 0 B; dual-publish",
+      "outcome": "shipped",
+      "tweak_id": "tweak-2026-09-10-one-job-board",
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-11-stripe-live",
+      "date": "2026-09-11",
+      "door": "ChatGPT Astra",
+      "source": "mac",
+      "model": "Astra",
+      "project": "dibs",
+      "task": "Stripe test to live so calldibs.us can charge real cards",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "Live payments on (Stripe email 11 Sep). No keys in git.",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-09-11-home-rewrite",
+      "date": "2026-09-11",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "Rewrite Home after the Astra Stripe bounce; cost by project",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "DOORS.md, computer jobs, Home + Cost",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-11-home-pages",
+      "date": "2026-09-11",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "Publish Home to GitHub Pages so it opens in a browser",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "https://iansimp.github.io/ian-jx7k2/home/",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    }
+  ]
+}
+
+</script>
+  <script>
+    const toast = document.getElementById("toast");
+    function copyText(text) {
+      const run = async () => {
+        try { await navigator.clipboard.writeText(text); }
+        catch (e) {
+          const area = document.createElement("textarea");
+          area.value = text; document.body.appendChild(area); area.select();
+          document.execCommand("copy"); area.remove();
+        }
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1400);
+      };
+      run();
+    }
+    document.querySelectorAll(".phrase").forEach((btn) => {
+      btn.addEventListener("click", () => copyText(btn.textContent.trim()));
+    });
+
+    const panels = {
+      home: document.getElementById("home"),
+      cost: document.getElementById("cost")
+    };
+    function showPanel(name) {
+      let key = name;
+      if (key === "overview" || key === "harness") key = key === "harness" ? "cost" : "home";
+      if (!panels[key]) key = "home";
+      Object.entries(panels).forEach(([id, el]) => el.classList.toggle("active", id === key));
+      document.querySelectorAll("nav button").forEach((btn) => {
+        btn.setAttribute("aria-current", btn.dataset.panel === key ? "page" : "false");
+      });
+      if (location.hash !== "#" + key) history.replaceState(null, "", "#" + key);
+    }
+    document.querySelectorAll("nav button").forEach((btn) => {
+      btn.addEventListener("click", () => showPanel(btn.dataset.panel));
+    });
+    showPanel((location.hash || "#home").slice(1));
+
+    function esc(s) {
+      return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+    function money(note) {
+      if (note.usd == null) return "not logged";
+      return (note.operator === ">=" ? "≥" : "") + "$" + note.usd;
+    }
+    function label(data, id) {
+      return (data.project_labels && data.project_labels[id]) || id;
+    }
+
+    function renderMac(data) {
+      const jobs = data.computer_jobs || [];
+      const open = jobs.filter((j) => j.status === "needs_computer" || j.status === "in_progress");
+      const done = jobs.filter((j) => j.status === "done");
+      const box = document.getElementById("macJobs");
+      let html = "";
+      if (open.length === 0) {
+        html += '<p class="quiet">Nothing waiting. Cursor will put a Copy for Astra button here when the next step is a real screen.</p>';
+      } else {
+        open.forEach((j, i) => {
+          html += '<article class="job"><span class="wait">' + esc(j.status === "in_progress" ? "In progress" : "Needs the Mac") +
+            "</span><h3>" + esc(j.title) + "</h3><p>" + esc(j.why_computer) + "</p>";
+          if (j.astra_prompt) {
+            html += '<button class="btn" type="button" data-copy="' + i + '">Copy for Astra</button>';
+          }
+          html += "</article>";
+        });
+      }
+      if (done.length) {
+        const last = done[done.length - 1];
+        html += '<p class="quiet" style="margin-top:12px"><span class="ok">Done</span> ' +
+          esc(last.date) + " · " + esc(last.title) + ". " + esc(last.result) + "</p>";
+      }
+      box.innerHTML = html;
+      box.querySelectorAll("[data-copy]").forEach((btn) => {
+        btn.addEventListener("click", () => copyText(open[Number(btn.dataset.copy)].astra_prompt));
+      });
+    }
+
+    function renderCost(data) {
+      const labels = data.project_labels || {};
+      const by = {};
+      (data.runs || []).forEach((r) => {
+        const id = r.project || "other";
+        if (!by[id]) by[id] = { runs: 0, unknown: 0, known: 0, last: "", lastDate: "" };
+        by[id].runs += 1;
+        if (r.cost_usd == null) by[id].unknown += 1;
+        else by[id].known += r.cost_usd;
+        if ((r.date || "") >= (by[id].lastDate || "")) {
+          by[id].lastDate = r.date;
+          by[id].last = r.task;
+        }
+      });
+      (data.spend_notes || []).forEach((s) => {
+        const id = s.project || "other";
+        if (!by[id]) by[id] = { runs: 0, unknown: 0, known: 0, last: "", lastDate: "" };
+        if (s.usd != null) by[id].named = (by[id].named || 0) + s.usd;
+      });
+      const order = Object.keys(labels).filter((id) => by[id])
+        .concat(Object.keys(by).filter((id) => !labels[id]));
+      document.getElementById("byProject").innerHTML =
+        "<table><thead><tr><th>Project</th><th>Runs</th><th>Known $</th><th>Last</th></tr></thead><tbody>" +
+        order.map((id) => {
+          const p = by[id];
+          const named = p.named != null ? "Named ≥$" + p.named : "";
+          const run$ = p.known ? "$" + p.known : "";
+          const known = named || run$ || (p.unknown ? p.unknown + " unknown" : "—");
+          const unknownBit = (named || run$) && p.unknown ? " · " + p.unknown + " runs with no $" : "";
+          return "<tr><td>" + esc(label(data, id)) + "</td><td>" + p.runs +
+            "</td><td>" + esc(known + unknownBit) + "</td><td>" + esc(p.lastDate) + " · " + esc(p.last) + "</td></tr>";
+        }).join("") + "</tbody></table>";
+
+      document.getElementById("money").innerHTML = (data.subscriptions || []).map((s) =>
+        '<div class="note"><h3>' + esc(s.name) + "</h3><p>" +
+        (s.usd_month == null ? "Amount not logged" : "$" + s.usd_month + " / month") +
+        ". " + esc(s.note) + "</p></div>"
+      ).join("");
+
+      const spends = data.spend_notes || [];
+      document.getElementById("namedSpend").innerHTML = spends.length
+        ? spends.map((s) =>
+            '<div class="note"><h3>' + esc(s.model) + " · " + esc(s.date) + "</h3><p>" +
+            money(s) + " · " + esc(label(data, s.project)) + " · " + esc(s.task) + ". " + esc(s.note) + "</p></div>"
+          ).join("")
+        : '<p class="quiet">None yet besides the monthly plans.</p>';
+
+      const runs = (data.runs || []).slice().reverse();
+      document.getElementById("runs").innerHTML =
+        "<table><thead><tr><th>Date</th><th>Project</th><th>Door</th><th>What</th><th>$</th></tr></thead><tbody>" +
+        runs.map((r) =>
+          "<tr><td>" + esc(r.date) + "</td><td>" + esc(label(data, r.project)) + "</td><td>" + esc(r.door) +
+          "</td><td>" + (r.url ? '<a href="' + esc(r.url) + '">' + esc(r.task) + "</a>" : esc(r.task)) +
+          "</td><td>" + (r.cost_usd == null ? "unknown" : "$" + r.cost_usd) + "</td></tr>"
+        ).join("") + "</tbody></table>";
+
+      document.getElementById("honest").innerHTML =
+        "<strong>What this page will not fake</strong><ul>" +
+        (data.honest_limits || []).map((x) => "<li>" + esc(x) + "</li>").join("") + "</ul>";
+      const rates = data.rates_per_million_usd;
+      if (rates) {
+        document.getElementById("ratesLine").innerHTML =
+          "List prices as of " + esc(rates.as_of) +
+          '. <a href="' + esc(rates.source) + '">Cursor pricing</a>. Default builder: ' +
+          esc(data.default_builder) + " since " + esc(data.default_builder_since) + ".";
+      }
+    }
+
+    function render(data) {
+      renderMac(data);
+      renderCost(data);
+    }
+
+    async function loadLedger() {
+      try {
+        const res = await fetch("harness/ledger.json", { cache: "no-store" });
+        if (res.ok) { render(await res.json()); return; }
+      } catch (e) { /* file:// */ }
+      try {
+        render(JSON.parse(document.getElementById("EMBEDDED_LEDGER").textContent));
+      } catch (e) {
+        document.getElementById("macJobs").innerHTML = '<p class="quiet">Could not load the work log.</p>';
+      }
+    }
+    loadLedger();
+  </script>
+</body>
+</html>

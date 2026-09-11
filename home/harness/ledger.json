@@ -1,0 +1,220 @@
+{
+  "updated": "2026-09-11",
+  "honest_limits": [
+    "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
+    "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
+    "Do not invent token counts or dollar amounts. Blank means unknown.",
+    "Do not split the $60 Cursor subscription across projects.",
+    "ChatGPT Astra sits in the $20 Plus unless Ian says he was billed extra.",
+    "A model switch after the fact cannot be A/B tested. Log outcome as unknown unless Ian judges it.",
+    "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords or live keys in Mac job prompts."
+  ],
+  "project_labels": {
+    "ai-home": "This home",
+    "job-search": "Job search",
+    "dibs": "Dibs",
+    "solopreneur": "Ideas",
+    "email-triage": "Mail",
+    "other": "Other"
+  },
+  "subscriptions": [
+    {
+      "name": "Cursor Pro Plus",
+      "usd_month": 60,
+      "note": "Two pools. Grok and Composer draw the cheap included pool. Sol, Claude, and GPT draw the expensive one."
+    },
+    {
+      "name": "ChatGPT Plus",
+      "usd_month": 20,
+      "note": "Flat. Astra lives here. GitHub read is on. Codex write still off."
+    },
+    {
+      "name": "Claude Pro",
+      "usd_month": null,
+      "note": "Still paying. Ends last. Monthly amount not logged yet."
+    }
+  ],
+  "routing": {
+    "mechanical": "cheap-fast (Composer / Luna class)",
+    "daily": "Grok 4.6",
+    "judgment": "Sol, only when Ian names a judgment job",
+    "computer_control": "Astra when the next step is a real screen"
+  },
+  "default_builder": "Grok 4.6",
+  "default_builder_since": "2026-09-10",
+  "rates_per_million_usd": {
+    "as_of": "2026-09-10",
+    "source": "https://cursor.com/docs/account/pricing",
+    "models": [
+      {"id": "grok-4.6", "pool": "Cursor Models", "input": 2, "output": 6, "note": "Included pool. Default builder."},
+      {"id": "grok-4.6-fast", "pool": "Cursor Models", "input": 4, "output": 12, "note": "Included pool, faster, 2x."},
+      {"id": "composer-2.5", "pool": "Cursor Models", "input": 0.5, "output": 2.5, "note": "Mechanical."},
+      {"id": "gpt-5.6-sol", "pool": "Other Models", "input": 4, "output": 20, "note": "Judgment. A long planning day burns this pool."}
+    ]
+  },
+  "computer_jobs": [
+    {
+      "id": "job-2026-09-11-stripe-live",
+      "date": "2026-09-11",
+      "project": "dibs",
+      "title": "Turn Stripe on for real payments",
+      "status": "done",
+      "door": "ChatGPT Astra",
+      "why_computer": "Stripe Dashboard: activate the business profile, passkey, phone. Not a git job.",
+      "result": "Stripe emailed 11 Sep that live payments are on. calldibs.us can charge real cards.",
+      "handoff": "handoffs/2026-09-11-stripe-live.md",
+      "astra_prompt": "You are Astra on my Mac. Do this computer job. Do not edit git unless this packet says so. Project: dibs. Goal: Take Stripe from test to live so calldibs.us can charge real cards. Why this is a computer job: Stripe Dashboard activate, passkey, phone. Cursor cloud cannot click that. Read iansimp/cursor file: context/ai-system/handoffs/2026-09-11-stripe-live.md When done, reply with: what changed, what you did not do, exact next step. I will paste that back into Cursor."
+    }
+  ],
+  "spend_notes": [
+    {
+      "id": "spend-2026-09-10-sol-planning",
+      "date": "2026-09-10",
+      "source": "ian",
+      "usd": 30,
+      "operator": ">=",
+      "tokens": null,
+      "model": "Sol",
+      "door": "Cursor",
+      "project": "ai-home",
+      "task": "Most of the day's architecture / planning",
+      "note": "Ian reported this after the fact. No token breakdown. Cannot compare to Grok on the same day."
+    }
+  ],
+  "tweaks": [
+    {
+      "id": "tweak-2026-09-10-sol-then-grok",
+      "date": "2026-09-10",
+      "who": "Ian",
+      "change": "Used Sol for most of the day's planning (more than $30). Switched default builder back to Grok.",
+      "hypothesis": "Sol would produce a better architecture than Grok for this planning.",
+      "outcome": "unknown",
+      "outcome_note": "No parallel Grok run. Do not guess. Standing rule after this: Sol only for a named judgment job, not an all-day default.",
+      "spend_note_id": "spend-2026-09-10-sol-planning"
+    },
+    {
+      "id": "tweak-2026-09-10-one-job-board",
+      "date": "2026-09-10",
+      "who": "Ian",
+      "change": "Consolidate job search to one Cursor writer. Stop skipping Cowork dupes. Union Cowork-only cards into the Cursor board.",
+      "hypothesis": "Two writers plus Cowork-skip made the Cursor board stale; one board will stay current.",
+      "outcome": "unknown",
+      "outcome_note": "Union shipped. Claude paused same day. Later folded city/import copies. Proof is later scans, not one empty pass.",
+      "spend_note_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": "run-2026-09-10-harness",
+      "date": "2026-09-10",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "Stand up the cost ledger after Ian asked how we track usage",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "harness/ + Cost tab",
+      "outcome": "shipped",
+      "tweak_id": "tweak-2026-09-10-sol-then-grok",
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-job-search-daily-pattern",
+      "date": "2026-09-10",
+      "door": "Cursor automations",
+      "source": "automations",
+      "model": "Grok 4.6 High Fast",
+      "project": "job-search",
+      "task": "Standing daily scan",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "Job board, when the scan finds cards",
+      "outcome": "ongoing",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-97b450dd-765c-4a55-ac0a-441792990199"
+    },
+    {
+      "id": "run-2026-09-10-one-job-board",
+      "date": "2026-09-10",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "job-search",
+      "task": "One job board after Ian said it had gotten stale",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "Union Cowork cards; both Pages URLs",
+      "outcome": "shipped",
+      "tweak_id": "tweak-2026-09-10-one-job-board",
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-10-afternoon-scan",
+      "date": "2026-09-10",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "job-search",
+      "task": "Afternoon cloud scan after Claude pause",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "0 new A / 0 B; dual-publish",
+      "outcome": "shipped",
+      "tweak_id": "tweak-2026-09-10-one-job-board",
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-11-stripe-live",
+      "date": "2026-09-11",
+      "door": "ChatGPT Astra",
+      "source": "mac",
+      "model": "Astra",
+      "project": "dibs",
+      "task": "Stripe test to live so calldibs.us can charge real cards",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "Live payments on (Stripe email 11 Sep). No keys in git.",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-09-11-home-rewrite",
+      "date": "2026-09-11",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "Rewrite Home after the Astra Stripe bounce; cost by project",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "DOORS.md, computer jobs, Home + Cost",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-11-home-pages",
+      "date": "2026-09-11",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "ai-home",
+      "task": "Publish Home to GitHub Pages so it opens in a browser",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "https://iansimp.github.io/ian-jx7k2/home/",
+      "outcome": "shipped",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    }
+  ]
+}
