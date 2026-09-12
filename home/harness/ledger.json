@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-11",
+  "updated": "2026-09-12",
   "honest_limits": [
     "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
     "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
@@ -32,7 +32,7 @@
     {
       "name": "Claude Pro",
       "usd_month": null,
-      "note": "Still paying. Ends last. Monthly amount not logged yet. Extra auto-recharge credits are on top of Pro — see Threads."
+      "note": "Still paying. Ends last. Monthly amount not logged yet. Extra auto-recharge credits are on top of Pro \u2014 see Threads."
     }
   ],
   "routing": {
@@ -47,10 +47,34 @@
     "as_of": "2026-09-10",
     "source": "https://cursor.com/docs/account/pricing",
     "models": [
-      {"id": "grok-4.6", "pool": "Cursor Models", "input": 2, "output": 6, "note": "Included pool. Default builder."},
-      {"id": "grok-4.6-fast", "pool": "Cursor Models", "input": 4, "output": 12, "note": "Included pool, faster, 2x."},
-      {"id": "composer-2.5", "pool": "Cursor Models", "input": 0.5, "output": 2.5, "note": "Mechanical."},
-      {"id": "gpt-5.6-sol", "pool": "Other Models", "input": 4, "output": 20, "note": "Judgment. A long planning day burns this pool."}
+      {
+        "id": "grok-4.6",
+        "pool": "Cursor Models",
+        "input": 2,
+        "output": 6,
+        "note": "Included pool. Default builder."
+      },
+      {
+        "id": "grok-4.6-fast",
+        "pool": "Cursor Models",
+        "input": 4,
+        "output": 12,
+        "note": "Included pool, faster, 2x."
+      },
+      {
+        "id": "composer-2.5",
+        "pool": "Cursor Models",
+        "input": 0.5,
+        "output": 2.5,
+        "note": "Mechanical."
+      },
+      {
+        "id": "gpt-5.6-sol",
+        "pool": "Other Models",
+        "input": 4,
+        "output": 20,
+        "note": "Judgment. A long planning day burns this pool."
+      }
     ]
   },
   "computer_jobs": [
@@ -76,7 +100,19 @@
       "why_computer": "Official export buttons and the Cursor Usage page need a logged-in Mac browser. Do not commit the files to git.",
       "result": null,
       "handoff": "handoffs/2026-09-11-usage-exports.md",
-      "astra_prompt": "You are Astra on my Mac. Do this computer job. Do not edit git. Project: ai-home. Goal: Three exports into Google Drive, folder Ian AI Home / usage-exports (create that subfolder if needed). Parent folder: https://drive.google.com/drive/folders/1w-EhHcXIAYUHcLO-qWjBDLdDsg4iTN06 1. Claude: claude.ai → Settings → Privacy (or Account) → Export data. Wait for the email. Download the ZIP. Upload it. Name it claude-export-YYYY-MM-DD.zip. 2. ChatGPT: chatgpt.com → Settings → Data controls → Export. Wait for the email. Download the ZIP. Upload it. Name it chatgpt-export-YYYY-MM-DD.zip. 3. Cursor: https://cursor.com/dashboard/usage → download the CSV if offered, otherwise screenshot Spending and Usage. Name cursor-usage-YYYY-MM-DD.csv or .png. When done, reply with: what landed in Drive (filenames only), what you could not export, exact next step. I will paste that back into Cursor."
+      "astra_prompt": "You are Astra on my Mac. Do this computer job. Do not edit git. Project: ai-home. Goal: Three exports into Google Drive, folder Ian AI Home / usage-exports (create that subfolder if needed). Parent folder: https://drive.google.com/drive/folders/1w-EhHcXIAYUHcLO-qWjBDLdDsg4iTN06 1. Claude: claude.ai \u2192 Settings \u2192 Privacy (or Account) \u2192 Export data. Wait for the email. Download the ZIP. Upload it. Name it claude-export-YYYY-MM-DD.zip. 2. ChatGPT: chatgpt.com \u2192 Settings \u2192 Data controls \u2192 Export. Wait for the email. Download the ZIP. Upload it. Name it chatgpt-export-YYYY-MM-DD.zip. 3. Cursor: https://cursor.com/dashboard/usage \u2192 download the CSV if offered, otherwise screenshot Spending and Usage. Name cursor-usage-YYYY-MM-DD.csv or .png. When done, reply with: what landed in Drive (filenames only), what you could not export, exact next step. I will paste that back into Cursor."
+    },
+    {
+      "id": "job-2026-09-12-home-dashboard-redesign",
+      "date": "2026-09-12",
+      "project": "ai-home",
+      "title": "Redesign Home so it reads as a usage dashboard",
+      "status": "needs_computer",
+      "door": "ChatGPT Astra",
+      "why_computer": "Ian wants Astra's shot at the layout. Open the live page on phone and laptop, rewrite the HTML, show the result. Cursor already took two shots he does not like.",
+      "result": null,
+      "handoff": "handoffs/2026-09-12-home-dashboard-redesign.md",
+      "astra_prompt": "You are Astra on my Mac. Redesign my AI Home dashboard. It still reads like a markdown file, not a jump-in usage console. Live: https://iansimp.github.io/ian-jx7k2/home/  Read the full brief (all methodologies) in iansimp/cursor: context/ai-system/handoffs/2026-09-12-home-dashboard-redesign.md Also read control-center.html, harness/ledger.json, harness/investigator.json, HARNESS.md, INVESTIGATOR.md, DOORS.md. Goal: phone-first personal usage dashboard. In five seconds I should see known spend vs unknown, Mac jobs waiting, and what ran recently by project/door/model. Do not repeat Cursor's two shots (AI control-center; 720px essay tabs). Do not invent dollars or tokens. Unknown is a first-class state. Keep the ledger.json + investigator.json contracts, Copy for Astra, fetch cache no-store plus JSON embeds, public-safe titles (no family/school/keys). ChatGPT GitHub write is off. Do not git push. Do not touch ian-jx7k2 index.html or index1.html or /solopreneur/. Rewrite control-center.html locally or write the complete file to Desktop or Drive Ian AI Home / 05 Inbox. When done, reply with: what changed, what you did not do, path to the new HTML, phone+desktop check, Cursor Spending number if you saw one, exact next step. I will paste that back into Cursor."
     }
   ],
   "spend_notes": [
