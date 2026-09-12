@@ -113,6 +113,18 @@
       "result": "Astra writeback 12 Sep: charcoal/lime dashboard built and browser-QA'd in Remote Control. No invented $. Usage-export job unchanged. Zip did not reach Drive. Status stays in_progress until Cursor has the HTML and finishes file://, OS clipboard, and 200% zoom checks.",
       "handoff": "handoffs/2026-09-12-home-dashboard-redesign.md",
       "astra_prompt": "You are Astra on my Mac. Redesign my AI Home dashboard. It still reads like a markdown file, not a jump-in usage console. Live: https://iansimp.github.io/ian-jx7k2/home/  Read the full brief (all methodologies) in iansimp/cursor: context/ai-system/handoffs/2026-09-12-home-dashboard-redesign.md Also read control-center.html, harness/ledger.json, harness/investigator.json, HARNESS.md, INVESTIGATOR.md, DOORS.md. Goal: phone-first personal usage dashboard. In five seconds I should see known spend vs unknown, Mac jobs waiting, and what ran recently by project/door/model. Do not repeat Cursor's two shots (AI control-center; 720px essay tabs). Do not invent dollars or tokens. Unknown is a first-class state. Keep the ledger.json + investigator.json contracts, Copy for Astra, fetch cache no-store plus JSON embeds, public-safe titles (no family/school/keys). ChatGPT GitHub write is off. Do not git push. Do not touch ian-jx7k2 index.html or index1.html or /solopreneur/. Rewrite control-center.html locally or write the complete file to Desktop or Drive Ian AI Home / 05 Inbox. When done, reply with: what changed, what you did not do, path to the new HTML, phone+desktop check, Cursor Spending number if you saw one, exact next step. I will paste that back into Cursor."
+    },
+    {
+      "id": "job-2026-09-12-home-redesign-drop-zone",
+      "date": "2026-09-12",
+      "project": "ai-home",
+      "title": "Put the reviewed Home zip in Drive",
+      "status": "needs_computer",
+      "door": "ChatGPT Astra",
+      "why_computer": "The HTML exists on the Mac / ChatGPT Library. Cursor cloud cannot see those places. Drive 05 Inbox or Gmail is the drop zone.",
+      "result": null,
+      "handoff": "handoffs/2026-09-12-home-redesign-drop-zone.md",
+      "astra_prompt": "You are ChatGPT / Astra. Cursor cloud cannot see my Mac, Codex folders, or the ChatGPT Library. That is why the Home redesign never landed. Do not redesign again. Do not git push. Deliver the reviewed 12 Sep package only, not an older Library draft. Zip name: AI-Home-redesign-reviewed-2026-09-12.zip containing control-center.html, harness/ledger.json, harness/investigator.json. Or upload those three files with those exact names. Leave them in Google Drive Ian AI Home / 05 Inbox: https://drive.google.com/drive/folders/19a8CHqxV3OfRTssHKSF4bWxpmiggQqx2 A note titled CURSOR DROP ZONE is already in that folder. Put the zip next to it. Use Drive create/upload. If that fails, reauthorize Drive and retry once. If Drive still fails, email the zip to iansimpso@gmail.com with subject exactly: AI Home redesign for Cursor. Do not stop after saving to Desktop, Codex, or ChatGPT Library. Last known Mac path: /Users/iansimpson/Documents/Codex/2026-09-11/continue-my-ai-home-dashboard-redesign/replacement/ When the Drive folder lists the zip, reply with: Changed, Drive URL or Gmail sent, filenames, Did not do, exact next step for Cursor."
     }
   ],
   "spend_notes": [
