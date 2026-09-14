@@ -7,7 +7,8 @@
     "Do not split the $60 Cursor subscription across projects.",
     "ChatGPT Astra sits in the $20 Plus unless Ian says he was billed extra.",
     "A model switch after the fact cannot be A/B tested. Log outcome as unknown unless Ian judges it.",
-    "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords, live keys, or family/school detail in Mac job prompts or in investigator.json."
+    "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords, live keys, or family/school detail in Mac job prompts or in investigator.json.",
+    "Same-session marketing personas are not separate model invocations. Simulated Dax/Morgan completions are excluded from learning, completed-work totals, and spend."
   ],
   "project_labels": {
     "ai-home": "This home",
@@ -366,9 +367,79 @@
       "cost_usd": null,
       "cost_source": "unknown",
       "shipped": "context/ai-system/dibs-marketing-router/; https://github.com/iansimp/cursor/pull/207",
-      "outcome": "client_landed_meeting_skill_gate_still_on_loupe_branch",
+      "outcome": "simulated_persona_excluded_not_completed_work",
+      "exclude_from_totals": true,
+      "exclude_from_learning": true,
+      "counts_as_spend": false,
       "tweak_id": null,
       "url": "https://cursor.com/agents/bc-45ed2de4-21f3-4834-8683-a3b705356b16"
+    },
+    {
+      "id": "run-2026-09-14-dibs-router-gate",
+      "date": "2026-09-14",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "dibs",
+      "task": "Check Cluster D routing decision; stop before worker",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "verify/bounded-gate.json status blocked_pending_connection",
+      "outcome": "blocked_pending_connection",
+      "counts_as_completed_work": false,
+      "counts_as_spend": false,
+      "exclude_from_learning": true,
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-45ed2de4-21f3-4834-8683-a3b705356b16"
+    }
+  ],
+  "router_assignments": [
+    {
+      "id": "dibs-mkt-2026-09-14-cluster-d-outline",
+      "date": "2026-09-14",
+      "project": "dibs",
+      "title": "Cluster D outline (prior rehearsal)",
+      "status": "excluded_simulated_completion",
+      "selected_route": "cursor-cloud/cursor-grok",
+      "execution": "simulated Dax and Morgan personas — excluded from learning, totals, and spend",
+      "estimated_cost_usd": null,
+      "billed_cost_usd": null,
+      "missing_measurements": ["billed_cost_usd", "observed_tokens", "monthly_remaining_usd"],
+      "blockers": [
+        "Same-session personas are not worker execution",
+        "Prior Morgan acceptance is excluded"
+      ],
+      "learn": false,
+      "counts_as_completed_work": false,
+      "counts_as_spend": false,
+      "evidence": "records/2026-09-14-cluster-d-outline.json",
+      "evidence_url": "https://github.com/iansimp/cursor/blob/main/context/ai-system/dibs-marketing-router/records/2026-09-14-cluster-d-outline.json"
+    },
+    {
+      "id": "dibs-mkt-2026-09-14-cluster-d-outline-checked",
+      "date": "2026-09-14",
+      "project": "dibs",
+      "title": "Cluster D outline — gate check",
+      "status": "blocked_pending_connection",
+      "selected_route": "cursor-cloud/cursor-grok",
+      "execution": "not started (gate stop). Not a simulated completion.",
+      "estimated_cost_usd": 0.118,
+      "estimated_cost_basis": "router candidate upper USD, not an invoice",
+      "billed_cost_usd": null,
+      "missing_measurements": ["billed_cost_usd", "observed_tokens", "monthly_remaining_usd", "context_receipts"],
+      "blockers": [
+        "conditional_recommendation",
+        "dispatch is false",
+        "missing context receipts",
+        "selected candidate ready=false",
+        "monthly remaining is null"
+      ],
+      "learn": false,
+      "counts_as_completed_work": false,
+      "counts_as_spend": false,
+      "evidence": "verify/bounded-gate.json",
+      "evidence_url": "https://github.com/iansimp/cursor/blob/main/context/ai-system/dibs-marketing-router/verify/bounded-gate.json"
     }
   ]
 }
