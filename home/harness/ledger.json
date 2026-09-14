@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-13",
+  "updated": "2026-09-14",
   "honest_limits": [
     "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
     "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
@@ -353,6 +353,22 @@
       "outcome": "shipped",
       "tweak_id": null,
       "url": "https://cursor.com/agents/bc-46120596-341e-44a1-8cc7-4c3ba408e9de"
+    },
+    {
+      "id": "run-2026-09-14-dibs-marketing-router",
+      "date": "2026-09-14",
+      "door": "Cursor cloud",
+      "source": "desktop",
+      "model": "Grok 4.6 High Fast",
+      "project": "dibs",
+      "task": "Connect Dibs marketing team to the AI Home router; Cluster D intake rehearsal",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "context/ai-system/dibs-marketing-router/; https://github.com/iansimp/cursor/pull/207",
+      "outcome": "client_landed_meeting_skill_gate_still_on_loupe_branch",
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-45ed2de4-21f3-4834-8683-a3b705356b16"
     }
   ]
 }
