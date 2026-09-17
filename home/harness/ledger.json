@@ -107,13 +107,13 @@
       "id": "job-2026-09-17-grokbot-airline-calendars",
       "date": "2026-09-17",
       "project": "other",
-      "title": "Crawl Delta Mix & Match on Grok Bot cloud",
+      "title": "Crawl every airline award calendar on Grok Bot cloud",
       "status": "needs_computer",
       "door": "Grok Bot",
-      "why_computer": "This Mac Playwright is Akamai-blocked. Grok Bot headed cloud browser can read Mix & Match. Not a Mac Astra job.",
+      "why_computer": "This Mac Playwright is Akamai-blocked. Grok Bot headed cloud browser reads Delta plus every transfer program. Not a Mac Astra job.",
       "result": null,
       "handoff": "handoffs/2026-09-17-grokbot-airline-calendars.md",
-      "astra_prompt": "You are crawling airline award calendars on your cloud computer for Ian Simpson Travel Maximizer. Do not book. Do not transfer points. Do not store passwords. Repo: iansimp/cursor (private). Pull main. Read travel-maximizer/collectors/GROK-BOT.md, travel-maximizer/jobs/israel-2026-site-calendars.json, and .agents/skills/airline-site-crawl/SKILL.md. Do the jobs in file order (LAX, then SFO, then LAS). Delta Mix & Match first: 3 passengers, Shop with Miles on, My Dates are Flexible on, Include Basic off. Write every cell that shows miles into travel-maximizer/observations/ using the JSON shape in GROK-BOT.md. Checkpoint often. Commit on branch travel/grokbot-delta and push. If login/2FA/CAPTCHA, pause for Ian to take over Agent Computer."
+      "astra_prompt": "You are crawling airline award calendars on your cloud computer for Ian Simpson Travel Maximizer. Do not book. Do not transfer. Do not stop after Delta. Repo iansimp/cursor. Pull main. Read travel-maximizer/collectors/GROK-BOT.md, jobs/israel-2026-programs.json, jobs/israel-2026-site-calendars.json, trips/israel-2026.json. Search every program except Southwest. Delta is a packaged RT. United/FB/Avios and the rest are one-way each direction. Write observations JSON. Commit travel/grokbot-calendars. Pause for login/2FA."
     },
     {
       "id": "job-2026-09-12-home-dashboard-redesign",
