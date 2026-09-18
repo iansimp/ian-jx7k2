@@ -110,10 +110,10 @@
       "title": "Crawl every airline award calendar on Grok Bot cloud",
       "status": "needs_computer",
       "door": "Grok Bot",
-      "why_computer": "This Mac Playwright is Akamai-blocked. Grok Bot headed cloud browser reads Delta plus every transfer program. Not a Mac Astra job.",
+      "why_computer": "This Mac Playwright is Akamai-blocked. Grok Bot headed cloud browser reads Delta plus every Chase and Cap One partner, signed in as Ian. Not a Mac Astra job.",
       "result": null,
       "handoff": "handoffs/2026-09-17-grokbot-airline-calendars.md",
-      "astra_prompt": "You are crawling airline award calendars on your cloud computer for Ian Simpson Travel Maximizer. Do not book. Do not transfer. Do not stop after Delta. Repo iansimp/cursor. Pull main. Read travel-maximizer/collectors/GROK-BOT.md, jobs/israel-2026-programs.json, jobs/israel-2026-site-calendars.json, trips/israel-2026.json. Search every program except Southwest. Delta is a packaged RT. United/FB/Avios and the rest are one-way each direction. Write observations JSON. Commit travel/grokbot-calendars. Pause for login/2FA."
+      "astra_prompt": "Crawl airline award calendars signed in as Ian. Do not book. Do not search logged-out. Do not ask for passwords in chat. Ask Ian to open Agent Computer and sign into each airline account there. Never Chase or Cap One. Every Chase and Cap One transfer partner plus Delta. Skip Southwest. Read GROK-BOT.md and israel-2026-programs.json."
     },
     {
       "id": "job-2026-09-12-home-dashboard-redesign",
