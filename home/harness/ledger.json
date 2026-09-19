@@ -108,10 +108,10 @@
       "date": "2026-09-17",
       "project": "other",
       "title": "Crawl every airline award calendar on Grok Bot cloud",
-      "status": "needs_computer",
+      "status": "parked",
       "door": "Grok Bot",
       "why_computer": "This Mac Playwright is Akamai-blocked. Grok Bot headed cloud browser reads Delta plus every Chase and Cap One partner, signed in as Ian. Not a Mac Astra job.",
-      "result": null,
+      "result": "18 Sep sweep: hours on Delta+United only. Fare unknown. United selected-day only. JSON on travel/grokbot-calendars, not trusted. Parked 19 Sep.",
       "handoff": "handoffs/2026-09-17-grokbot-airline-calendars.md",
       "astra_prompt": "Crawl airline award calendars signed in as Ian. Do not book. Do not search logged-out. Do not ask for passwords in chat. Ask Ian to open Agent Computer and sign into each airline account there. Never Chase or Cap One. Every Chase and Cap One transfer partner plus Delta. Skip Southwest. Read GROK-BOT.md and israel-2026-programs.json."
     },
