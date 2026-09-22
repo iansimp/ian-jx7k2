@@ -3,14 +3,14 @@
 {
   "name": "Opportunity Dashboard",
   "schemaVersion": 1,
-  "description": "Interactive dashboard comparing 58 solopreneur opportunity gap cards across 11 lanes: one-line elevator pitch on every card, ranked score bars, fit-adjusted/raw/Jack-first/easiest-first ranking modes, E1–E5 activation-energy grades, a payoff-vs-difficulty map view, uncapped save (❤) plus 3-item pin-to-compare radar, per-card and bulk archive (🗄, reversible) with a Show-archived filter, JSON export/import of your picks for durability, and expandable full cards with evidence links. Data embedded from the Aug 9, 2026 scans."
+  "description": "Interactive dashboard comparing 190 solopreneur opportunity gap cards across 30 lanes: one-line elevator pitch on every card, ranked score bars, fit-adjusted/raw/Jack-first/easiest-first ranking modes, E1–E5 activation-energy grades, a payoff-vs-difficulty map view, uncapped save (❤) plus 3-item pin-to-compare radar, per-card and bulk archive (🗄, reversible) with a Show-archived filter, JSON export/import of your picks for durability, and expandable full cards with evidence links. Latest independent evidence scan: Sep 22, 2026."
 }
 </script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Opportunity Dashboard — Batch 1</title>
+<title>Opportunity Dashboard — Batches 1–7</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root { color-scheme: light;
@@ -63,6 +63,12 @@ header { margin-bottom:14px; }
 .gate { position:absolute; top:-3px; bottom:-3px; width:2px; background:#111827; opacity:.55; }
 .gate span { position:absolute; top:-1px; left:5px; font-size:9.5px; font-weight:700; color:#374151; white-space:nowrap; }
 .scorecell { display:flex; align-items:center; justify-content:flex-end; gap:7px; }
+.pending-fit .scorecell { flex-direction:column; align-items:flex-end; gap:3px; }
+.pending-fit .scorecell > div { max-width:100%; }
+.pending-fit .scorecell > div > div { flex-wrap:wrap; justify-content:flex-end; }
+.pending-fit .jacktag[title] { color:#fff; }
+.pending-fit .tname .l { display:block; }
+.pending-fit .tname .l > span { display:inline-block; white-space:nowrap; }
 .score { font-size:15px; font-weight:750; font-variant-numeric:tabular-nums; width:38px; text-align:right; }
 .badge { font-size:10px; font-weight:750; letter-spacing:.3px; padding:3px 7px; border-radius:5px; text-transform:uppercase; white-space:nowrap; }
 .b-deep { background:#dcfce7; color:#15803d; } .b-short { background:#fef3c7; color:#b45309; } .b-arch { background:#f1f2f5; color:#6b7280; }
@@ -70,6 +76,8 @@ header { margin-bottom:14px; }
 /* detail */
 .detail { display:none; border-top:1px solid var(--line); padding:16px 18px; background:#fcfdff; }
 .row.open .detail { display:grid; grid-template-columns:1.4fr 1fr; gap:22px; }
+.detail > div { min-width:0; }
+.row[data-cid^="AGR-"] .ev a, .row[data-cid^="NPO-"] .ev a { white-space:normal; overflow-wrap:anywhere; }
 .detail h4 { font-size:10.5px; text-transform:uppercase; letter-spacing:.7px; color:var(--muted); margin:12px 0 3px; }
 .detail h4:first-child { margin-top:0; }
 .detail p { font-size:13px; }
@@ -105,7 +113,7 @@ table.cmp .cn { font-weight:750; font-size:13px; }
 <body>
 <header>
   <h1>Solopreneur Opportunity Dashboard</h1>
-  <div class="sub">Batches 1–6 · 184 evidence-backed gaps · 28 lanes · scanned Aug 9–11, 2026 · click any row for full card &amp; evidence · <a href="clusters.html" style="color:#2563eb;font-weight:650">Cluster map of 56 saved ideas</a></div>
+  <div class="sub">Batches 1–7 · 190 evidence-backed gaps · 30 lanes · latest scan Sep 22, 2026 · click any row for full card &amp; evidence · <a href="clusters.html" style="color:#2563eb;font-weight:650">Cluster map of 56 saved ideas</a></div>
 </header>
 
 <div class="controls">
@@ -134,7 +142,7 @@ table.cmp .cn { font-weight:750; font-size:13px; }
   <button class="bulkarchive" id="importstate" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8">⬆ Import picks</button>
   <input type="file" id="importfile" accept="application/json" style="display:none">
   <div class="count" id="count"></div>
-  <div class="hint" id="hint">Scores are 0-100 (v1.6): 70 of the 100 points come from the standard weighted rubric, the other 30 are an "excellence bonus" that only pays out when demand, WTP, solo-scalability, AI-fit, and moat are simultaneously strong — one great dimension propping up a weak profile earns little bonus. 70+ clears deep-dive and is genuinely hard to reach (an idea that's a solid 4 across the board lands in the low 60s; only a near-perfect profile hits 90+); 50-69 is a solid shortlist; below 50 archives. Fit-adjusted includes founder fit; Raw ignores it (anti-bias check) — each uses its own 100-point ceiling. Easiest first sorts by activation energy: E1 = ship &amp; be found → E5 = industry framework + enterprise buy-in. Newest first shows the most recently added ideas. 📊 Data flywheel marks ideas where real scale would also produce a valuable aggregate dataset with a plausible secondary buyer (alt-data, sales intelligence) — unscored speculative upside, same spirit as Jack angle. The Map plots payoff vs startup difficulty — hunt the top-left. ❤ save as many as you like for a shortlist · ★ pin up to 3 for a side-by-side radar compare · 🗄 archive to hide (nothing is deleted — toggle "Show archived" anytime to bring it back) · 🙈 Hide saved filters out everything you've already hearted, so new ideas aren't buried among old favorites. <b>Your picks live only in this browser — click ⬇ Export regularly and keep the file somewhere safe.</b></div>
+  <div class="hint" id="hint">Scores are 0-100 (v1.6): 70 of the 100 points come from the standard weighted rubric, the other 30 are an "excellence bonus" that only pays out when demand, WTP, solo-scalability, AI-fit, and moat are simultaneously strong — one great dimension propping up a weak profile earns little bonus. 70+ clears deep-dive and is genuinely hard to reach (an idea that's a solid 4 across the board lands in the low 60s; only a near-perfect profile hits 90+); 50-69 is a solid shortlist; below 50 archives. Cards awaiting founder-fit synthesis show raw scores for ranking and map placement; their fit-adjusted score is not yet scored. Fit-adjusted includes founder fit; Raw ignores it (anti-bias check) — each uses its own 100-point ceiling. Easiest first sorts by activation energy: E1 = ship &amp; be found → E5 = industry framework + enterprise buy-in. Newest first shows the most recently added ideas. 📊 Data flywheel marks ideas where real scale would also produce a valuable aggregate dataset with a plausible secondary buyer (alt-data, sales intelligence) — unscored speculative upside, same spirit as Jack angle. The Map plots payoff vs startup difficulty — hunt the top-left. ❤ save as many as you like for a shortlist · ★ pin up to 3 for a side-by-side radar compare · 🗄 archive to hide (nothing is deleted — toggle "Show archived" anytime to bring it back) · 🙈 Hide saved filters out everything you've already hearted, so new ideas aren't buried among old favorites. <b>Your picks live only in this browser — click ⬇ Export regularly and keep the file somewhere safe.</b></div>
 </div>
 
 <div id="mapcard" style="display:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px;">
@@ -166,6 +174,9 @@ table.cmp .cn { font-weight:750; font-size:13px; }
 
 <script>
 const LANES = {
+"Agriculture & food production":{"c":"#4d7c0f","hex":"#4d7c0f"},
+"Nonprofit operations":{"c":"#0369a1","hex":"#0369a1"},
+
   "SMB ops":        {c:"var(--smb)", hex:"#2563eb"},
   "Skilled trades": {c:"var(--trd)", hex:"#ea580c"},
   "Creators":       {c:"var(--cre)", hex:"#9333ea"},
@@ -196,7 +207,14 @@ const LANES = {
   "Research-driven": {c:"#64748b", hex:"#64748b"},
   "Productivity apps": {c:"#6366f1", hex:"#6366f1"}
 };
-const EASE = {"CMI-1":5,"CMI-2":4,"SMB-1":3,"TRD-2":2,"SMB-2":3,"CMI-5":2,"TRD-3":3,"CMI-4":4,"TRD-1":4,"SMB-5":4,"SMB-3":3,"CRE-2":2,"CRE-1":3,"CRE-3":2,"SMB-4":3,"CRE-4":4,"TRD-5":3,"TRD-4":4,"CRE-6":2,"CRE-5":3,"CMI-3":4,"CON-1":1,"CON-2":2,"CON-3":1,"CON-4":1,"CON-5":1,"SSB-1":1,"SSB-2":2,"SSB-3":2,"SSB-4":1,
+const EASE = {
+"AGR-1":3,
+"AGR-2":4,
+"AGR-3":4,
+"NPO-1":3,
+"NPO-2":2,
+"NPO-3":3,
+"CMI-1":5,"CMI-2":4,"SMB-1":3,"TRD-2":2,"SMB-2":3,"CMI-5":2,"TRD-3":3,"CMI-4":4,"TRD-1":4,"SMB-5":4,"SMB-3":3,"CRE-2":2,"CRE-1":3,"CRE-3":2,"SMB-4":3,"CRE-4":4,"TRD-5":3,"TRD-4":4,"CRE-6":2,"CRE-5":3,"CMI-3":4,"CON-1":1,"CON-2":2,"CON-3":1,"CON-4":1,"CON-5":1,"SSB-1":1,"SSB-2":2,"SSB-3":2,"SSB-4":1,
 "SSV2-1":2,"SSV2-2":1,"SSV2-3":2,"SSV2-4":1,"SSV2-5":2,"SSV2-6":2,"CV2-1":1,"CV2-2":1,"CV2-3":2,"CV2-4":1,"CV2-5":1,"CV2-6":1,"HC-1":4,"HC-2":3,"HC-3":2,"HC-4":2,"HC-5":3,"REP-1":2,"REP-2":3,"REP-3":2,"REP-4":3,"REP-5":1,"REP-6":2,"AGE-1":2,"AGE-2":2,"AGE-3":3,"AGE-4":4,"AGE-5":2,
 "FIN-1":2,"FIN-2":1,"FIN-3":2,"FIN-4":3,"FIN-5":2,"FIN-6":2,"FIN-7":3,"FIN-8":2,
 "LEG-1":2,"LEG-2":2,"LEG-3":1,"LEG-4":2,"LEG-5":1,"LEG-6":1,"LEG-7":2,"LEG-8":1,
@@ -209,6 +227,13 @@ const EASE = {"CMI-1":5,"CMI-2":4,"SMB-1":3,"TRD-2":2,"SMB-2":3,"CMI-5":2,"TRD-3
 "LCI-1":3,"LCI-2":3,"LCI-3":2,"LCI-4":3,"LCI-5":2,"LCI-6":2,"LCI-7":2,"LCI-8":3,"WEL-1":2,"WEL-2":2,"WEL-3":1,"WEL-4":3,"WEL-5":1,"SOC-1":1,"SOC-2":3,"SOC-3":3,"SOC-4":3,"SOC-5":1,"LIF-1":2,"LIF-2":1,"LIF-3":3,"LIF-4":1,"LIF-5":3,"HOM-1":1,"HOM-2":3,"HOM-3":1,"HOM-4":1,"SAF-1":2,"SAF-2":2,"SAF-3":1,"SAF-4":2,"SAF-5":2,"SAF-6":2,"BOD-1":2,"BOD-2":1,"BOD-3":2,"BOD-4":3,"BOD-5":2,"BOD-6":2,"PET-1":2,"PET-2":2,"PET-3":1,"PET-4":1,"PET-5":2,"TRV-1":3,"TRV-2":2,"TRV-3":1,"TRV-4":1,"TRV-5":2,"TRV-6":4,"WLD-1":1,"WLD-2":3,"WLD-3":2,"WLD-4":3,"WLD-5":2,"RES-1":2,"RES-2":1,"RES-3":1,"RES-4":1,"RES-5":1,
 "PRD-1":2,"PRD-2":2,"PRD-3":2,"PRD-4":1,"PRD-5":2};
 const PITCH = {
+"AGR-1":"Turn a small produce farm's harvest, cooling, packing, and shipment notes into a shareable Food Traceability Rule record set without replacing its POS or accounting stack.",
+"AGR-2":"Turn a diversified farm's planting, harvest, sales, and map records into an organized FSA and Micro Farm insurance evidence packet, with deadline prompts and a human-review handoff for agents.",
+"AGR-3":"Help small branded meat, poultry, and processed-egg producers collect supplier attestations, segregation trails, and label-claim proof for a credible Product of USA claim without adopting a full enterprise traceability system.",
+"NPO-1":"A QuickBooks-side restricted-fund control layer that turns award letters into usable rules, flags uncoded or ineligible spend, reconciles the fund schedule to the general ledger, and creates a board-ready available-cash view.",
+"NPO-2":"A grant-by-grant reporting workspace that turns each award and funder template into a reusable evidence map, assigns data owners, tracks deadlines, and creates a human-reviewed narrative and financial-reporting packet.",
+"NPO-3":"An audit-readiness layer that maps folders and finance exports to a reusable prepared-by-client checklist, identifies missing support, and gives staff and auditors a permissioned evidence index.",
+
 "CMI-1":"A subscription research service that gives mid-market brands one independently-verified retail-media measurement report instead of three vendor dashboards that all disagree.",
 "CMI-2":"An independent auditing service that scores AI-shopping-visibility (GEO/AEO) tools against real query data, so brands stop trusting vendors who sell both the scorecard and the fix.",
 "SMB-1":"An AI dunning assistant that plugs into QuickBooks/Xero and automatically chases overdue invoices before they go 30+ days late, so small B2B businesses stop losing $17K a year to slow payers.",
@@ -396,7 +421,14 @@ const PITCH = {
 "PRD-5":"A personal CRM that would give relationship-driven professionals real Android+iOS+web parity and tested sync, instead of choosing between Dex's bugs, Clay/Mesh's Apple-only lock-in, or Monica's no-mobile-app manual grind.",
 };
 // Batch 1-2 cards (58) default to 2026-08-09 via the fallback below; batch 3 (this round) is listed explicitly.
-const DATES = {"FIN-1":"2026-08-10","FIN-2":"2026-08-10","FIN-3":"2026-08-10","FIN-4":"2026-08-10","FIN-5":"2026-08-10","FIN-6":"2026-08-10","FIN-7":"2026-08-10","FIN-8":"2026-08-10",
+const DATES = {
+"AGR-1":"2026-09-22",
+"AGR-2":"2026-09-22",
+"AGR-3":"2026-09-22",
+"NPO-1":"2026-09-22",
+"NPO-2":"2026-09-22",
+"NPO-3":"2026-09-22",
+"FIN-1":"2026-08-10","FIN-2":"2026-08-10","FIN-3":"2026-08-10","FIN-4":"2026-08-10","FIN-5":"2026-08-10","FIN-6":"2026-08-10","FIN-7":"2026-08-10","FIN-8":"2026-08-10",
 "LEG-1":"2026-08-10","LEG-2":"2026-08-10","LEG-3":"2026-08-10","LEG-4":"2026-08-10","LEG-5":"2026-08-10","LEG-6":"2026-08-10","LEG-7":"2026-08-10","LEG-8":"2026-08-10",
 "LOG-1":"2026-08-10","LOG-2":"2026-08-10","LOG-3":"2026-08-10","LOG-4":"2026-08-10","LOG-5":"2026-08-10","LOG-6":"2026-08-10","LOG-7":"2026-08-10",
 "HOSP-1":"2026-08-10","HOSP-2":"2026-08-10","HOSP-3":"2026-08-10","HOSP-4":"2026-08-10","HOSP-5":"2026-08-10","HOSP-6":"2026-08-10","HOSP-7":"2026-08-10",
@@ -411,6 +443,11 @@ const DATES = {"FIN-1":"2026-08-10","FIN-2":"2026-08-10","FIN-3":"2026-08-10","F
 // does this business, at scale, passively accumulate an aggregate dataset with a real secondary buyer (alt-data,
 // sales intelligence)? Not counted in the score; speculative-upside commentary only.
 const FLYWHEEL = {
+"AGR-1":{"level":"Moderate","note":"At scale, consented and de-identified crop/handling timing and traceback-readiness benchmarks might help insurers, food hubs, or extension groups; farm and food-safety data make sharing sensitive."},
+"AGR-2":{"level":"Weak","note":"Anonymous readiness signals could help extension groups, but farm, tax, and land data are sensitive and do not make a credible near-term secondary-data product."},
+"AGR-3":{"level":"Weak","note":"Aggregated provenance adoption could interest researchers, but disclosure and competitive sensitivity limit a credible secondary-data business."},
+"NPO-2":{"level":"Weak","note":"Anonymized metadata on common reporting requirements could improve templates, but grant and beneficiary data should not be resold."},
+
 "CMI-11":{level:"Moderate",note:"Whitelisted-creator ad spend across many brands' ad accounts, in aggregate, is a read on creator-economy ad spend by category — a smaller-scale analog to Bloomberg Second Measure/YipitData's use of panel data for company estimates. Speculative: needs broad multi-brand adoption first."},
 "LOG-6":{level:"Moderate",note:"3PL billing data across many small DTC brands is, in aggregate, a read on small-brand e-commerce fulfillment volume and cost trends — comparable in shape to Womply/Affinity Solutions' small-business card-spend indicators. Speculative: needs real scale across many brands before it's a credible external signal."},
 "ADI-1":{level:"Moderate",note:"Aggregated political ad rate cards/spend-by-race across many small stations could become a market-level political-spend index for firms that currently scrape FCC political files by hand. Early-stage bet, not a near-term line."},
@@ -454,6 +491,68 @@ const FLYWHEEL = {
 };
 const EASE_DEF = {1:"E1 · ship & be found",2:"E2 · self-serve + light GTM",3:"E3 · one-at-a-time convincing",4:"E4 · high-trust B2B",5:"E5 · ecosystem buy-in"};
 const EASE_COLOR = {1:"#16a34a",2:"#84cc16",3:"#d97706",4:"#ea580c",5:"#dc2626"};
+const SCORE_NOTES = {
+  "AGR-1": [
+    "1. Demand evidence: 4/5 — A specific impending rule, a first-person operations complaint, and a research survey point to the same data-capture burden.",
+    "2. Willingness to pay: 2/5 — Sources show work and risk, not verified purchases of this narrow tool.",
+    "3. Solo-scalability: 4/5 — Standardized templates and exports can be self-serve once built.",
+    "4. AI-leverage fit: 4/5 — AI can turn photos/voice notes into structured records and flag omissions, with humans retaining regulatory judgment.",
+    "5. Competition posture: 3/5 — Farm suites exist, but an FTR-specific small-farm wedge remains plausible; feature absorption is a real risk.",
+    "6. Distribution access: 3/5 — Extension programs, food hubs, and farm organizations are reachable but no channel conversion is verified.",
+    "7. Time to first revenue: 3/5 — A paid pilot could run before 2028, though deadline urgency is currently muted.",
+    "8. Moat potential: 3/5 — Crop/workflow templates and integrations can compound, but the core record UI is copyable."
+  ],
+  "AGR-2": [
+    "1. Demand evidence: 4/5 — Official requirements and an independent small-farm guide document the same recurring record/map burden.",
+    "2. Willingness to pay: 2/5 — Insurance, loan, and disaster-assistance access creates stakes, but no purchase of a preparation tool was verified.",
+    "3. Solo-scalability: 3/5 — Templates and automation scale, but county/program variation and support can become labor-heavy.",
+    "4. AI-leverage fit: 4/5 — AI can classify records, extract receipts, check completeness, and explain form fields while official decisions remain human.",
+    "5. Competition posture: 3/5 — Official portals and farm software do not eliminate the preparation gap, but partnership and absorption risk are real.",
+    "6. Distribution access: 3/5 — Beginning-farmer nonprofits, extension groups, and independent agents are identifiable but endorsement is unverified.",
+    "7. Time to first revenue: 3/5 — A paid record-organizing pilot could run this crop year, but trust and seasonal timing slow sales.",
+    "8. Moat potential: 3/5 — County/program packet rules can compound, but form organization itself is not defensible."
+  ],
+  "AGR-3": [
+    "1. Demand evidence: 3/5 — The live rule, consumer-expectation signal, and implementation coverage establish an opening, not repeated small-brand operational complaints.",
+    "2. Willingness to pay: 2/5 — Brands may value the claim, but no direct payment or paid-workaround evidence for this product was verified.",
+    "3. Solo-scalability: 4/5 — A standard attestation/document workflow can be subscription software with limited ongoing service.",
+    "4. AI-leverage fit: 3/5 — AI can extract and check documents, but rules-based provenance and legal review remain central.",
+    "5. Competition posture: 3/5 — Enterprise traceability and consultants cover pieces; the small-brand wedge is plausible but unproven.",
+    "6. Distribution access: 2/5 — Label consultants, processors, and ranch-to-retail groups are identifiable but high-trust and fragmented.",
+    "7. Time to first revenue: 3/5 — The January 2026 standard is live, allowing a narrow assisted pilot now.",
+    "8. Moat potential: 3/5 — Supplier-network history and product-specific templates can accumulate, but a document portal is copyable."
+  ],
+  "NPO-1": [
+    "1. Demand evidence: 4/5 — Verified practitioner guidance plus two public user/workaround discussions show recurring workflow friction.",
+    "2. Willingness to pay: 3/5 — Organizations already use accounting systems, bookkeepers, and bespoke tracking, but sources do not prove a standalone-tool price.",
+    "3. Solo-scalability: 4/5 — A read-only reconciliation and reporting SaaS can standardize after setup.",
+    "4. AI-leverage fit: 4/5 — AI can extract restrictions and explain exceptions while deterministic rules handle calculations.",
+    "5. Competition posture: 3/5 — Dedicated fund-accounting products compete, yet the QBO-plus-spreadsheet wedge is documented.",
+    "6. Distribution access: 3/5 — Nonprofit bookkeepers, QBO advisors, and nonprofit associations are reachable channels, though trust takes work.",
+    "7. Time to first revenue: 3/5 — A concierge reconciliation report or accountant-channel pilot could sell within 90 days, but integrations slow self-serve launch.",
+    "8. Moat potential: 3/5 — Restriction mappings and accountant-channel workflow can compound, but core functionality is copyable."
+  ],
+  "NPO-2": [
+    "1. Demand evidence: 5/5 — A sector report with aggregated feedback, a federal-template workflow, and a practitioner workaround corroborate the burden.",
+    "2. Willingness to pay: 3/5 — The report documents substantial staff time and existing CRM use, but no verified standalone-tool purchase or price point.",
+    "3. Solo-scalability: 4/5 — Template/evidence mapping can become repeatable SaaS after higher-touch onboarding.",
+    "4. AI-leverage fit: 5/5 — Document extraction, field mapping, deadline detection, and draft assembly are high-value AI assists with human approval.",
+    "5. Competition posture: 3/5 — Foundant, Fluxx, Raiser's Edge, and general work tools are established, but grantee-side manual work persists around them.",
+    "6. Distribution access: 4/5 — Grant-writing consultants, nonprofit associations, and government-grant training communities concentrate potential buyers.",
+    "7. Time to first revenue: 4/5 — A paid concierge report-pack and deadline-map service can launch before integrations.",
+    "8. Moat potential: 3/5 — A library of funder-template mappings and user-approved evidence structures offers some defensibility, but is not exclusive."
+  ],
+  "NPO-3": [
+    "1. Demand evidence: 4/5 — A nonprofit-leader survey, professional trade reporting on documentation/fee pressure, and a paid-audit practitioner account corroborate the burden.",
+    "2. Willingness to pay: 3/5 — Audit costs are explicitly mentioned, but no verified evidence proves payment for a readiness platform.",
+    "3. Solo-scalability: 4/5 — A repeatable checklist/index product can serve many organizations, with configuration by audit type.",
+    "4. AI-leverage fit: 4/5 — AI can classify documents and summarize gaps, while deterministic checklists and permissions keep the system auditable.",
+    "5. Competition posture: 2/5 — Generic document and audit-management software is mature; differentiation must be nonprofit-specific and lightweight.",
+    "6. Distribution access: 3/5 — Nonprofit CPAs, state associations, and audit-prep education channels offer access, but referrals require trust.",
+    "7. Time to first revenue: 3/5 — A service-assisted readiness review can sell quickly, while secure integrations and trust requirements delay broad SaaS adoption.",
+    "8. Moat potential: 3/5 — Nonprofit-specific evidence mappings and CPA referral workflows can compound, but the storage/indexing layer is replicable."
+  ]
+};
 const DIMS = [
   ["d","Demand",2],["w","Willing to pay",1.5],["s","Solo-scale",2],["a","AI-fit",1.5],
   ["c","Competition",1],["di","Distribution",1],["t","Speed to $",1],["m","Moat",1],["fit","Founder fit",1.5]
@@ -2305,6 +2404,230 @@ const DATA = [
  cons:"LinkedIn/Gmail sync depends on third-party APIs that have 'bitten similar tools before' per the evidence; genuine cross-platform reliability is real engineering investment, not a quick wrapper.",
  jacknote:"Mostly reliability engineering; some content surface in a 'we tested every personal CRM so you don't have to' comparison piece.",
  ev:[["Dex — App Store reviews citing broken tagging/notes, crashes, and 'search frequently fails, which negates the entire purpose,' with a vendor reply admitting the issues","https://apps.apple.com/gb/app/dex-rolodex-and-personal-crm/id1472132715"],["Muncly — hands-on comparison confirming Clay/Mesh has no Android app and a laggy desktop client, cited as the reason a reviewer who preferred it switched back to Dex","https://muncly.com/dex-review-is-this-the-best-personal-contact-management-tool/"],["Storyflow / Dex — category comparison of the auto-sync-vs-AI-native-vs-manual-privacy trade-off, plus Clay's 2025 rebrand to Mesh after Automattic's acquisition","https://storyflow.so/blog/best-personal-crm-tools-2026"]]},
+// Astra independent source pass · 2026-09-22
+{
+ "id": "AGR-1",
+ "title": "TraceLot: Produce Traceability Starter",
+ "lane": "Agriculture & food production",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 4,
+ "w": 2,
+ "s": 4,
+ "a": 4,
+ "c": 3,
+ "di": 3,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Small produce growers and initial packers need a low-friction way to capture Food Traceability Rule harvest/cooling/packing data while they still work from paper, spreadsheets, and disconnected sales channels.",
+ "who": "Small produce farms, harvest/cooling operators, and initial packers handling Food Traceability List foods. FDA says covered farms must keep a traceability plan; a Produce Safety Rule qualified exemption does not itself create a parallel Food Traceability Rule exemption.",
+ "why": "Broad farm-management suites cover planning, accounting, livestock, and retail; a mobile-first traceability workflow for small harvest/cooling/initial-packing teams is operationally narrow. The delayed enforcement date reduces immediate urgency.",
+ "today": "Paper market sheets, notebooks, spreadsheets, separate CSA/e-commerce/POS systems, and manual re-entry. No source reviewed proves a price paid for this exact workaround.",
+ "solo": "Start with mobile QR/lot forms and CSV/PDF traceback exports: capture harvest, cooling, and packing events offline, flag missing fields, then sell self-serve by crop/operation tier. Add only the most requested integrations after proving the workflow.",
+ "cons": "Recordkeeping support must not be presented as legal compliance certification. FDA scope/exemptions are nuanced, and an expert reviewer is needed. Offline field use and seasonal support are real requirements. FDA cannot enforce the rule before July 20, 2028; the older forum and Ontario study support adjacent workflow pain, not current purchases of FTR software.",
+ "jacknote": "Own farmer interviews, field-test onboarding, visual labels/QR templates, and a public library of crop-specific workflow examples: clear deliverables, fast user feedback, and design/research portfolio residue.",
+ "ev": [
+  [
+   "Structural change — FDA — Frequently Asked Questions: FSMA Food Traceability Rule; 2026-06-09; loaded 2026-09-22. FDA says harvesting and cooling before initial packing are critical tracking events with specific data elements. It says FDA cannot enforce the rule before 2028-07-20.",
+   "https://www.fda.gov/food/food-safety-modernization-act-fsma/frequently-asked-questions-fsma-food-traceability-rule"
+  ],
+  [
+   "Public complaint / explicit software request — r/farming — Help finding software to collect harvest/market/sales data; Undated; accessed 2026-09-22; loaded 2026-09-22. A small organic-farm employee describes manual harvest, market allocation, cooler rotation, packing, CSA, and sales records and calls the business side messy.",
+   "https://www.reddit.com/r/farming/comments/e27qpx/help_finding_software_to_collect/"
+  ],
+  [
+   "Journalist/analyst-flagged gap — Frontiers in Sustainability — Digital technologies in local agri-food systems; 2023-02-09; loaded 2026-09-22. A study of Ontario digital farmgate participants reports manual cross-platform updates; more than 75% of survey respondents reported extra data-management work from weak interoperability. This supports general workflow friction, not direct demand for FSMA software.",
+   "https://www.frontiersin.org/journals/sustainability/articles/10.3389/frsus.2023.1073873/full"
+  ]
+ ]
+},
+// Astra independent source pass · 2026-09-22
+{
+ "id": "AGR-2",
+ "title": "FieldProof: Small-Farm Program Record Packet",
+ "lane": "Agriculture & food production",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 4,
+ "w": 2,
+ "s": 3,
+ "a": 4,
+ "c": 3,
+ "di": 3,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Small and diversified farms must reconstruct field maps, planting/production records, and sales history across FSA and insurance workflows, even when they are too small or irregular for mainstream crop-software assumptions.",
+ "who": "Small, diversified, indoor, skip-row, and beginning farms seeking FSA programs, disaster assistance, loans, crop insurance, or Micro Farm coverage. RAFI specifically identifies mapping as difficult for small-acreage, indoor, and skip-row operations.",
+ "why": "Official systems appropriately retain filing and signature steps while broad farm software often assumes conventional acre/crop patterns. A preparation layer for irregular production could bridge them, but cannot replace official systems.",
+ "today": "Notebook or Excel records, printed aerial maps, local FSA-office appointments, and crop-insurance-agent handoffs. The research does not establish a price for human assistance.",
+ "solo": "A guided web app imports sales CSVs, turns mobile planting/harvest logs into organized records, and exports annotated maps plus an FSA-appointment and agent-ready Micro Farm packet. Sell annual renewals and referrals, not official filing.",
+ "cons": "Do not present as FSA, insurer, tax preparer, or insurance agent. County rules/deadlines vary; tax and land data are sensitive; direct access to official systems cannot be assumed. The paid-workaround account is an older anonymous forum report, not an independently verified invoice or a Micro Farm-specific purchase.",
+ "jacknote": "Own clear form walkthroughs, visual map/packet design, deadline-content calendars, and usability tests with beginning-farmer groups: bounded work with public-facing portfolio output.",
+ "ev": [
+  [
+   "Official reporting requirements (corroboration; not counted as a structural change) — Farmers.gov — Crop Acreage Reporting Information; Undated; accessed 2026-09-22; loaded 2026-09-22. Outside the modernization-pilot counties, farms file as usual. Even where common data are shared, producers still contact both FSA and an insurance agent for program-specific data, maps, validation, and signatures.",
+   "https://www.farmers.gov/working-with-us/crop-acreage-reports"
+  ],
+  [
+   "Journalist/analyst-flagged gap — Rural Advancement Foundation International — Record Keeping &amp; Reporting; 2026-05-01; loaded 2026-09-22. RAFI calls FSA recordkeeping daunting, describes notebook/Excel use, says mapping is challenging for small/indoor/skip-row farms, and notes late filing may require verification and a fee.",
+   "https://www.rafiusa.org/record-keeping-reporting/"
+  ],
+  [
+   "Public complaint / reported paid workaround — r/farming — Every spring...; Undated; accessed 2026-09-22; loaded 2026-09-22. Farmers call Whole Farm paperwork difficult and say they outsource crop-insurance navigation to a California service because they lack time to follow changes and complete paperwork. This is an independent farmer-source signal and direct paid-human-workaround evidence.",
+   "https://www.reddit.com/r/farming/comments/fghuyg/every_spring/"
+  ]
+ ]
+},
+// Astra independent source pass · 2026-09-22
+{
+ "id": "AGR-3",
+ "title": "OriginLedger: Product-of-USA Proof Pack",
+ "lane": "Agriculture & food production",
+ "jack": "Weak",
+ "whynow": true,
+ "d": 3,
+ "w": 2,
+ "s": 4,
+ "a": 3,
+ "c": 3,
+ "di": 2,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Small domestic protein brands that choose the voluntary Product of USA claim need an audit-ready provenance file across animals, ingredients, processing, and labels; official rules specify the evidence but do not provide a lightweight record workflow.",
+ "who": "Small ranch-to-retail brands and inspected meat, poultry, and processed-egg establishments that want to use U.S.-origin claims. This is a subset because the claim is voluntary.",
+ "why": "Enterprise traceability/ERP systems serve larger processors, while this voluntary claim's proof burden may be too narrow for horizontal tools. Some producers may avoid the claim rather than buy software.",
+ "today": "Supplier documents, certificates/attestations, lot/segregation records, shared folders, spreadsheets, and general traceability systems. No source verifies a small-brand spend on this exact workflow.",
+ "solo": "A narrow annual subscription collects supplier attestations, links ingredients/batches, runs an exception checklist, and exports a claim-substantiation binder. Start with one protein category and partner with label consultants or small processors.",
+ "cons": "Claim substantiation has legal/regulatory consequences: require food-labeling counsel and never certify eligibility. Mixed ingredients and co-packers add complexity; ERPs and labeling consultants compete. Treat as a monitored lead until interviews verify payment intent. FSIS expects existing records may suffice; this is a contested burden and the claim is voluntary. Both sources concern the same rule, with independent stakeholder views preserved in the official record.",
+ "jacknote": "Supplier-facing attestation templates and visual proof-binder design are ownable, but regulatory nuance makes core customer work a poor entry-level independent surface.",
+ "ev": [
+  [
+   "Structural change — USDA — Product of USA; Undated; accessed 2026-09-22; loaded 2026-09-22. The voluntary standard covers U.S.-origin meat, poultry and processed-egg claims and requires written substantiation. The final rule provides documentation examples, not a requirement to buy software or adopt every example.",
+   "https://www.usda.gov/usa"
+  ],
+  [
+   "Public stakeholder complaints (rulemaking) — Federal Register — trade-association comments in 89 FR 19470; 2024-03-18; loaded 2026-09-22. Several trade associations raised recordkeeping cost, traceability feasibility, and confidentiality concerns. FSIS disagreed that costs were excessive and expected many firms to use existing records. These are independently authored stakeholder complaints documented in the rule, not interviews or proof of purchases of this tool.",
+   "https://www.federalregister.gov/documents/2024/03/18/2024-05479/voluntary-labeling-of-fsis-regulated-products-with-us-origin-claims"
+  ]
+ ]
+},
+// Astra independent source pass · 2026-09-22
+{
+ "id": "NPO-1",
+ "title": "RestrictedFund Reconciliation Layer",
+ "lane": "Nonprofit operations",
+ "jack": "Weak",
+ "whynow": false,
+ "d": 4,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 3,
+ "di": 3,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Small nonprofits using general accounting software lack a dependable way to keep donor and grant restrictions, qualifying expenses, releases, and remaining balances in sync without a separate spreadsheet or custom Airtable build.",
+ "who": "Volunteer treasurers and finance leads at small grant- and donor-funded U.S. nonprofits, especially those using QuickBooks rather than dedicated fund-accounting software. The evidence supports the workflow pain; no market-size number is asserted.",
+ "why": "General ledgers preserve accounting records but do not interpret each grant's restrictions; dedicated nonprofit finance products exist, while small organizations still configure generic tools and external schedules. The narrow wedge is a non-GL control and reconciliation layer, not a replacement accounting system.",
+ "today": "Use QuickBooks Classes/Projects and manual journal entries, keep a beginning-balance/inflows/outflows spreadsheet, or build a bespoke Airtable tracker. The sources do not establish a purchase price for these workarounds.",
+ "solo": "Extract restriction terms from award letters for human approval, map them to an imported QBO ledger, retain a restriction/expense evidence trail, surface exceptions, and export an accountant-review packet. Begin read-only rather than posting journal entries.",
+ "cons": "Financial outputs need accountant review; do not automate accounting advice or journal posting. QBO integration, data security, and chart-of-accounts variation raise implementation burden. Dedicated fund-accounting products compete. The Intuit thread is marked solved, and the CPA source says many failures are process rather than software problems; proper configuration may be sufficient.",
+ "jacknote": "A junior generalist could own customer onboarding templates and visual board-report design, with quick feedback, but the core workflow needs finance-domain supervision.",
+ "ev": [
+  [
+   "Public complaint — QuickBooks Community, “Restricted Funds accounting”; 2025-10-14; loaded 2026-09-22. A nonprofit treasurer describes class/equity reporting conflicts for restricted donations and PayPal fees; a reply proposes a separate spreadsheet to reconcile fund balances when the needed report is unavailable.",
+   "https://quickbooks.intuit.com/community/reports-and-accounting-5/restricted-funds-accounting-60864"
+  ],
+  [
+   "Analyst-flagged gap (CPA practitioner guidance) — Bilotta &amp; Company CPAs, “How Should Nonprofits Track Restricted Funds?”; Undated; accessed 2026-09-22; loaded 2026-09-22. The CPA firm identifies spreadsheet-only tracking, missing donor documentation, unreconciled grant reports, and aging balances as common failures; it calls for connecting agreement → accounting activity → grant report → remaining balance.",
+   "https://bilottacpas.com/how-to-track-restricted-funds-for-nonprofits"
+  ],
+  [
+   "Public complaint / workaround discussion — r/nonprofit, “What are your accounting practices for restricted funds?”; Undated; accessed 2026-09-22; loaded 2026-09-22. Practitioners describe monthly journal entries, transaction-by-transaction grant coding, and an Airtable tool built to pull QBO transactions and track grant restrictions and dates.",
+   "https://www.reddit.com/r/nonprofit/comments/1ou9pvw/what_are_your_accounting_practices_for_restricted/"
+  ]
+ ]
+},
+// Astra independent source pass · 2026-09-22
+{
+ "id": "NPO-2",
+ "title": "GrantReport Evidence Map",
+ "lane": "Nonprofit operations",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 5,
+ "w": 3,
+ "s": 4,
+ "a": 5,
+ "c": 3,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Grant-funded nonprofits repeatedly rebuild applications and reporting evidence across funder-specific portals, spreadsheets, folders, and deadlines instead of maintaining a reusable, auditable source of program and financial facts.",
+ "who": "Grant writers, program leads, and finance staff at small-to-mid-sized nonprofits with several foundation or government awards. A Minnesota Council of Nonprofits report says a small-to-medium nonprofit commonly spends 80 hours annually recreating grant forms in usable formats.",
+ "why": "Funders need their own fields, templates, and portals; broad grant-management systems often focus on the funder or entire CRM. A grantee-side evidence layer can preserve source facts and map them to varied submissions without claiming to replace funder systems.",
+ "today": "Recreate forms as shareable documents, maintain annual deadline spreadsheets and folders, use general project-management tools, or configure a broad fundraising CRM. The evidence establishes staff time, not payment for a distinct reporting product.",
+ "solo": "Upload award documents and templates; extract deliverables, metrics, budget categories, and due dates for human approval; link each claim to program data or ledger export; maintain narrative history; export a submission checklist and filled draft. Sell a concierge setup to grant consultants first.",
+ "cons": "Must not submit to funder portals without review or represent AI-generated narrative as accurate. Beneficiary and financial data require secure storage. Funder-template variation limits automation and major CRMs are adjacent competitors. The 80-hour sector estimate concerns recreating grant forms, not a measured time saving for the proposed product.",
+ "jacknote": "An apprentice can own evidence-library taxonomy, template design, onboarding, and customer-visible before/after reporting packets, producing clear weekly shipped work and portfolio residue.",
+ "ev": [
+  [
+   "Analyst-flagged gap (sector research) — Minnesota Council of Nonprofits, “Strategies Toward Equitable Government Grantmaking Through Cross-Sector Partnerships”; 2024-09; loaded 2026-09-22. The report cites 2,500+ GrantAdvisor reviews saying technical time-wasters consume 20–30% of time, and says a small-to-medium nonprofit commonly spends 80 hours annually recreating online grant forms as shareable Word documents.",
+   "https://minnesotanonprofits.org/wp-content/uploads/2024/09/Strategies-Toward-Equitable-Government-Grantmaking-through-Cross-Sector-Partnerships.pdf"
+  ],
+  [
+   "Official reporting requirements (corroboration only) — U.S. Environmental Protection Agency, “Grant Reporting”; 2024-10 (latest listed template); accessed 2026-09-22; loaded 2026-09-22. EPA requires grantees to use and not modify specific Excel templates, provides multiple project-type templates, and specifies recurring reporting timelines and detailed instructions.",
+   "https://www.epa.gov/p2/grant-reporting"
+  ],
+  [
+   "Public request / workaround discussion — r/nonprofit, “How do you keep track of deadlines for multi-year grants?”; Undated; accessed 2026-09-22; loaded 2026-09-22. A practitioner reports a former grant manager used yearly spreadsheets, folders, and a transition document for reporting deadlines despite access to Raiser's Edge; another describes manually entering award and reporting dates into a separate database.",
+   "https://www.reddit.com/r/nonprofit/comments/1k294hi/how_do_you_keep_track_of_deadlines_for_multiyear/"
+  ]
+ ]
+},
+// Astra independent source pass · 2026-09-22
+{
+ "id": "NPO-3",
+ "title": "AuditReady Evidence Locker",
+ "lane": "Nonprofit operations",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 4,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 2,
+ "di": 3,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Small nonprofits enter audits by hunting through files for recurring proof of financial, governance, grant, and policy records, even though the core request set is predictable year to year.",
+ "who": "Finance directors, executive directors, volunteer treasurers, and audit committees at nonprofits facing an independent financial-statement or single audit. The evidence establishes operational burden but does not assert the number affected.",
+ "why": "Generic document-management and audit products exist but are not organized around nonprofits' recurring mix of grants, board records, policies, financial schedules, and changing auditor requests. The wedge is a lightweight evidence index and completeness check, not audit or accounting advice.",
+ "today": "Build a prepared-by-client folder at audit time, use filenames and recurring monthly folders in Google Drive, respond to auditor lists manually, or pay accountants/auditors to chase documents. The evidence only states expense for an audit firm, not for this proposed product.",
+ "solo": "A secure connector indexes authorized Drive/Dropbox folders and accounting exports, maps files to an auditor-approved request list, flags absent or expired artifacts, creates owner tasks, and shares a read-only evidence portal. Begin with a templated readiness review and no assurance claims.",
+ "cons": "Financial and personnel records require serious security, permissions, retention controls, and may trigger SOC 2 expectations from larger buyers. Do not perform an audit, give assurance, or substitute for a CPA; generic DMS and audit-management vendors compete.",
+ "jacknote": "A junior generalist can own document taxonomy, template/policy inventory, visual evidence-room setup, and customer education with clear deliverables and feedback.",
+ "ev": [
+  [
+   "Analyst-flagged gap (vendor-sponsored survey) — BTQ Financial, “2025 Nonprofit Leaders Report”; 2025; loaded 2026-09-22. BTQ's survey of 100 nonprofit leaders says 29% name audit preparation/regulatory compliance as a financial hurdle; among organizations outsourcing finance, 42% use audit-preparation/support services. This is vendor-sponsored and covers $3M–$200M organizations, so it is a directional sector signal rather than a small-nonprofit estimate.",
+   "https://btqfinancial.com/insights/2025-nonprofit-leaders-report/"
+  ],
+  [
+   "Analyst-flagged gap (professional trade press) — Journal of Accountancy, “What to know to avoid deficient not-for-profit audits”; 2024-07-01; loaded 2026-09-22. The AICPA publication reports missing/incomplete documentation among not-for-profit audit deficiencies, notes more extensive documentation requirements, fee pressure on cash-constrained nonprofits, and new quality-management standards effective in 2025.",
+   "https://www.journalofaccountancy.com/issues/2024/jul/what-to-know-to-avoid-deficient-not-for-profit-audits/"
+  ],
+  [
+   "Public complaint / reported paid workaround — r/nonprofit, “Audits advice”; 2024-05-31; loaded 2026-09-22. A nonprofit practitioner reports the cheapest available audit rose from $6–7K to $25K, about 240 staff hours for the prior audit, and peers in the $500K–$5M range suspending audits unless required. This establishes a paid audit and staff-time burden, not payment for the proposed product.",
+   "https://www.reddit.com/r/nonprofit/comments/1d57tky/audits_advice/"
+  ]
+ ]
+},
 ];
 DATA.forEach(d=>{ d.ease = EASE[d.id] || 3; d.pitch = PITCH[d.id] || ""; d.added = DATES[d.id] || "2026-08-09"; d.flywheel = FLYWHEEL[d.id] || null; });
 
@@ -2326,7 +2649,9 @@ function adj0(x){ return raw0(x) + x.fit*1.5; }
 function coreCredit(v){ return Math.max(0, (v-3)/2); } // 3→0, 4→0.5, 5→1
 function excellence(x){ const core=[x.d,x.w,x.s,x.a,x.m]; const avg=core.reduce((s,v)=>s+coreCredit(v),0)/core.length; return avg*avg; }
 function raw(x){ return (raw0(x)/55)*70 + excellence(x)*30; }
-function adj(x){ return (adj0(x)/62.5)*70 + excellence(x)*30; }
+function adj(x){ return x.fit>0 ? (adj0(x)/62.5)*70 + excellence(x)*30 : null; }
+function rankScore(x){ return adj(x) ?? raw(x); }
+function fitLabel(x){ const v=adj(x); return v===null ? "not yet scored" : (v%1?v.toFixed(1):v); }
 function band(x){ const r=raw(x), a=adj(x); if(a>=70||r>=70) return "Deep-dive"; if(a>=50||r>=50) return "Shortlist"; return "Archive"; }
 const jackRank = {Strong:0, Moderate:1, Weak:2};
 
@@ -2407,15 +2732,15 @@ $("importfile").onchange=(e)=>{
 $("mode").querySelectorAll("button").forEach(b=>b.onclick=()=>{ state.mode=b.dataset.m; persist(); render(); });
 $("view").querySelectorAll("button").forEach(b=>b.onclick=()=>{ state.view=b.dataset.v; persist(); render(); });
 
-function score(x){ return state.mode==="raw" ? raw(x) : adj(x); }
+function score(x){ return state.mode==="raw" ? raw(x) : rankScore(x); }
 function maxScore(){ return 100; }
 function gate(){ return 70; }
 
 function sorted(){
   let arr=[...DATA];
-  if(state.mode==="jack") arr.sort((a,b)=> jackRank[a.jack]-jackRank[b.jack] || adj(b)-adj(a));
-  else if(state.mode==="ease") arr.sort((a,b)=> a.ease-b.ease || adj(b)-adj(a));
-  else if(state.mode==="new") arr.sort((a,b)=> (b.added>a.added?1:b.added<a.added?-1:0) || adj(b)-adj(a));
+  if(state.mode==="jack") arr.sort((a,b)=> jackRank[a.jack]-jackRank[b.jack] || rankScore(b)-rankScore(a));
+  else if(state.mode==="ease") arr.sort((a,b)=> a.ease-b.ease || rankScore(b)-rankScore(a));
+  else if(state.mode==="new") arr.sort((a,b)=> (b.added>a.added?1:b.added<a.added?-1:0) || rankScore(b)-rankScore(a));
   else arr.sort((a,b)=> score(b)-score(a));
   return arr;
 }
@@ -2423,12 +2748,13 @@ function easeChip(x, big){
   return `<span title="${EASE_DEF[x.ease]}" style="font-size:${big?11:10}px;font-weight:750;color:#fff;background:${EASE_COLOR[x.ease]};border-radius:5px;padding:${big?"3px 8px":"2px 6px"};letter-spacing:.3px">E${x.ease}</span>`;
 }
 
+function escText(s){ return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 function dimBars(x){
   return DIMS.map(([k,label,wt])=>{
-    const v=x[k]; const laneHex=LANES[x.lane].hex;
+    const pending=k==="fit" && !(x.fit>0); const v=pending?0:x[k]; const laneHex=LANES[x.lane].hex;
     return `<div class="d"><div class="n">${label} <span style="opacity:.55">×${wt}</span></div>
       <div class="track"><div class="fill" style="width:${v*20}%;background:${k==="fit"?"#f59e0b":laneHex}"></div></div>
-      <div class="v">${v}</div></div>`;
+      <div class="v" title="${pending?"Founder fit not yet scored":""}">${pending?"—":v}</div></div>`;
   }).join("");
 }
 
@@ -2451,7 +2777,7 @@ function render(){
     const pinned = state.pins.includes(x.id);
     const saved = state.saves.has(x.id);
     const archived = state.archived.has(x.id);
-    const row=document.createElement("div"); row.className="row"+(state.open===x.id?" open":"")+(archived?" archived-row":"");
+    const row=document.createElement("div"); row.className="row"+(state.open===x.id?" open":"")+(archived?" archived-row":"")+(!(x.fit>0)?" pending-fit":"");
     row.innerHTML=`
       <div class="rowhead">
         <div class="rank">${i+1}</div>
@@ -2463,6 +2789,7 @@ function render(){
         <div class="tname">
           <div class="t">${x.title}${x.whynow?`<span class="whynow" title="Time-sensitive window">⏳ why-now</span>`:""}${archived?`<span class="whynow" style="color:#6b7280;background:#f1f2f5">archived</span>`:""}</div>
           <div class="pitch" title="${x.pitch}">${x.pitch}</div>
+          ${!(x.fit>0)?`<div style="font-size:10px;color:var(--muted)">Raw score · founder fit not yet scored</div>`:""}
           <div class="l" style="color:${lh}"><span class="dot" style="background:${lh}"></span>${x.lane} · ${x.id} · <span title="Date added">${x.added}</span></div>
         </div>
         <div class="barwrap">
@@ -2491,8 +2818,9 @@ function render(){
           ${x.flywheel?`<h4>📊 Data flywheel — ${x.flywheel.level} <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted)">(unscored, speculative upside)</span></h4><p>${x.flywheel.note}</p>`:""}
         </div>
         <div>
-          <h4>Score breakdown <span style="text-transform:none;letter-spacing:0">(raw ${raw(x)%1?raw(x).toFixed(1):raw(x)} / fit-adj ${adj(x)%1?adj(x).toFixed(1):adj(x)})</span></h4>
+          <h4>Score breakdown <span style="text-transform:none;letter-spacing:0">(raw ${raw(x)%1?raw(x).toFixed(1):raw(x)} / fit-adj ${fitLabel(x)})</span></h4>
           <div class="dims">${dimBars(x)}</div>
+          ${SCORE_NOTES[x.id]?`<h4>AGENT'S SCORES (1–8)</h4><p>${SCORE_NOTES[x.id].map(escText).join("<br>")}</p>`:""}
           <h4>Evidence</h4>
           <div class="ev">${x.ev.map(([l,u])=>`<a href="${u}" target="_blank" rel="noopener" title="${u}">↗ ${l}</a>`).join("")}</div>
         </div>
@@ -2514,7 +2842,7 @@ function render(){
 
 let mapChart=null;
 function renderMap(arr){
-  const pts = arr.map(x=>({ x: x.ease + (hash(x.id)%9-4)*0.028, y: adj(x), r: state.pins.includes(x.id)?9:(state.saves.has(x.id)?7.5:6), _c:x }));
+  const pts = arr.map(x=>({ x: x.ease + (hash(x.id)%9-4)*0.028, y: rankScore(x), r: state.pins.includes(x.id)?9:(state.saves.has(x.id)?7.5:6), _c:x }));
   const byLane = {};
   pts.forEach(p=>{ (byLane[p._c.lane]=byLane[p._c.lane]||[]).push(p); });
   if(mapChart) mapChart.destroy();
@@ -2528,10 +2856,10 @@ function renderMap(arr){
       scales:{
         x:{ min:0.5, max:5.5, title:{display:true, text:"Activation energy (E1 easy → E5 hard)", font:{size:12, weight:"600"}},
             ticks:{ stepSize:1, callback:v=>Number.isInteger(v)&&v>=1&&v<=5?("E"+v):"" }, grid:{color:"#edf0f5"} },
-        y:{ min:40, max:100, title:{display:true, text:"Fit-adjusted score (0-100)", font:{size:12, weight:"600"}}, grid:{color:"#edf0f5"} }
+        y:{ min:40, max:100, title:{display:true, text:"Score (raw while founder fit is unscored)", font:{size:12, weight:"600"}}, grid:{color:"#edf0f5"} }
       },
       plugins:{ legend:{position:"bottom", labels:{boxWidth:10, font:{size:11}, usePointStyle:true}},
-        tooltip:{ callbacks:{ label:(ctx)=>{ const c=ctx.raw._c; return ` ${c.title} — ${adj(c)%1?adj(c).toFixed(1):adj(c)} pts, ${EASE_DEF[c.ease]}${c.jack==="Strong"?", JACK ★":""}`; } } } }
+        tooltip:{ callbacks:{ label:(ctx)=>{ const c=ctx.raw._c; return ` ${c.title} — ${rankScore(c).toFixed(1)} pts${!(c.fit>0)?" (raw; fit not yet scored)":""}, ${EASE_DEF[c.ease]}${c.jack==="Strong"?", JACK ★":""}`; } } } }
     }});
 }
 function hash(s){ let h=0; for(const ch of s) h=(h*31+ch.charCodeAt(0))>>>0; return h; }
@@ -2561,13 +2889,13 @@ $("cgo").onclick=()=>{
   if(radarChart) radarChart.destroy();
   radarChart=new Chart($("radar"),{ type:"radar",
     data:{ labels:DIMS.map(d=>d[1]),
-      datasets:items.map((x,i)=>({ label:x.title, data:DIMS.map(([k])=>x[k]),
+      datasets:items.map((x,i)=>({ label:x.title, data:DIMS.map(([k])=>k==="fit" && !(x.fit>0)?null:x[k]),
         borderColor:colors[i], backgroundColor:colors[i]+"22", pointBackgroundColor:colors[i], borderWidth:2 })) },
     options:{ responsive:true, maintainAspectRatio:false,
       scales:{ r:{ min:0, max:5, ticks:{stepSize:1, font:{size:10}}, pointLabels:{font:{size:11}} } },
       plugins:{ legend:{position:"bottom", labels:{boxWidth:12, font:{size:11}}} } }
   });
-  const rows=[["","cn",x=>x.title],["Pitch","",x=>x.pitch],["Lane","",x=>x.lane],["Fit-adj / Raw","",x=>`<b>${adj(x)%1?adj(x).toFixed(1):adj(x)}</b> / ${raw(x)%1?raw(x).toFixed(1):raw(x)}`],
+  const rows=[["","cn",x=>x.title],["Pitch","",x=>x.pitch],["Lane","",x=>x.lane],["Fit-adj / Raw","",x=>`<b>${fitLabel(x)}</b> / ${raw(x)%1?raw(x).toFixed(1):raw(x)}`],
     ["Band","",x=>band(x)],["Ease","",x=>EASE_DEF[x.ease]],["Why unsolved","",x=>x.why],["Solo shape","",x=>x.solo],["Jack angle","",x=>x.jack+(x.jacknote?` — ${x.jacknote}`:"")],["📊 Data flywheel","",x=>x.flywheel?`${x.flywheel.level} — ${x.flywheel.note}`:"—"],["Watch out","",x=>x.cons]];
   $("ctable").innerHTML = rows.map(([h,cls,fn])=>`<tr><th>${h}</th>${items.map(x=>`<td class="${cls}">${fn(x)}</td>`).join("")}</tr>`).join("");
 };
