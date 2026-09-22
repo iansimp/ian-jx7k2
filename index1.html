@@ -89,7 +89,7 @@ body { margin: 0; }
   <div class="card-list" id="cardList"></div>
 </div>
 <script>
-document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-09-22T13:30:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + ".";
+document.getElementById("syncNote").textContent = "Snapshot generated " + new Date("2026-09-22T17:45:00").toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}) + ".";
 
 
 const JOBS = [
@@ -609,6 +609,14 @@ const SYNCED_STATE = {
 "mongodb-director-isv-partnerships": {reaction:"Not for me", status:"New"},
 "braze-avp-agency-si-partnerships": {reaction:"Not for me", status:"New"},
 "supermetrics-vp-strategic-partnerships": {reaction:"Not for me", status:"New"},
+"ladders-vp-strategy-innovation-pharma": {reaction:"Not for me", status:"New"},
+"comscore-svp-business-development": {reaction:"Not for me", status:"New"},
+"together-ai-head-distribution-partnerships": {reaction:"Maybe", status:"New"},
+"jerry-director-bd-partnerships": {reaction:"Not for me", status:"New"},
+"vast-data-vp-bd-cloud": {reaction:"Not for me", status:"New"},
+"onestream-vp-partnerships-americas": {reaction:"Not for me", status:"New"},
+"vidmob-director-data-partnerships": {reaction:"Not for me", status:"New"},
+"axtria-director-sr-director-partnerships": {reaction:"Not for me", status:"New"},
 };
 
 const STATE_KEY = "ian_job_dashboard_state_v1_cursor";
@@ -667,8 +675,9 @@ function isUnreviewed(job) {
   const hasSyncedEntry = Object.prototype.hasOwnProperty.call(SYNCED_STATE, job.id);
   if (!hasSyncedEntry && !st.reaction) return true;
   if (norm(st.reaction) !== norm(synced.reaction)) return true;
-  if (norm(st.notes) !== norm(synced.notes)) return true;
   if (norm(st.status||job.status) !== norm(synced.status||job.status)) return true;
+  // Notes-only drift in this browser's localStorage must not keep an
+  // already-synced reaction in Unreviewed / Copy summary.
   return false;
 }
 function archivedCount() { return JOBS.filter(isArchived).length; }
@@ -919,6 +928,24 @@ function handleNotesBlur() {
   renderFilters();
   renderCards();
 }
+
+// After a Cursor sync, drop leftover local notes when reaction+status already
+// match SYNCED_STATE. Those notes were keeping old lines in the copy box.
+(function adoptSyncedNotes() {
+  let dirty = false;
+  Object.keys(SYNCED_STATE).forEach(id => {
+    const st = state[id];
+    if (!st) return;
+    const synced = SYNCED_STATE[id];
+    if (norm(st.reaction) !== norm(synced.reaction)) return;
+    if (norm(st.status) !== norm(synced.status)) return;
+    if (norm(st.notes) === norm(synced.notes)) return;
+    if (synced.notes == null) delete st.notes;
+    else st.notes = synced.notes;
+    dirty = true;
+  });
+  if (dirty) saveState(state);
+})();
 
 function copySummary() {
   const lines = [];
