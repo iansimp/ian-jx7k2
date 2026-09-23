@@ -3,14 +3,14 @@
 {
   "name": "Opportunity Dashboard",
   "schemaVersion": 1,
-  "description": "Interactive dashboard comparing 190 solopreneur opportunity gap cards across 30 lanes: one-line elevator pitch on every card, ranked score bars, fit-adjusted/raw/Jack-first/easiest-first ranking modes, E1–E5 activation-energy grades, a payoff-vs-difficulty map view, uncapped save (❤) plus 3-item pin-to-compare radar, per-card and bulk archive (🗄, reversible) with a Show-archived filter, JSON export/import of your picks for durability, and expandable full cards with evidence links. Latest independent evidence scan: Sep 22, 2026."
+  "description": "Interactive dashboard comparing 200 solopreneur opportunities across 30 lanes: one-line elevator pitch on every card, ranked score bars, fit-adjusted/raw/Jack-first/easiest-first ranking modes, E1–E5 activation-energy grades, a payoff-vs-difficulty map view, uncapped save (❤) plus 3-item pin-to-compare radar, per-card and bulk archive (🗄, reversible) with a Show-archived filter, JSON export/import of your picks for durability, and expandable full cards with evidence links. Latest independent evidence scan: Sep 22, 2026."
 }
 </script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Opportunity Dashboard — Batches 1–7</title>
+<title>Opportunity Dashboard — Batches 1–8</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root { color-scheme: light;
@@ -113,7 +113,7 @@ table.cmp .cn { font-weight:750; font-size:13px; }
 <body>
 <header>
   <h1>Solopreneur Opportunity Dashboard</h1>
-  <div class="sub">Batches 1–7 · 190 evidence-backed gaps · 30 lanes · latest scan Sep 22, 2026 · click any row for full card &amp; evidence · <a href="clusters.html" style="color:#2563eb;font-weight:650">Cluster map of 56 saved ideas</a></div>
+  <div class="sub">Batches 1–8 · 200 opportunities (190 gap cards + 10 consumer subscription candidates) · 30 lanes · latest scan Sep 22, 2026 · click any row for full card &amp; evidence · <a href="clusters.html" style="color:#2563eb;font-weight:650">Cluster map of 56 saved ideas</a></div>
 </header>
 
 <div class="controls">
@@ -208,6 +208,17 @@ const LANES = {
   "Productivity apps": {c:"#6366f1", hex:"#6366f1"}
 };
 const EASE = {
+"B2C-1":2,
+"B2C-2":2,
+"B2C-3":2,
+"B2C-4":2,
+"B2C-5":2,
+"B2C-6":2,
+"B2C-7":2,
+"B2C-8":2,
+"B2C-9":2,
+"B2C-10":2,
+
 "AGR-1":3,
 "AGR-2":4,
 "AGR-3":4,
@@ -227,6 +238,17 @@ const EASE = {
 "LCI-1":3,"LCI-2":3,"LCI-3":2,"LCI-4":3,"LCI-5":2,"LCI-6":2,"LCI-7":2,"LCI-8":3,"WEL-1":2,"WEL-2":2,"WEL-3":1,"WEL-4":3,"WEL-5":1,"SOC-1":1,"SOC-2":3,"SOC-3":3,"SOC-4":3,"SOC-5":1,"LIF-1":2,"LIF-2":1,"LIF-3":3,"LIF-4":1,"LIF-5":3,"HOM-1":1,"HOM-2":3,"HOM-3":1,"HOM-4":1,"SAF-1":2,"SAF-2":2,"SAF-3":1,"SAF-4":2,"SAF-5":2,"SAF-6":2,"BOD-1":2,"BOD-2":1,"BOD-3":2,"BOD-4":3,"BOD-5":2,"BOD-6":2,"PET-1":2,"PET-2":2,"PET-3":1,"PET-4":1,"PET-5":2,"TRV-1":3,"TRV-2":2,"TRV-3":1,"TRV-4":1,"TRV-5":2,"TRV-6":4,"WLD-1":1,"WLD-2":3,"WLD-3":2,"WLD-4":3,"WLD-5":2,"RES-1":2,"RES-2":1,"RES-3":1,"RES-4":1,"RES-5":1,
 "PRD-1":2,"PRD-2":2,"PRD-3":2,"PRD-4":1,"PRD-5":2};
 const PITCH = {
+"B2C-1":"A consumer subscription that turns 12–15 photographed garments into weekly outfits and learns from wear/reject feedback. Test $9/month.",
+"B2C-2":"A consumer voice-practice subscription for real family conversations, remembered vocabulary and natural code-switching. Test $15/month with usage limits.",
+"B2C-3":"A consumer watercolor-practice subscription: upload a painting and reference, receive two observations, an annotated illustration and a ten-minute exercise. Test $12/month.",
+"B2C-4":"A household subscription that converts forwarded school emails, PDFs and screenshots into tonight’s pack/sign/pay/wear checklist. Test $9/month.",
+"B2C-5":"A household meal-planning subscription with one preparation sequence and different plate finishes, learning what each person ate. Test $12/month.",
+"B2C-6":"A consumer sewing-memory subscription that turns photos and voice notes into a history of pattern alterations and next-project cutting checklists. Test $7/month.",
+"B2C-7":"A consumer campaign-memory subscription that turns a brief dictated recap into updated characters, promises and a next-session preparation brief. Test $10/month.",
+"B2C-8":"A household dog-practice subscription with shared cues, reward rules, five-minute exercises and an enrichment progression. Test $9/month.",
+"B2C-9":"A consumer orchid-collection subscription tracking flowering, repotting, roots and growing observations, with weekly inspection lists. Test $6/month.",
+"B2C-10":"A consumer wishlist subscription that filters user-forwarded listing alerts against exact model, size, color and condition and explains matches. Test $7/month.",
+
 "AGR-1":"Turn a small produce farm's harvest, cooling, packing, and shipment notes into a shareable Food Traceability Rule record set without replacing its POS or accounting stack.",
 "AGR-2":"Turn a diversified farm's planting, harvest, sales, and map records into an organized FSA and Micro Farm insurance evidence packet, with deadline prompts and a human-review handoff for agents.",
 "AGR-3":"Help small branded meat, poultry, and processed-egg producers collect supplier attestations, segregation trails, and label-claim proof for a credible Product of USA claim without adopting a full enterprise traceability system.",
@@ -422,6 +444,17 @@ const PITCH = {
 };
 // Batch 1-2 cards (58) default to 2026-08-09 via the fallback below; batch 3 (this round) is listed explicitly.
 const DATES = {
+"B2C-1":"2026-09-22",
+"B2C-2":"2026-09-22",
+"B2C-3":"2026-09-22",
+"B2C-4":"2026-09-22",
+"B2C-5":"2026-09-22",
+"B2C-6":"2026-09-22",
+"B2C-7":"2026-09-22",
+"B2C-8":"2026-09-22",
+"B2C-9":"2026-09-22",
+"B2C-10":"2026-09-22",
+
 "AGR-1":"2026-09-22",
 "AGR-2":"2026-09-22",
 "AGR-3":"2026-09-22",
@@ -492,6 +525,17 @@ const FLYWHEEL = {
 const EASE_DEF = {1:"E1 · ship & be found",2:"E2 · self-serve + light GTM",3:"E3 · one-at-a-time convincing",4:"E4 · high-trust B2B",5:"E5 · ecosystem buy-in"};
 const EASE_COLOR = {1:"#16a34a",2:"#84cc16",3:"#d97706",4:"#ea580c",5:"#dc2626"};
 const SCORE_NOTES = {
+"B2C-1":["1. Demand evidence: 3/5 — User discussion supports wardrobe-app friction; exact capsule proposition is untested.","2. Willingness to pay: 3/5 — Paid styling and premium apps establish category spend, not conversion at $9.","3. Solo-scalability: 4/5 — Automated recommendations can scale; onboarding support remains.","4. AI-leverage fit: 4/5 — Vision tagging and preference learning serve the core workflow.","5. Competition posture: 2/5 — Established wardrobe apps can implement the same approach.","6. Distribution access: 4/5 — Visual outfit demonstrations reach identifiable consumer communities.","7. Time to first revenue: 4/5 — A narrow photo-and-feedback MVP could charge within 90 days.","8. Moat potential: 3/5 — Personal wear history improves relevance but is portable and replicable."],
+"B2C-2":["1. Demand evidence: 3/5 — Heritage speakers directly describe understanding without speaking.","2. Willingness to pay: 3/5 — Paid speaking apps validate category spend; this niche price is untested.","3. Solo-scalability: 4/5 — Metered automated voice practice avoids tutor hours per customer.","4. AI-leverage fit: 4/5 — Speech generation and personalized practice are central.","5. Competition posture: 2/5 — General AI tutors are numerous and can target this segment.","6. Distribution access: 4/5 — Language-specific social communities provide focused acquisition channels.","7. Time to first revenue: 4/5 — One-language roleplays can be a chargeable narrow MVP.","8. Moat potential: 3/5 — Personal vocabulary and learning history compound modestly."],
+"B2C-3":["1. Demand evidence: 3/5 — Forum discussion shows demand for structured learning and feedback.","2. Willingness to pay: 4/5 — Instructor-feedback memberships and paid-course experiences show category spending.","3. Solo-scalability: 4/5 — Automated feedback can scale after upfront rubric calibration.","4. AI-leverage fit: 4/5 — Image interpretation connects feedback to the actual painting.","5. Competition posture: 3/5 — A narrow practice loop differentiates from broad course catalogs but is copyable.","6. Distribution access: 4/5 — Visual learning outcomes suit art communities and social demonstrations.","7. Time to first revenue: 3/5 — A small credible rubric needs expert review before charging.","8. Moat potential: 3/5 — Longitudinal practice history adds some switching value."],
+"B2C-4":["1. Demand evidence: 3/5 — Parents directly report recurring information overload across school senders.","2. Willingness to pay: 3/5 — Commercial assistants indicate category pricing potential, not validated demand for another app.","3. Solo-scalability: 4/5 — Forwarded inputs and confirmation can be automated without school sales.","4. AI-leverage fit: 4/5 — Document extraction is a direct AI use case.","5. Competition posture: 1/5 — Multiple products already target essentially this workflow.","6. Distribution access: 4/5 — Parent social content offers self-serve distribution; trust must be earned.","7. Time to first revenue: 4/5 — A forwarding/upload MVP is technically narrow.","8. Moat potential: 3/5 — Family context and task history offer modest retention value."],
+"B2C-5":["1. Demand evidence: 3/5 — Parents report planning burden and maintain lists of accepted meals.","2. Willingness to pay: 3/5 — Paid meal plans demonstrate category spending, not this product price.","3. Solo-scalability: 4/5 — Tested templates can serve households without bespoke cooking work.","4. AI-leverage fit: 4/5 — AI can adapt preferences and coordinate ingredient reuse.","5. Competition posture: 2/5 — Family meal planning has many close substitutes.","6. Distribution access: 4/5 — Concrete cooking demonstrations fit social acquisition.","7. Time to first revenue: 3/5 — A tested recipe set requires upfront content work.","8. Moat potential: 3/5 — Household acceptance histories improve recommendations modestly."],
+"B2C-6":["1. Demand evidence: 3/5 — Sewists directly ask how to preserve hacks and alteration notes.","2. Willingness to pay: 3/5 — A paid sewing organizer establishes adjacent spend, not this price.","3. Solo-scalability: 5/5 — Searchable project records can scale without per-user service labor.","4. AI-leverage fit: 4/5 — Voice extraction and contextual retrieval reduce recordkeeping friction.","5. Competition posture: 2/5 — Existing organizers can add structured fit history.","6. Distribution access: 4/5 — Sewing communities and project videos concentrate the audience.","7. Time to first revenue: 4/5 — Records plus retrieval form a small chargeable MVP.","8. Moat potential: 3/5 — User-specific adjustment history compounds but should remain exportable."],
+"B2C-7":["1. Demand evidence: 3/5 — Dungeon masters describe scattered notes and retrieval problems.","2. Willingness to pay: 3/5 — Campaign-management subscriptions show adjacent spending.","3. Solo-scalability: 5/5 — User-supplied recaps can be processed without manual service delivery.","4. AI-leverage fit: 4/5 — Extraction and retrieval directly address continuity.","5. Competition posture: 2/5 — TavernScribe already offers closely overlapping campaign memory.","6. Distribution access: 4/5 — D&D communities and short sketches provide focused channels.","7. Time to first revenue: 4/5 — Text/voice recap to structured records is a narrow MVP.","8. Moat potential: 3/5 — Campaign history accumulates but exportability limits lock-in."],
+"B2C-8":["1. Demand evidence: 2/5 — The direct inconsistency complaint was found in search but did not load.","2. Willingness to pay: 3/5 — Pupford offers monthly paid training alongside free alternatives.","3. Solo-scalability: 4/5 — Vetted exercises scale after initial expert review.","4. AI-leverage fit: 3/5 — AI can adapt schedules; reliable curriculum matters more than generation.","5. Competition posture: 2/5 — Established training apps and free courses compete strongly.","6. Distribution access: 4/5 — Pet demonstrations are easy to target through consumer social content.","7. Time to first revenue: 3/5 — Content review and progression design add upfront work.","8. Moat potential: 2/5 — Practice history offers limited defensibility."],
+"B2C-9":["1. Demand evidence: 3/5 — Orchid owners directly ask for collection tracking apps.","2. Willingness to pay: 3/5 — Plant-care subscriptions are adjacent evidence, not collector-specific conversion.","3. Solo-scalability: 4/5 — Records and scheduled inspection prompts can scale.","4. AI-leverage fit: 3/5 — AI can organize observations, but does not replace sound care guidance.","5. Competition posture: 3/5 — A specialized collection history has a narrower niche than general plant apps.","6. Distribution access: 4/5 — Collector communities and flowering videos offer focused distribution.","7. Time to first revenue: 4/5 — A photo/history MVP is feasible before sophisticated diagnostics.","8. Moat potential: 3/5 — Years of plant-level observations offer some retention value."],
+"B2C-10":["1. Demand evidence: 3/5 — Marketplace users report saved-search size-filter failures.","2. Willingness to pay: 3/5 — Specialist alert products suggest adjacent spend, not confirmed $7 demand.","3. Solo-scalability: 4/5 — Alert classification is automatable if input access remains stable.","4. AI-leverage fit: 4/5 — Attribute extraction and near-match rejection are meaningful AI tasks.","5. Competition posture: 2/5 — Native alerts and specialist services compete directly.","6. Distribution access: 4/5 — Specific-item rediscovery makes a clear consumer demonstration.","7. Time to first revenue: 3/5 — Forwarded-alert MVP avoids API approval but needs deliverability testing.","8. Moat potential: 2/5 — Wishlist data is easy to recreate; platform dependence limits defensibility."],
+
   "AGR-1": [
     "1. Demand evidence: 4/5 — A specific impending rule, a first-person operations complaint, and a research survey point to the same data-capture burden.",
     "2. Willingness to pay: 2/5 — Sources show work and risk, not verified purchases of this narrow tool.",
@@ -2625,6 +2669,349 @@ const DATA = [
   [
    "Public complaint / reported paid workaround — r/nonprofit, “Audits advice”; 2024-05-31; loaded 2026-09-22. A nonprofit practitioner reports the cheapest available audit rose from $6–7K to $25K, about 240 staff hours for the prior audit, and peers in the $500K–$5M range suspending audits unless required. This establishes a paid audit and staff-time burden, not payment for the proposed product.",
    "https://www.reddit.com/r/nonprofit/comments/1d57tky/audits_advice/"
+  ]
+ ]
+},
+// Astra consumer subscription candidates · 2026-09-22
+{
+ "id": "B2C-1",
+ "title": "Wear It Again",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 2,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Getting useful outfits from an existing wardrobe requires too much cataloging and does not reliably reflect what the owner actually wears.",
+ "who": "Consumers interested in capsule wardrobes and wearing existing clothes more often; market size not quantified.",
+ "why": "Indyx and Whering already serve this market. The proposed opening is immediate value from a small capsule and learning accepted outfits, not an empty category.",
+ "today": "Closet photos, manual outfit planning, free wardrobe apps and paid human styling.",
+ "solo": "A consumer subscription that turns 12–15 photographed garments into weekly outfits and learns from wear/reject feedback. Test $9/month. MVP: photo catalog, real-item outfit combinations and weekly feedback. Acquire through short outfit-transformation videos; daily dressing sustains use.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Recommendation quality, photo onboarding and crowded competition. Do not hallucinate garments or claim validated savings.",
+ "jacknote": "Own outfit-demo templates and weekly social experiments with a visible design portfolio.",
+ "ev": [
+  [
+   "Public complaints — r/capsulewardrobe: Indyx or Whering; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Discussion describes the work of uploading a wardrobe and choosing between apps.",
+   "https://www.reddit.com/r/capsulewardrobe/comments/1dea79i/indyx_or_whering_app/"
+  ],
+  [
+   "Paid alternative — Indyx FAQ; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Free wardrobe functions coexist with premium features and styling services; this validates a paid category, not the proposed gap.",
+   "https://www.myindyx.com/contact-us"
+  ]
+ ]
+},
+{
+ "id": "B2C-2",
+ "title": "Talk to Grandma",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 2,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Heritage-language adults can understand family conversations but struggle to produce the speech they want to use.",
+ "who": "Adults reconnecting with a family language; start with one language that can be evaluated reliably. Market size not quantified.",
+ "why": "General AI speaking apps already exist. A family-conversation curriculum for receptive heritage speakers is a narrower positioning hypothesis.",
+ "today": "General language apps, tutors, family practice and generic AI voice conversations.",
+ "solo": "A consumer voice-practice subscription for real family conversations, remembered vocabulary and natural code-switching. Test $15/month with usage limits. MVP: one language, short roleplays and spaced speaking practice. Acquire through relatable heritage-language videos; daily practice supplies recurring value.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Voice inference cost, language and dialect quality, private family details and practice churn. No assumption that unlimited voice is profitable.",
+ "jacknote": "Own scenario cards, onboarding and short relatable language-learning content.",
+ "ev": [
+  [
+   "Public problem reports — r/languagelearning: heritage speakers; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Participants describe understanding their heritage language while struggling to speak it.",
+   "https://www.reddit.com/r/languagelearning/comments/16z4toj"
+  ],
+  [
+   "Paid alternative — LingoLooper; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. AI speaking practice is an existing consumer product; family-specific positioning still needs validation.",
+   "https://www.lingolooper.com/"
+  ]
+ ]
+},
+{
+ "id": "B2C-3",
+ "title": "Paint Next",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 4,
+ "s": 4,
+ "a": 4,
+ "c": 3,
+ "di": 4,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Hobby painters struggle to turn general tutorials into specific feedback and a useful next practice exercise.",
+ "who": "Amateur watercolor painters practicing regularly; market size not quantified.",
+ "why": "Teaching memberships exist. Personalized automated critique must be demonstrably useful to justify an additional subscription.",
+ "today": "YouTube tutorials, Reddit critiques, courses and paid instructor-feedback memberships.",
+ "solo": "A consumer watercolor-practice subscription: upload a painting and reference, receive two observations, an annotated illustration and a ten-minute exercise. Test $12/month. MVP: composition, value and color feedback with progress history. Acquire through painting-before/after demos; every new painting creates a new feedback occasion.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Expert calibration is needed before release; photo quality affects feedback. Avoid generic praise or presenting subjective judgments as facts.",
+ "jacknote": "Own annotation design and demonstration videos with clear before/after portfolio work.",
+ "ev": [
+  [
+   "Public complaints and paid experiences — r/watercolor101: online classes; 2026-04-27; accessed 2026-09-22; loaded 2026-09-22. Users discuss paid teaching and canceling when style and price did not suit them.",
+   "https://www.reddit.com/r/watercolor101/comments/1swoujk/any_online_watercolor_classes_recommended/"
+  ],
+  [
+   "Paid human workaround — Watercolor College premium memberships; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Membership offers instructor feedback; automated feedback has not been shown equivalent.",
+   "https://www.watercolorcollege.com/about-premium-memberships"
+  ]
+ ]
+},
+{
+ "id": "B2C-4",
+ "title": "Tomorrow Bag",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 1,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Parents miss practical preparation tasks buried in school messages from several senders and channels.",
+ "who": "Parents managing school-age children and recurring forms, supplies and special days; market size not quantified.",
+ "why": "Ohai and Little Adda already extract family tasks. Evening preparation with source-linked instructions is a usability hypothesis, not an unserved market.",
+ "today": "Manual calendar entry, email labels, parent group chats and family-assistant apps.",
+ "solo": "A household subscription that converts forwarded school emails, PDFs and screenshots into tonight’s pack/sign/pay/wear checklist. Test $9/month. MVP: uploads or forwarding, source links, uncertain-date confirmation and reminders. Acquire through parent-focused buried-message demos; school messages recur weekly.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Private child information, extraction mistakes and summer churn. No school contracts or portal integrations required for MVP.",
+ "jacknote": "Own checklist UX and parent-facing demo content with short feedback loops.",
+ "ev": [
+  [
+   "Public complaints — r/workingmoms: school emails; 2026-08-13; accessed 2026-09-22; loaded 2026-09-22. Parents describe overwhelming messages and practical school requests.",
+   "https://www.reddit.com/r/workingmoms/comments/1vnr34y/overwhelmed_by_school_emails/"
+  ],
+  [
+   "Commercial alternative — Ohai how it works; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Existing assistant extracts tasks and events from family documents; evidence of competition, not proof of unmet willingness to pay.",
+   "https://www.ohai.ai/how-it-works/"
+  ],
+  [
+   "Direct competition — Little Adda; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Already identifies forms, fees, supplies and school dates; differentiation must be tested.",
+   "https://www.littleadda.com/"
+  ]
+ ]
+},
+{
+ "id": "B2C-5",
+ "title": "One Dinner, Different Plates",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 2,
+ "di": 4,
+ "t": 3,
+ "m": 3,
+ "fit": 0,
+ "gap": "Households with different food preferences repeatedly coordinate separate meals or manually adapt shared ingredients.",
+ "who": "Household cooks handling several preferences; initial audience excludes medically prescribed diets. Market size not quantified.",
+ "why": "Many apps support dietary preferences. Coordinating shared preparation and learning what each person accepts is the proposed distinction.",
+ "today": "Separate cooking, component meals, accepted-meal lists, meal subscriptions and free recipe generation.",
+ "solo": "A household meal-planning subscription with one preparation sequence and different plate finishes, learning what each person ate. Test $12/month. MVP: a small tested recipe library, shared grocery list and acceptance feedback. Acquire with one-pan/multiple-preferences videos; weekly planning drives repeat use.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Recipe testing, strong free alternatives and churn. The MVP does not promise allergy safety or therapeutic nutrition.",
+ "jacknote": "Own cooking-plan visualizations and simple recipe demonstration formats.",
+ "ev": [
+  [
+   "Public complaints — r/mealprep: dietary restrictions; 2026-03-24; accessed 2026-09-22; loaded 2026-09-22. Parents describe planning burden and accepted-meal lists. Medical cases evidence burden but are outside the proposed MVP.",
+   "https://www.reddit.com/r/mealprep/comments/1s2niju/meal_prepping_with_dietary_restrictions_how_do/"
+  ],
+  [
+   "Paid alternative — Cook Smarts subscription; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Consumer meal planning is sold as a subscription; exact proposed service remains unvalidated.",
+   "https://mealplans.cooksmarts.com/trial_subscription/new"
+  ],
+  [
+   "Unverified public lead — r/MealPrepSunday: different family members; 2020-09-01 per search; fetch failed 2026-09-22; UNVERIFIED — direct fetch failed. Search surfaced a family meal-preparation question; direct fetch failed, so this is not counted as verified evidence.",
+   "https://www.reddit.com/r/MealPrepSunday/comments/ikhjzt"
+  ]
+ ]
+},
+{
+ "id": "B2C-6",
+ "title": "Fit Memory",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 5,
+ "a": 4,
+ "c": 2,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Home sewists lose the pattern, fabric and alteration context needed to repeat a successful personal fit.",
+ "who": "Frequent hobby sewists reusing patterns and adjustments; market size not quantified.",
+ "why": "Stash Hub already stores project notes. Reliable retrieval of personal fit changes is the narrow hypothesis rather than a new project tracker.",
+ "today": "Notebooks, pattern-envelope notes, photos, text files and sewing organizers.",
+ "solo": "A consumer sewing-memory subscription that turns photos and voice notes into a history of pattern alterations and next-project cutting checklists. Test $7/month. MVP: pattern/fabric/version records and source-linked recall of prior adjustments. Acquire through sewing before/after stories; each project adds reusable fit knowledge.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Only frequent sewists may justify monthly payment. Do not generate allegedly guaranteed-fit patterns or confuse two pattern versions.",
+ "jacknote": "Own pattern-note layouts and sewist onboarding demos with visible design outcomes.",
+ "ev": [
+  [
+   "Public requests and workarounds — r/sewing: documenting projects; 2021-09-26; accessed 2026-09-22; loaded 2026-09-22. Sewists discuss notebooks, pattern notes and photos for remembering project changes.",
+   "https://www.reddit.com/r/sewing/comments/pw15e0/how_do_you_document_your_projects_including_hacks/"
+  ],
+  [
+   "Paid alternative — Stash Hub; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Sewing organizer with projects and a paid Plus tier; notes are already an incumbent capability.",
+   "https://stashhubapp.com/"
+  ]
+ ]
+},
+{
+ "id": "B2C-7",
+ "title": "Campaign Memory",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 5,
+ "a": 4,
+ "c": 2,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Home dungeon masters struggle to retrieve established characters, promises and unresolved threads between game sessions.",
+ "who": "Hobby dungeon masters running ongoing campaigns; market size not quantified.",
+ "why": "LegendKeeper and TavernScribe already address campaign knowledge. A three-minute post-session voice workflow needs a clear convenience advantage.",
+ "today": "Notebooks, scattered documents, campaign managers and session-summary tools.",
+ "solo": "A consumer campaign-memory subscription that turns a brief dictated recap into updated characters, promises and a next-session preparation brief. Test $10/month. MVP: user-entered canon with source-linked recall and separately labeled creative suggestions. Acquire through D&amp;D social sketches; every session creates another use.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Campaign hiatus churn, hallucinated canon and close competitors. No licensed rulebook ingestion or full-group recording needed.",
+ "jacknote": "Own campaign-card graphics and short demonstrations of forgotten-plot recovery.",
+ "ev": [
+  [
+   "Public complaints — r/DMAcademy: campaign tracking; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Dungeon masters discuss scattered notes and the burden of keeping track of campaigns.",
+   "https://www.reddit.com/r/DMAcademy/comments/1tyrxbm/how_do_you_all_actually_keep_track_of_your/"
+  ],
+  [
+   "Paid alternative — LegendKeeper pricing; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Paid campaign-management software validates a category with existing alternatives.",
+   "https://www.legendkeeper.com/pricing/"
+  ],
+  [
+   "Direct competition — TavernScribe campaign memory; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Already links campaign memory to session preparation, reducing novelty of the proposed service.",
+   "https://tavernscribe.com/blog/dnd-session-prep-with-campaign-memory"
+  ]
+ ]
+},
+{
+ "id": "B2C-8",
+ "title": "Good Dog Together",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 2,
+ "w": 3,
+ "s": 4,
+ "a": 3,
+ "c": 2,
+ "di": 4,
+ "t": 3,
+ "m": 2,
+ "fit": 0,
+ "gap": "Household members use inconsistent dog-training cues and rewards and struggle to keep daily practice aligned.",
+ "who": "Multi-person households training a pet dog; initial scope is ordinary skills and enrichment. Market size not quantified.",
+ "why": "Pupford already supplies free and paid training. Household coordination could improve practice, but its incremental subscription value is not established.",
+ "today": "Training classes, video courses, shared reminders and informal verbal coordination.",
+ "solo": "A household dog-practice subscription with shared cues, reward rules, five-minute exercises and an enrichment progression. Test $9/month. MVP: vetted ordinary-skills curriculum, shared checklist and practice history. Acquire through recognizable household-training videos; daily practice and later enrichment sustain use.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Expert curriculum review before release; exclude aggression and clinical behavior treatment. Retention after puppyhood is uncertain. The direct household-complaint lead remains unverified.",
+ "jacknote": "Own cue-card design, shared-practice onboarding and short educational demos.",
+ "ev": [
+  [
+   "Unverified public complaint — r/puppy101: Buyer’s Remorse; Publication date unconfirmed; search and failed fetch 2026-09-22; UNVERIFIED — direct fetch failed. Search snippet describes inconsistent family commands and expectations; direct fetch failed.",
+   "https://www.reddit.com/r/puppy101/comments/10lw0z4"
+  ],
+  [
+   "Paid alternative — Pupford Academy; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Offers free courses and Academy+ with monthly, yearly and lifetime options. This does not prove demand for household coordination.",
+   "https://pupford.com/pages/pupford-academy"
+  ]
+ ]
+},
+{
+ "id": "B2C-9",
+ "title": "Orchid Season",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 4,
+ "a": 3,
+ "c": 3,
+ "di": 4,
+ "t": 4,
+ "m": 3,
+ "fit": 0,
+ "gap": "Orchid collectors need to preserve plant-specific care and flowering history across different growing conditions.",
+ "who": "Hobby orchid collectors with multiple plants; market size not quantified.",
+ "why": "Planta already covers plant care. The proposed distinction is collector history and observation-based inspection, which existing apps may reproduce.",
+ "today": "Plant apps, photographs, spreadsheets and generic care reminders.",
+ "solo": "A consumer orchid-collection subscription tracking flowering, repotting, roots and growing observations, with weekly inspection lists. Test $6/month. MVP: collection records, photo timelines and observation-based tasks. Acquire through flowering time-lapses and collection walkthroughs; year-round collections create recurring use.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Narrow audience, low price ceiling and upfront horticultural review. Avoid rigid watering prescriptions or confident disease diagnosis from photos.",
+ "jacknote": "Own plant-timeline visuals and collection-story video templates.",
+ "ev": [
+  [
+   "Public requests — r/orchids: collection app; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Collectors discuss tracking orchids and using apps for records and reminders.",
+   "https://www.reddit.com/r/orchids/comments/1gnavk7/"
+  ],
+  [
+   "Commercial alternative — Planta; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Established plant-care app demonstrates direct category competition; exact orchid proposition needs paid validation.",
+   "https://getplanta.com/"
+  ]
+ ]
+},
+{
+ "id": "B2C-10",
+ "title": "Find My Favorite Again",
+ "lane": "Consumer",
+ "jack": "Strong",
+ "whynow": false,
+ "d": 3,
+ "w": 3,
+ "s": 4,
+ "a": 4,
+ "c": 2,
+ "di": 4,
+ "t": 3,
+ "m": 2,
+ "fit": 0,
+ "gap": "Secondhand shoppers waste attention on alerts for the wrong size, model, color or condition when looking for a specific item.",
+ "who": "Frequent secondhand shoppers and collectors with ongoing wishlists; occasional replacement shoppers may churn. Market size not quantified.",
+ "why": "Native marketplace alerts and FindersKeepers already exist. Precise attribute filtering is an improvement hypothesis dependent on the available listing data.",
+ "today": "Native saved searches, repeated manual browsing and specialist alert services.",
+ "solo": "A consumer wishlist subscription that filters user-forwarded listing alerts against exact model, size, color and condition and explains matches. Test $7/month. MVP: one marketplace, forwarded alerts and user-confirmed matches. Acquire through discontinued-favorite rediscovery videos; frequent shoppers maintain changing wishlists.",
+ "cons": "Consumer subscription candidate; pricing, conversion and retention are unvalidated. Email forwarding limits timeliness and coverage. Platform access and false matches are risks; no cross-site scraping assumption. Occasional shoppers cancel after finding an item.",
+ "jacknote": "Own match-explanation cards and wishlist discovery demonstrations.",
+ "ev": [
+  [
+   "Incumbent complaint — eBay Community: saved-search sizes; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. User reports saved searches not retaining intended sizes.",
+   "https://community.ebay.com/forum/buying-57914/topic/saved-search-sizes-not-saving-173374/"
+  ],
+  [
+   "Commercial alternative — FindersKeepers; Publication date not stated; accessed 2026-09-22; loaded 2026-09-22. Existing specialist eBay alerts show direct competition; not proof of this exact filtering gap.",
+   "https://finderskeepers.app/"
   ]
  ]
 },
