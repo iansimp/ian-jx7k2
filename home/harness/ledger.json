@@ -41,7 +41,7 @@
     "daily": "Grok 4.6",
     "judgment": "Sol, only when Ian names a judgment job",
     "computer_control": "Astra when the next step is a real screen",
-    "morgan_key_decisions": "Opus via skill morgan-key-decision; Grok stays Morgan's daily operator (Ian 2026-09-28)"
+    "dibs_daily_run": "Opus via skill dibs-daily-run; Morgan runs the Dibs team every morning (Ian 2026-09-28)"
   },
   "default_builder": "Grok 4.6",
   "default_builder_since": "2026-09-10",
