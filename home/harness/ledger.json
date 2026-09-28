@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-16",
+  "updated": "2026-09-28",
   "honest_limits": [
     "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
     "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
@@ -40,7 +40,8 @@
     "mechanical": "cheap-fast (Composer / Luna class)",
     "daily": "Grok 4.6",
     "judgment": "Sol, only when Ian names a judgment job",
-    "computer_control": "Astra when the next step is a real screen"
+    "computer_control": "Astra when the next step is a real screen",
+    "morgan_key_decisions": "Opus via skill morgan-key-decision; Grok stays Morgan's daily operator (Ian 2026-09-28)"
   },
   "default_builder": "Grok 4.6",
   "default_builder_since": "2026-09-10",
@@ -428,6 +429,25 @@
       "exclude_from_learning": true,
       "tweak_id": null,
       "url": "https://cursor.com/agents/bc-45ed2de4-21f3-4834-8683-a3b705356b16"
+    },
+    {
+      "id": "run-2026-09-28-morgan-opus-operator",
+      "date": "2026-09-28",
+      "door": "Cursor cloud",
+      "source": "mobile",
+      "model": "Claude Opus 5.5 Medium",
+      "project": "dibs",
+      "task": "Set up Opus as Morgan's key-decision operator alongside Grok",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "context/ai-system/MORGAN-OPUS.md + skill morgan-key-decision",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-01a0e881-0cf7-7548-884d-679ae868af24"
     }
   ],
   "router_assignments": [
