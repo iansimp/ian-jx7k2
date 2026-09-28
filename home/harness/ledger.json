@@ -467,6 +467,25 @@
       "exclude_from_learning": false,
       "tweak_id": null,
       "url": "https://cursor.com/agents/bc-01a0e881-0cf7-7548-884d-679ae868af24"
+    },
+    {
+      "id": "run-2026-09-28-dibs-autonomy-day1",
+      "date": "2026-09-28",
+      "door": "Cursor cloud",
+      "source": "mobile",
+      "model": "Claude Opus 5.5 Medium",
+      "project": "dibs",
+      "task": "Make the Dibs team autonomous (rules, daily Opus run, timer) and run day one",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "OPERATING.md, plan.md, experiments.md, reports/2026-09-28.md (marketing branch); dibs-daily-run skill (main); 6 outreach emails; daily timer 13:30 UTC",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": "https://cursor.com/agents/bc-01a0e881-0cf7-7548-884d-679ae868af24"
     }
   ],
   "router_assignments": [
