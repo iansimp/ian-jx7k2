@@ -732,7 +732,7 @@
       "door": "Claude",
       "project": "other",
       "task": "September API usage, ian-anthropic-key",
-      "note": "Anthropic console cost column, September only. Month total, dated the 1st so it is not read as a one-day charge. Same money as the auto-recharge card lines. Do not add this to the card total. Key created 21 Feb 2026, no expiry. Largest September key. The console does not name the program. OpenClaw was the always-on gateway using a Claude API key through 29 Sep, when it was removed. EmailTriage has its own key."
+      "note": "Anthropic console cost column, September only. Month total, dated the 1st so it is not read as a one-day charge. Same money as the auto-recharge card lines. Do not add this to the card total. Key created 21 Feb 2026, no expiry. Ian, 29 Sep: June and July were zero on this key, then about $3.80 a day from 3 Aug on, about $80 a month. EmailTriage's key was created 7 Aug, so it is not this line. OpenClaw's gateway was still running through 29 Sep with an empty cron list. Heartbeat file was not read before removal."
     },
     {
       "id": "spend-2026-09-anthropic-key-loupe",
