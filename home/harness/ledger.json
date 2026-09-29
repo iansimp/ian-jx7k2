@@ -4,7 +4,7 @@
     "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
     "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
     "Do not invent token counts or dollar amounts. Blank means unknown.",
-    "Do not split the $60 Cursor subscription across projects.",
+    "Do not split the Cursor subscription across projects.",
     "ChatGPT Astra sits in the $20 Plus unless Ian says he was billed extra.",
     "A model switch after the fact cannot be A/B tested. Log outcome as unknown unless Ian judges it.",
     "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords, live keys, or family/school detail in Mac job prompts or in investigator.json.",
@@ -23,9 +23,9 @@
   },
   "subscriptions": [
     {
-      "name": "Cursor Pro Plus",
-      "usd_month": 60,
-      "note": "Two pools. Grok and Composer draw the Cursor Models pool. Sol, Claude, and GPT draw Other Models. Card: $60 on 24 Aug and 24 Sep, plus a $20 plan charge on 11 Aug. On-demand through 26 Sep was $155. Meter on 29 Sep (Ian screenshot, cycle resets 24 Oct): Cursor Models 7% used, Other Models 94% used, on-demand $0 of a fixed $130 cap. The 94% is included usage, not a posted charge."
+      "name": "Cursor Ultra",
+      "usd_month": 100,
+      "note": "Ian started Ultra on 29 Sep 2026 at a $100 offer instead of the $200 list price. $100 is the start price he took. Not recorded as the lasting price until a later invoice says so. Was Pro Plus $60 (card: $60 on 24 Aug and 24 Sep, plus $20 on 11 Aug). Two pools. Grok and Composer draw Cursor Models. Sol, Claude, and GPT draw Other Models. On-demand through 26 Sep was $155, cap still a fixed $130 as of the 29 Sep Pro+ screenshot. That screenshot was before this switch: Cursor Models 7%, Other Models 94%, cycle reset 24 Oct. Whether the bars reset on the upgrade is unknown."
     },
     {
       "name": "ChatGPT Plus",
@@ -776,8 +776,18 @@
       "change": "Used Opus in Cursor for about a day and a half. Other Models hit 94% of the Pro+ cycle with 26 days left. On-demand still $0 of $130.",
       "hypothesis": "Sitting in Opus would be worth the Other Models pool.",
       "outcome": "unknown",
-      "outcome_note": "No parallel Grok run of the same chats. Standing rule: Grok for everyday work. Opus for the morning Dibs run only. Ultra not bought on this reading. Cap stays $130.",
+      "outcome_note": "No parallel Grok run of the same chats. Standing rule: Grok for everyday work. Opus for the morning Dibs run only. Cap stays $130. Later the same day Ian started Ultra at $100. See tweak-2026-09-29-ultra-100.",
       "spend_note_id": "spend-2026-09-29-cursor-pool-meter"
+    },
+    {
+      "id": "tweak-2026-09-29-ultra-100",
+      "date": "2026-09-29",
+      "who": "Ian",
+      "change": "Started Cursor Ultra at a $100 offer instead of the $200 list price. Was Pro Plus at $60.",
+      "hypothesis": "The larger included pools cover the morning Opus run and occasional Opus without on-demand, at $40 more than Pro Plus for as long as the $100 price lasts.",
+      "outcome": "unknown",
+      "outcome_note": "Offer accepted the same day the Pro+ Other Models bar was at 94%. Whether that bar reset is unknown. Everyday model stays Grok. Morning Dibs run stays Opus. On-demand cap stays $130. Next invoice says if $100 continues.",
+      "spend_note_id": null
     }
   ],
   "runs": [
@@ -1183,6 +1193,25 @@
       "counts_as_spend": false,
       "exclude_from_learning": false,
       "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-09-29-ultra-100",
+      "date": "2026-09-29",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "ai-home",
+      "task": "Record that Ian started Cursor Ultra at a $100 offer",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "harness/ledger.json subscription; tweak-2026-09-29-ultra-100",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": "tweak-2026-09-29-ultra-100",
       "url": null
     }
   ],
