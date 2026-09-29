@@ -24,7 +24,7 @@
     {
       "name": "Cursor Pro Plus",
       "usd_month": 60,
-      "note": "Two pools. Grok and Composer draw the cheap included pool. Sol, Claude, and GPT draw the expensive one. Card: $60 on 24 Aug and 24 Sep, plus a $20 plan charge on 11 Aug. On-demand usage is separate ($155 through 26 Sep)."
+      "note": "Two pools. Grok and Composer draw the Cursor Models pool. Sol, Claude, and GPT draw Other Models. Card: $60 on 24 Aug and 24 Sep, plus a $20 plan charge on 11 Aug. On-demand through 26 Sep was $155. Meter on 29 Sep (Ian screenshot, cycle resets 24 Oct): Cursor Models 7% used, Other Models 94% used, on-demand $0 of a fixed $130 cap. The 94% is included usage, not a posted charge."
     },
     {
       "name": "ChatGPT Plus",
@@ -39,16 +39,16 @@
   ],
   "routing": {
     "mechanical": "cheap-fast (Composer / Luna class)",
-    "daily": "Grok 4.6",
+    "daily": "Grok 4.7 (not Fast). Opus and Sol draw Other Models and are not the all-day setting.",
     "judgment": "Sol, only when Ian names a judgment job",
     "computer_control": "Astra when the next step is a real screen",
     "dibs_daily_run": "Opus via skill dibs-daily-run; Morgan runs the Dibs team every morning (Ian 2026-09-28)"
   },
-  "default_builder": "Grok 4.6",
+  "default_builder": "Grok 4.7",
   "default_builder_since": "2026-09-10",
   "rates_per_million_usd": {
-    "as_of": "2026-09-10",
-    "source": "https://cursor.com/docs/account/pricing",
+    "as_of": "2026-09-29",
+    "source": "https://cursor.com/docs/models-and-pricing",
     "models": [
       {
         "id": "grok-4.6",
@@ -77,6 +77,13 @@
         "input": 4,
         "output": 20,
         "note": "Judgment. A long planning day burns this pool."
+      },
+      {
+        "id": "claude-opus-5.5",
+        "pool": "Other Models",
+        "input": 4,
+        "output": 20,
+        "note": "Same pool as Sol. Official rate on cursor.com/docs/models-and-pricing, checked 2026-09-29. Not a measured bill."
       }
     ]
   },
@@ -686,6 +693,19 @@
       "project": "other",
       "task": "CURSOR USAGE charge",
       "note": "Posted card charge from the 28 Sep 2026 AI Providers export. One usage bill. Not split by model or project. September usage bills are the pool that contains the 10 Sep Sol floor."
+    },
+    {
+      "id": "spend-2026-09-29-cursor-pool-meter",
+      "date": "2026-09-29",
+      "source": "ian",
+      "usd": 0,
+      "operator": null,
+      "tokens": null,
+      "model": "Cursor on-demand",
+      "door": "Cursor",
+      "project": "other",
+      "task": "Pro+ cycle meter, on-demand still $0",
+      "note": "Ian screenshot of Plan & Usage. Cycle resets 24 Oct (26 days left on 29 Sep). Cursor Models 7% used. Other Models 94% used after about a day and a half of Opus in Cursor, plus the 28 Sep and 29 Sep Opus cloud runs. On-demand $0 of a fixed $130 monthly limit. The 94% is included usage. Cursor does not publish a dollar size for that pool. This $0 is the on-demand meter, not the included pool."
     }
   ],
   "tweaks": [
@@ -708,6 +728,16 @@
       "outcome": "unknown",
       "outcome_note": "Union shipped. Claude paused same day. Later folded city/import copies. Proof is later scans, not one empty pass.",
       "spend_note_id": null
+    },
+    {
+      "id": "tweak-2026-09-29-opus-chat",
+      "date": "2026-09-29",
+      "who": "Ian",
+      "change": "Used Opus in Cursor for about a day and a half. Other Models hit 94% of the Pro+ cycle with 26 days left. On-demand still $0 of $130.",
+      "hypothesis": "Sitting in Opus would be worth the Other Models pool.",
+      "outcome": "unknown",
+      "outcome_note": "No parallel Grok run of the same chats. Standing rule: Grok for everyday work. Opus for the morning Dibs run only. Ultra not bought on this reading. Cap stays $130.",
+      "spend_note_id": "spend-2026-09-29-cursor-pool-meter"
     }
   ],
   "runs": [
@@ -1037,6 +1067,25 @@
       "counts_as_spend": false,
       "exclude_from_learning": false,
       "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-09-29-opus-pool-meter",
+      "date": "2026-09-29",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "ai-home",
+      "task": "Read the Pro+ usage meter and keep everyday work on Grok",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "HARNESS.md routing note; spend-2026-09-29-cursor-pool-meter",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": "tweak-2026-09-29-opus-chat",
       "url": null
     }
   ],
