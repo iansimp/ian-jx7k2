@@ -9,7 +9,8 @@
     "A model switch after the fact cannot be A/B tested. Log outcome as unknown unless Ian judges it.",
     "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords, live keys, or family/school detail in Mac job prompts or in investigator.json.",
     "Same-session marketing personas are not separate model invocations. Simulated Dax/Morgan completions are excluded from learning, completed-work totals, and spend.",
-    "Card export 28 Sep 2026 covers AI Providers charges from 5 Jan through 26 Sep. Those figures are posted charges, not tokens, not remaining balances, and not a split by project."
+    "Card export 28 Sep 2026 covers AI Providers charges from 5 Jan through 26 Sep. Those figures are posted charges, not tokens, not remaining balances, and not a split by project.",
+    "September Anthropic console key totals ($139.31) are the same money as the auto-recharge card lines. Do not add them to the card total."
   ],
   "project_labels": {
     "ai-home": "This home",
@@ -706,6 +707,45 @@
       "project": "other",
       "task": "Pro+ cycle meter, on-demand still $0",
       "note": "Ian screenshot of Plan & Usage. Cycle resets 24 Oct (26 days left on 29 Sep). Cursor Models 7% used. Other Models 94% used after about a day and a half of Opus in Cursor, plus the 28 Sep and 29 Sep Opus cloud runs. On-demand $0 of a fixed $130 monthly limit. The 94% is included usage. Cursor does not publish a dollar size for that pool. This $0 is the on-demand meter, not the included pool."
+    },
+    {
+      "id": "spend-2026-09-anthropic-key-email-triage",
+      "date": "2026-09-01",
+      "source": "ian",
+      "usd": 52.26,
+      "operator": null,
+      "tokens": null,
+      "model": "Anthropic API",
+      "door": "Claude",
+      "project": "email-triage",
+      "task": "September API usage, email-triage key",
+      "note": "Anthropic console cost column, September only, from Ian's 29 Sep screenshot. Month total, dated the 1st so it is not read as a one-day charge. Same money as the ~$10 auto-recharge card lines, split by key. Do not add this to the card total. Key created 7 Aug 2026. Design estimate was under $10/month. Leave EmailTriage running."
+    },
+    {
+      "id": "spend-2026-09-anthropic-key-ian",
+      "date": "2026-09-01",
+      "source": "ian",
+      "usd": 86.83,
+      "operator": null,
+      "tokens": null,
+      "model": "Anthropic API",
+      "door": "Claude",
+      "project": "other",
+      "task": "September API usage, ian-anthropic-key",
+      "note": "Anthropic console cost column, September only. Month total, dated the 1st so it is not read as a one-day charge. Same money as the auto-recharge card lines. Do not add this to the card total. Key created 21 Feb 2026, no expiry. Largest September key. The console does not name the program. OpenClaw was the always-on gateway using a Claude API key through 29 Sep, when it was removed. EmailTriage has its own key."
+    },
+    {
+      "id": "spend-2026-09-anthropic-key-loupe",
+      "date": "2026-09-01",
+      "source": "ian",
+      "usd": 0.22,
+      "operator": null,
+      "tokens": null,
+      "model": "Anthropic API",
+      "door": "Claude",
+      "project": "dibs",
+      "task": "September API usage, loupe verification key",
+      "note": "Anthropic console cost column, September only. Month total, dated the 1st. Key loupe-ai-verification-of-copied-page-results, created 24 Aug 2026. Same money as the auto-recharge card lines. Do not add this to the card total."
     }
   ],
   "tweaks": [
@@ -1119,6 +1159,25 @@
       "cost_usd": null,
       "cost_source": "unknown",
       "shipped": "DIBS-TEAM.md, NOW.md, DECISIONS.md",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-09-29-anthropic-key-split",
+      "date": "2026-09-29",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "ai-home",
+      "task": "Split September Anthropic API spend across the three console keys",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "snapshots/2026-09-28-ai-provider-card.md September API keys section",
       "outcome": "shipped",
       "counts_as_completed_work": true,
       "counts_as_spend": false,

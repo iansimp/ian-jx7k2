@@ -25,8 +25,8 @@
       "id": "claude",
       "label": "Claude",
       "what_we_see": "Gmail: Anthropic auto-recharge credits. Ian named a personal school-enrollment thread on 10–11 Sep.",
-      "what_we_do_not": "Any Claude transcript. Which product (claude.ai vs API vs Claude Code) tripped auto-recharge.",
-      "spend": "Claude Pro is $20 on the card (the 2nd of the month). Credits are separate. Last 8 weeks (week of 3 Aug through 26 Sep): $318.50 across 31 charges, about $10 each. Full export 5 Jan–26 Sep: $933.77 of non-plan Anthropic charges. Opened receipts match the ~$10 lines. The card still does not say which chat."
+      "what_we_do_not": "Any Claude transcript. Which program called the February API key. The console names the key, not the process.",
+      "spend": "Claude Pro is $20 on the card (the 2nd of the month). Credits are separate. Last 8 weeks (week of 3 Aug through 26 Sep): $318.50 across 31 charges, about $10 each. September console, same money as those recharges: email-triage $52.26, ian-anthropic-key $86.83, loupe verification $0.22. Do not add the console totals to the card."
     },
     {
       "id": "openai",
