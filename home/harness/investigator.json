@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-29",
+  "updated": "2026-10-02",
   "run_id": "inv-2026-09-11",
   "model": "Grok 4.6 High Fast",
   "cost_usd": null,
@@ -25,8 +25,8 @@
       "id": "claude",
       "label": "Claude",
       "what_we_see": "Gmail: Anthropic auto-recharge credits. Ian named a personal school-enrollment thread on 10–11 Sep.",
-      "what_we_do_not": "Any Claude transcript. Which program called the February API key. The console names the key, not the process.",
-      "spend": "Claude Pro is $20 on the card (the 2nd of the month). Credits are separate. Last 8 weeks (week of 3 Aug through 26 Sep): $318.50 across 31 charges, about $10 each. September console, same money as those recharges: email-triage $52.26, ian-anthropic-key $86.83, loupe verification $0.22. Do not add the console totals to the card."
+      "what_we_do_not": "Any Claude transcript. Which program called the February API key. Desktop Fable token totals. The console names the API key, not Claude Desktop.",
+      "spend": "Claude Pro is $20 on the card (the 2nd of the month). On Pro, Fable in Claude Desktop is not included. It spends usage credits from the first message, and auto-reload posts about $10. Ian, 1 Oct 2026: heavy desktop Fable, then a $10 charge. API keys are a separate meter: September email-triage $52.26, ian-anthropic-key $86.83, loupe verification $0.22. Do not add those console totals on top of the card, and do not treat them as the whole card."
     },
     {
       "id": "openai",

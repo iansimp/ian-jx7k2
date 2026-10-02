@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01",
+  "updated": "2026-10-02",
   "honest_limits": [
     "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
     "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
@@ -10,7 +10,7 @@
     "Home is public at iansimp.github.io/ian-jx7k2/home/. Do not put passwords, live keys, or family/school detail in Mac job prompts or in investigator.json.",
     "Same-session marketing personas are not separate model invocations. Simulated Dax/Morgan completions are excluded from learning, completed-work totals, and spend.",
     "Card export 28 Sep 2026 covers AI Providers charges from 5 Jan through 26 Sep. Those figures are posted charges, not tokens, not remaining balances, and not a split by project.",
-    "September Anthropic console key totals ($139.31) are the same money as the auto-recharge card lines. Do not add them to the card total."
+    "September API key totals ($139.31) are the API portion only. Desktop Fable on Claude Pro also spends usage credits and can trigger the same style of ~$10 reload. Do not add the console totals on top of the card, and do not treat the keys page as the whole card."
   ],
   "project_labels": {
     "ai-home": "This home",
@@ -35,7 +35,7 @@
     {
       "name": "Claude Pro",
       "usd_month": 20,
-      "note": "Card shows $20 on the 2nd (Mar, Apr, May, Jul, Aug, Sep 2026). June has no matching plan line in that export. Extra auto-recharge credits are on top of Pro."
+      "note": "Card shows $20 on the 2nd (Mar, Apr, May, Jul, Aug, Sep 2026). June has no matching plan line in that export. On Pro, Fable in Claude Desktop is not included in that $20. It spends usage credits from the first message, at API rates, and auto-reload buys more. Ian, 1 Oct 2026: a bunch of desktop Fable, then a $10 charge."
     }
   ],
   "routing": {
@@ -745,7 +745,20 @@
       "door": "Claude",
       "project": "dibs",
       "task": "September API usage, loupe verification key",
-      "note": "Anthropic console cost column, September only. Month total, dated the 1st. Key loupe-ai-verification-of-copied-page-results, created 24 Aug 2026. Same money as the auto-recharge card lines. Do not add this to the card total."
+      "note": "Anthropic console cost column, September only. Month total, dated the 1st. Key loupe-ai-verification-of-copied-page-results, created 24 Aug 2026. API portion only. Do not add this to the card total. Desktop Fable does not appear on this page."
+    },
+    {
+      "id": "spend-2026-10-01-fable-desktop",
+      "date": "2026-10-01",
+      "source": "ian",
+      "usd": 10,
+      "operator": null,
+      "tokens": null,
+      "model": "Anthropic credits",
+      "door": "Claude",
+      "project": "personal",
+      "task": "Auto-reload after desktop Fable",
+      "note": "Ian, 2 Oct 2026. On 1 Oct he used Fable a lot in Claude Desktop, saw the notice that Fable burns usage credits, and then a $10 charge posted. Amount is his report of the reload, not an opened receipt and not the exact token cost. On Pro, Fable is outside the $20 plan. This does not show on the API keys page."
     }
   ],
   "tweaks": [
@@ -1226,6 +1239,25 @@
       "cost_usd": null,
       "cost_source": "unknown",
       "shipped": "six press emails from ian@calldibs.us; reports/2026-10-01.md on the marketing branch",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-10-02-fable-desktop",
+      "date": "2026-10-02",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "ai-home",
+      "task": "Record that Claude Desktop Fable spends usage credits and can reload about $10",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "spend-2026-10-01-fable-desktop",
       "outcome": "shipped",
       "counts_as_completed_work": true,
       "counts_as_spend": false,
