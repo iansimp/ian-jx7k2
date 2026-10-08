@@ -1340,6 +1340,25 @@
       "exclude_from_learning": false,
       "tweak_id": null,
       "url": null
+    },
+    {
+      "id": "run-2026-10-08-dibs-opus-review",
+      "date": "2026-10-08",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "dibs",
+      "task": "Point the morning strategy review at Opus, on the seat Ian assigned",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "dibs-daily-run skill requires Claude Opus 5.5 for the strategy review; morning alarm prompt updated to match",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": null
     }
   ],
   "router_assignments": [
