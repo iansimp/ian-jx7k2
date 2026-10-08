@@ -1359,6 +1359,25 @@
       "exclude_from_learning": false,
       "tweak_id": null,
       "url": null
+    },
+    {
+      "id": "run-2026-10-08-dibs-afternoon",
+      "date": "2026-10-08",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "dibs",
+      "task": "Afternoon push: thank Charlene and ship the Amazon guide",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "https://calldibs.us/amazon; reply to Charlene Kolesnik stopping after she passed",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": null
     }
   ],
   "router_assignments": [
