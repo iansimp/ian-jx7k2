@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07",
+  "updated": "2026-10-08",
   "honest_limits": [
     "Cursor self-serve Usage is tokens-only (since 2026-07-31). There is no per-chat dollar API on Ian's plan.",
     "Cloud agent metadata gives model, source, and dates. It does not give tokens or cost.",
@@ -1315,6 +1315,25 @@
       "cost_usd": null,
       "cost_source": "unknown",
       "shipped": "https://calldibs.us/copied; OPERATING pace rule; dibs-push timer at 1pm and 6pm Pacific",
+      "outcome": "shipped",
+      "counts_as_completed_work": true,
+      "counts_as_spend": false,
+      "exclude_from_learning": false,
+      "tweak_id": null,
+      "url": null
+    },
+    {
+      "id": "run-2026-10-08-dibs-morning",
+      "date": "2026-10-08",
+      "door": "Cursor cloud",
+      "source": "cloud-agent",
+      "model": "Grok 4.7",
+      "project": "dibs",
+      "task": "Answer Laura with Los Angeles times and ship the SHEIN guide page",
+      "tokens": null,
+      "cost_usd": null,
+      "cost_source": "unknown",
+      "shipped": "https://calldibs.us/shein; reply to Laura Newbold Breen offering 3pm or 4pm UK on 28 October",
       "outcome": "shipped",
       "counts_as_completed_work": true,
       "counts_as_spend": false,
