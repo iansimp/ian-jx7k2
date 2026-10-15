@@ -2,3 +2,14 @@
 @media(min-width:1400px){main{max-width:1300px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:850px){.shell{grid-template-columns:1fr}nav{display:flex;flex-wrap:wrap;padding:12px;gap:5px}nav button{width:auto;gap:10px;margin:0}.navgroup{display:none}.workgrid{grid-template-columns:1fr}main{padding:22px}header{padding:22px;flex-wrap:wrap}.healthrow{grid-template-columns:1fr;gap:5px}.headerlinks{gap:14px}.grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}}
 @media(pointer:coarse){button,select,input{min-height:44px;font-size:16px}}
+
+
+/* Let the document scroll normally; each desktop column has its own scroll area. */
+.company-overview p{margin:7px 0 9px}.company-overview{padding-bottom:2px}
+@media(min-width:851px){
+ .workgrid{height:clamp(420px,74vh,980px);height:clamp(420px,74dvh,980px);align-items:stretch}
+ .job-list{min-height:0;overflow-y:auto;overflow-x:hidden;padding:3px 10px 3px 3px;scrollbar-gutter:stable;overscroll-behavior-y:contain}
+ .workgrid > .detail{min-height:0;height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;overscroll-behavior-y:contain}
+ .job-list:focus-visible,.workgrid > .detail:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+}
+@media(max-width:850px){.job-list{min-width:0}.workgrid > .detail{height:auto;overflow:visible}}
