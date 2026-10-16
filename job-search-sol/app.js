@@ -36,3 +36,4 @@ $('#close-dialog').onclick=()=>$('#handoff').close();$('#copy-prompt').onclick=a
 fetch('snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json();}).then(data=>{snapshot=data;const synced=new Set(snapshot.jobs.flatMap(j=>j.syncedEventIds||[]));queue=queue.filter(e=>!synced.has(e.eventId));persist();[...new Set(snapshot.jobs.map(j=>j.family).filter(Boolean))].sort().forEach(f=>$('#family').add(new Option(f,f)));$('#footer').textContent='Published '+new Date(snapshot.publishedAt).toLocaleString()+'. Independent Sol pilot. Closed listings are in Archived; unverified listings remain visible. Private source stays in job-search-sol.';render();}).catch(err=>{$('#caption').textContent='Unable to load the dashboard data. Reload or check publication.';$('#workspace').innerHTML='<p class="error">'+esc(err.message)+'</p>';});
 
 
+

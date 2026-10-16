@@ -13,3 +13,4 @@
  .job-list:focus-visible,.workgrid > .detail:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 }
 @media(max-width:850px){.job-list{min-width:0}.workgrid > .detail{height:auto;overflow:visible}}
+
