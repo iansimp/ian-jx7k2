@@ -32,3 +32,10 @@
 .application-save.has-unsaved{position:sticky;bottom:12px;z-index:20;box-shadow:0 3px 14px #0002}
 .application-save>div{flex:0 1 auto}.application-save [role=status]{font-size:12px;opacity:1;margin:0;color:var(--muted);max-width:260px}.application-save button,.application-save button.primary,.application-save button:not(.primary){padding:8px 12px;font-size:12px;background:var(--panel);color:var(--text);border:1px solid var(--line)}.application-save.has-unsaved button[data-save-application]{font-weight:700;border-color:var(--accent)}
 @media(max-width:650px){.application-save{width:auto;gap:8px}.application-save>div{flex-basis:100%}.application-save [role=status]{max-width:none}.application-save.has-unsaved{bottom:8px}}
+
+/* Keep review-ready work first within Pipeline, without a new navigation item. */
+.pipeline-grid{display:flex;overflow-x:auto;align-items:stretch;gap:16px;padding-bottom:14px;scroll-snap-type:x proximity}.pipeline-grid>.lane{flex:0 0 245px;min-width:0;scroll-snap-align:start}.pipeline-grid>.review-lane{flex-basis:290px;border:2px solid var(--accent)}.review-lane h3{font-size:15px}.lane-description{margin:0 0 16px}.review-packet-link{display:block;font-size:12px;margin:10px 0;padding:7px 0}
+
+.pipeline-role{display:block;width:100%;border:0;background:transparent;text-align:left;padding:0;min-height:0}.pipeline-role strong,.pipeline-role span{display:block}.pipeline-role span{font-size:13px;margin-top:5px}.pipelinecard p{margin:8px 0}.review-packet-link{border-top:1px solid var(--line);padding-top:10px}
+
+.pipelinecard{background:var(--panel);border:1px solid var(--line);border-radius:9px}.pipeline-role{display:block;width:100%;text-align:left;border:0;padding:0;background:transparent}.pipeline-role strong,.pipeline-role span{display:block}.pipeline-role span{font-size:13px;margin-top:5px}.pipelinecard>p{margin:9px 0 0}.review-packet-link{font-weight:650}
