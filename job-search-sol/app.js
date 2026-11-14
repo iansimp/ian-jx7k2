@@ -26,8 +26,8 @@ function event(j,field,value,reason){const e={eventId:crypto.randomUUID(),id:j.i
 function nav(){const js=jobs();$('#nav').innerHTML=views.map((v,i)=>`${v==='Search Health'?'<div class="navgroup">SEARCH OPERATIONS</div>':''}<button data-view="${v}" class="${view===v?'active':''}" aria-current="${view===v?'page':'false'}">${v}<span>${!['Search Health','Comparison'].includes(v)?js.filter(j=>matches(j,v)).length:''}</span></button>`).join('');}
 function assessment(j){return ['Strong','Review','Pass'].includes(j.recommendation)?'Sol: '+j.recommendation:'Not assessed by Sol';}
 function provenance(j){return j.origin==='cursor-source'?'Cursor find':j.origin==='sol-search'?(j.cursorSource?'Sol find · also in Cursor':'Sol find'):'Cursor baseline';}
-function rows(js){return js.map(j=>`<button class="listrow ${selected===j.id?'active':''}" data-job="${esc(j.id)}" aria-pressed="${selected===j.id}"><div class="company">${esc(j.company)} ${j.focus?'★':''}</div><div class="role">${esc(j.title)}</div><div class="muted">${esc(j.location)}</div><div class="muted added-date">${esc(addedLabel(j))}</div><div class="tags"><span class="tag">${esc(assessment(j))}</span><span class="tag">${esc(stageActive(j)?j.stage:j.interest)}</span>${j.stage==="Ready for Ian's Review"&&j.availability?.startsWith('Current opening unverified')?'<span class="tag pending">Live posting needs checking</span>':''}<span class="tag">${esc(provenance(j))}</span>${pending(j)?'<span class="tag pending">Pending sync</span>':''}</div></button>`).join('');}
-function pipelineRows(js){return js.map(j=>`<article class="pipelinecard"><button class="pipeline-role" data-job="${esc(j.id)}"><strong>${esc(j.company)}</strong><span>${esc(j.title)}</span></button><p class="muted">${esc(addedLabel(j))}</p>${j.stage==="Ready for Ian's Review"?`${j.availability?.startsWith('Current opening unverified')?'<p class="muted">Live posting needs checking</p>':''}<a class="review-packet-link" href="${privateHost?'#apply/'+encodeURIComponent(j.id):'https://jobs.ianatwork.com/#apply/'+encodeURIComponent(j.id)}" data-open-application="${esc(j.id)}">Review prep →</a>`:''}<label class="label">Move to<select data-pipeline-stage="${esc(j.id)}" aria-label="Application stage for ${esc(j.company)}">${['Not started','Networking','Preparing',"Ready for Ian's Review",'Ready to submit','Applied','Interviewing','Offer','Closed'].map(v=>`<option value="${esc(v)}" ${v===j.stage?'selected':''}>${v==='Applied'?'Submitted / Applied':esc(v)}</option>`).join('')}</select></label>${pending(j)?'<span class="tag pending">Pending sync</span>':''}</article>`).join('');}
+function rows(js){return js.map(j=>`<article><button class="listrow ${selected===j.id?'active':''}" data-job="${esc(j.id)}" aria-pressed="${selected===j.id}"><div class="company">${esc(j.company)} ${j.focus?'★':''}</div><div class="role">${esc(j.title)}</div><div class="muted">${esc(j.location)}</div><div class="muted added-date">${esc(addedLabel(j))}</div><div class="tags"><span class="tag">${esc(assessment(j))}</span><span class="tag">${esc(stageActive(j)?j.stage:j.interest)}</span>${j.stage==="Ready for Ian's Review"&&j.availability?.startsWith('Current opening unverified')?'<span class="tag pending">Live posting needs checking</span>':''}<span class="tag">${esc(provenance(j))}</span>${pending(j)?'<span class="tag pending">Pending sync</span>':''}</div></button>${applyControls(j,true)}</article>`).join('');}
+function pipelineRows(js){return js.map(j=>`<article class="pipelinecard"><button class="pipeline-role" data-job="${esc(j.id)}"><strong>${esc(j.company)}</strong><span>${esc(j.title)}</span></button><p class="muted">${esc(addedLabel(j))}</p>${j.stage==="Ready for Ian's Review"?`${j.availability?.startsWith('Current opening unverified')?'<p class="muted">Live posting needs checking</p>':''}<a class="review-packet-link" href="${privateHost?'#apply/'+encodeURIComponent(j.id):'https://jobs.ianatwork.com/#apply/'+encodeURIComponent(j.id)}" data-open-application="${esc(j.id)}">Review prep →</a>`:''}<label class="label">Move to<select data-pipeline-stage="${esc(j.id)}" aria-label="Application stage for ${esc(j.company)}">${['Not started','Networking','Preparing',"Ready for Ian's Review",'Ready to submit','Applied','Interviewing','Offer','Closed'].map(v=>`<option value="${esc(v)}" ${v===j.stage?'selected':''}>${v==='Applied'?'Submitted / Applied':esc(v)}</option>`).join('')}</select></label> ${applyControls(j,true)}${pending(j)?'<span class="tag pending">Pending sync</span>':''}</article>`).join('');}
 function companyContext(j){const profile=snapshot.companyProfiles?.[j.company];return profile?`<section class="section company-overview"><div class="label">About the company</div><p>${esc(profile.description)}</p>${profile.sourceUrl?`<a class="muted" href="${esc(profile.sourceUrl)}" target="_blank" rel="noopener">Company website ↗</a>`:''}</section>`:'';}
 function restoreWorkspace(key,previousSelection,listScroll,detailScroll){const list=$('.job-list'),panel=$('.workgrid > .detail');if(list)list.scrollTop=listScroll;if(panel)panel.scrollTop=previousSelection===selected?detailScroll:0;renderedListKey=key;renderedSelection=selected;}
 function detail(j){if(!j)return'<div class="empty">Select an opportunity to see its details.</div>';return `<aside class="detail" aria-label="Selected opportunity" tabindex="0"><div class="eyebrow">${esc(provenance(j).toUpperCase())}</div><div class="company">${esc(j.company)}</div><h3>${esc(j.title)}</h3><div class="muted">${esc(j.location)}</div><p class="muted added-date" title="Recorded discovery date; original Cursor dates are retained for imported opportunities. This is not the employer posting date.">${esc(addedLabel(j))}</p><p>${esc(j.comp)}</p><div class="tags"><span class="tag">${esc(assessment(j))}</span><span class="tag">${esc(j.availability)}</span><span class="tag">${j.listingCheckedAt?'Listing checked '+date(j.listingCheckedAt):'Needs live check'}</span></div>${j.archivedAt?`<p class="muted">Archived ${date(j.archivedAt)}: ${esc(j.archiveReason)} Your decisions and application history are retained.</p>`:''}<div class="actions"><button data-archive>${j.archivedAt?'Restore role':'Archive role'}</button></div>${companyContext(j)}<div class="section"><div class="label">Your interest</div><div class="actions">${['Pursue','Maybe','Pass'].map(v=>`<button data-interest="${v}" class="${v===j.interest?'selected':''}" aria-pressed="${v===j.interest}">${v}</button>`).join('')}<button data-focus class="${j.focus?'selected':''}" aria-pressed="${!!j.focus}">${j.focus?'★ Focused':'☆ Focus'}</button></div>${!j.archivedAt&&['Not started','Networking','Preparing'].includes(j.stage)?'<p class="muted">Pursue starts prep on your next Sol sync. Maybe gets a second review.</p>':''}</div><div class="section"><label class="label" for="stage">Application stage</label><select id="stage">${['Not started','Networking','Preparing',"Ready for Ian's Review",'Ready to submit','Applied','Interviewing','Offer','Closed'].map(v=>`<option ${v===j.stage?'selected':''}>${v}</option>`).join('')}</select></div><div class="section"><div class="label">Why consider it</div><p>${esc(j.reason||'No Sol assessment yet. Review the current posting.')}</p>${j.concerns?`<p class="muted">Check: ${esc(j.concerns)}</p>`:''}</div><div class="section"><div class="label">Role summary</div><p>${esc(j.summary||'Full description was not included in the baseline. Verify the posting before preparation.')}</p></div><a href="${esc(j.url)}" target="_blank" rel="noopener">Open posting ↗</a>${j.applicationWorkspace?'<button class="primary" data-prepare>Open application workspace</button>':preparesOnSync(j)?'<p class="muted">Sol prepares this role during sync.</p>':`<button class="primary" data-prepare ${j.archivedAt?'disabled':''}>Apply with Sol</button>`}${j.baselineTier?`<details><summary class="muted">Prior assessment</summary><p class="muted">Cursor tier ${esc(j.baselineTier)}. Your interest determines visibility here.</p></details>`:''}</aside>`;}
@@ -35,12 +35,12 @@ function render(){if(applicationId){renderApplication();return;}const listKey=JS
 if(view==='Search Health'){health();return;}if(view==='Comparison'){comparison();return;}
 const js=filtered();$('#caption').textContent=view==='Strong'?`${js.length} Strong inbox roles · unreviewed and not started`:view==='Cursor additions'?`${js.length} Cursor additions since the baseline · includes archived roles · imported roles need independent verification`:view==='Archived'?`${js.length} archived roles, including live roles set aside for later. Restore any role to bring it back.`:view==='Inbox'?`${js.length} unaddressed roles to review · no inbox limit · Strong roles first with Recommended sort`:view==='Pipeline'?"AI-prepared opportunities wait in Ready for Ian's Review. Review is separate from approval or submission.":`${js.length} opportunities · your decisions control this view`;
 if(view==='Today'){today();return;}
-if(view==='Pipeline'){const stages=["Ready for Ian's Review",'Networking','Preparing','Ready to submit','Applied','Interviewing','Offer','Closed'];$('#workspace').innerHTML=`<div class="grid pipeline-grid">${stages.map(s=>`<section class="lane ${s==="Ready for Ian's Review"?'review-lane':''}"><h3>${esc(s)} · ${js.filter(j=>j.stage===s).length}</h3>${s==="Ready for Ian's Review"?'<p class="muted lane-description">AI prep is saved. Review your evidence choices and Word drafts before moving forward.</p>':''}${pipelineRows(js.filter(j=>j.stage===s))}</section>`).join('')}</div>${selected?detail(jobs().find(j=>j.id===selected)):''}`;return;}
-const subset=js.slice(page*15,(page+1)*15);if(!subset.some(j=>j.id===selected))selected=subset[0]?.id||null;$('#workspace').innerHTML=`<div class="workgrid"><section class="job-list" aria-label="Job list" tabindex="0">${rows(subset)||`<div class="empty">${view==='Focus'?'Choose ☆ Focus on a role to build this week’s working list.':'No opportunities match this view.'}</div>`}${js.length>15?`<div class="pager"><button data-prev ${page===0?'disabled':''}>Previous</button><span class="muted">${page+1} / ${Math.ceil(js.length/15)}</span><button data-next ${(page+1)*15>=js.length?'disabled':''}>Next</button></div>`:''}</section>${detail(subset.find(j=>j.id===selected))}</div>`;restoreWorkspace(listKey,previousSelection,listScroll,detailScroll);}
+if(view==='Pipeline'){const stages=["Ready for Ian's Review",'Networking','Preparing','Ready to submit','Applied','Interviewing','Offer','Closed'];$('#workspace').innerHTML=`${applyBulk()}<div class="grid pipeline-grid">${stages.map(s=>`<section class="lane ${s==="Ready for Ian's Review"?'review-lane':''}"><h3>${esc(s)} · ${js.filter(j=>j.stage===s).length}</h3>${s==="Ready for Ian's Review"?'<p class="muted lane-description">AI prep is saved. Review your evidence choices and Word drafts before moving forward.</p>':''}${pipelineRows(js.filter(j=>j.stage===s))}</section>`).join('')}</div>${selected?detail(jobs().find(j=>j.id===selected)):''}`;return;}
+const subset=js.slice(page*15,(page+1)*15);if(!subset.some(j=>j.id===selected))selected=subset[0]?.id||null;$('#workspace').innerHTML=`${applyBulk()}<div class="workgrid"><section class="job-list" aria-label="Job list" tabindex="0">${rows(subset)||`<div class="empty">${view==='Focus'?'Choose ☆ Focus on a role to build this week’s working list.':'No opportunities match this view.'}</div>`}${js.length>15?`<div class="pager"><button data-prev ${page===0?'disabled':''}>Previous</button><span class="muted">${page+1} / ${Math.ceil(js.length/15)}</span><button data-next ${(page+1)*15>=js.length?'disabled':''}>Next</button></div>`:''}</section>${detail(subset.find(j=>j.id===selected))}</div>`;restoreWorkspace(listKey,previousSelection,listScroll,detailScroll);}
 function health(){const run=snapshot.latestRun,audit=snapshot.listingAudit;$('#caption').textContent='A source is complete only when its results were actually read.';$('#workspace').innerHTML=`<section class="panel"><h3>${run?'Latest run: '+esc(run.status):'No completed full search yet'}</h3><p>${esc(run?.summary||'Baseline imported. The daily search instructions are ready; coverage is not claimed until each source has been checked.')}</p><p class="muted">Scheduler: ${esc(snapshot.schedule?.status||'Not configured')} · Requested model: Sol 6.1</p>${snapshot.schedule?.note?`<p class="muted">${esc(snapshot.schedule.note)}</p>`:''}</section>${snapshot.searchProgress?`<section class="panel"><h3>What remains unfinished</h3><p>${esc(snapshot.searchProgress.stopReason)}</p><p>${esc(snapshot.searchProgress.summary||'See current source coverage below.')} </p><ul>${(snapshot.searchProgress.remainingWork||[snapshot.searchProgress.summary||'See source rows for the recorded gaps.']).map(item=>`<li>${esc(item)}</li>`).join('')}</ul><p>${esc(snapshot.searchProgress.nextAction)}</p></section>`:''}${audit?`<section class="panel"><h3>Saved-listing check · ${date(audit.finishedAt)}</h3><p>${esc(audit.summary)}</p><p class="muted">${esc(audit.limit)}</p></section>`:''}<section class="panel"><div class="healthrow label"><span>Source / coverage</span><span>Result</span><span>Last complete check / next step</span></div>${snapshot.sourceHealth.map(s=>`<div class="healthrow"><div><strong>${esc(s.name)}</strong><div class="muted">${esc((s.lanes||[]).join(', '))}</div></div><div><span class="tag">${esc(s.status)}</span><div class="muted">${Number.isFinite(s.sourceRecords)?s.sourceRecords+' source records reconciled':Number.isFinite(s.catalogEntries)?s.catalogEntries+' catalog entries; '+s.fullDescriptionsRead+' descriptions assessed':Number.isFinite(s.resultCardsRead)?s.resultCardsRead+' result cards from the recorded check':Number.isFinite(s.uniqueReviewed)?s.uniqueReviewed+' '+esc(s.countBasis||'descriptions assessed'):'Count not reconciled'}${s.pagesRead?' · '+s.pagesRead+' page(s)':''}</div></div><div><div class="muted">${s.lastComplete?date(s.lastComplete):'No complete check recorded'}</div><div class="muted">${esc(s.nextAction||'Run the next coverage pass.')}</div>${s.note?`<details><summary>Coverage details</summary><p class="muted">${esc(s.note)}</p></details>`:''}</div></div>`).join('')}</section>`;}
 function comparison(){const c=snapshot.comparison,r=c?.sourceReconciliation;$('#caption').textContent='One dashboard, with the source of each discovery retained.';$('#workspace').innerHTML=`<section class="panel"><h3>Cursor is an input source</h3><p>${esc(c?.summary||'Source reconciliation pending.')}</p>${r?`<p>${r.representedCount??r.matchedExisting+r.imports} of ${r.cursorSnapshotCount??r.sourceRecords} Cursor records represented · ${r.newImports??r.imports??0} imported in the reconciliation · ${r.matchedExisting} matched existing records · ${r.missingCount??r.missing??0} missing.</p><p>Open <strong>Cursor additions</strong> to see the ${r.cursorAdditionCount??snapshot.jobs.filter(j=>j.cursorSource&&j.cursorSource.foundAt>=snapshot.baselineAt.slice(0,10)).length} additions since the original baseline, including archived records.</p>`:''}<p>Source-only imports show <strong>Not assessed by Sol</strong> and need a live posting check. They are not counted as independent Sol discoveries.</p></section><section class="panel"><h3>Independent search attribution</h3><p>${snapshot.baselineCount} opportunities formed the original Cursor baseline on ${date(snapshot.baselineAt)}. New independent Sol finds: <strong>${snapshot.jobs.filter(j=>j.origin==='sol-search').length}</strong>.</p><p>Search coverage remains ${esc(snapshot.searchProgress?.status||'Partial')}. Source reconciliation and dashboard publication do not establish a completed search.</p></section>`;}
 
-function handoff(text,title,caption){$('#handoff-title').textContent=title;$('#handoff-caption').textContent=caption;$('#prompt').value=text;$('#open-chat').href='https://chatgpt.com/?q='+encodeURIComponent(text);$('#handoff').showModal();}
+function handoff(text,title,caption){$('#handoff-title').textContent=title;$('#handoff-caption').textContent=caption;$('#prompt').value=text;$('#open-chat').hidden=false;$('#copy-prompt').textContent='Copy task prompt';$('#handoff-note').textContent='Copy the prompt if it is not filled in automatically.';$('#open-chat').href='https://chatgpt.com/?q='+encodeURIComponent(text);$('#handoff').showModal();}
 function exportQueue(){const blob=new Blob([JSON.stringify({schemaVersion:1,repository:'iansimp/job-search-sol',events:queue},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='sol-job-search-decisions.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!snapshot)return;if(b.dataset.view){view=b.dataset.view;page=0;selected=null;render();}if(b.dataset.job){selected=b.dataset.job;render();}if(b.hasAttribute('data-prev')){page--;render();}if(b.hasAttribute('data-next')){page++;render();}const j=jobs().find(j=>j.id===selected);if(b.dataset.interest&&j)event(j,'interest',b.dataset.interest);if(b.hasAttribute('data-focus')&&j)event(j,'focus',!j.focus);if(b.hasAttribute('data-archive')&&j)event(j,'archivedAt',j.archivedAt?null:new Date().toISOString(),j.archivedAt?undefined:'Manually archived from dashboard.');if(b.hasAttribute('data-prepare')&&j)openApplication(j.id);});
 $('#stage')?.addEventListener('change',()=>{});document.addEventListener('change',e=>{if(e.target.id==='stage'||e.target.hasAttribute('data-pipeline-stage')){const j=jobs().find(j=>j.id===(e.target.dataset.pipelineStage||selected));if(e.target.value==='Applied'&&!confirm('Have you actually submitted this application?')){render();return;}event(j,'stage',e.target.value);}});
@@ -48,7 +48,7 @@ $('#search').addEventListener('input',()=>{page=0;render();});$('#family').addEv
 function syncPrompt(events) {
   const instructions = [
     'Read iansimp/job-search-sol/AGENTS.md and tasks/sync-decisions.md. Run the full sync, including Pursue preparation and Maybe review, using the private ledger and the queue below.',
-    'After merging these decisions, prepare every newly effective Pursue and resume unfinished prep in this same run under tasks/prepare-application.md. Pursue is my authorization to prepare. Use my saved choices and evidence; save the private packet and documents and verify readback. No separate prompt or approval is needed for prep.',
+    'After merging these decisions, reconcile private apply-result.json files using the apply-result sync step, then prepare every newly effective Pursue and resume unfinished prep in this same run under tasks/prepare-application.md. Pursue is my authorization to prepare. Use my saved choices and evidence; save the private packet and documents and verify readback. No separate prompt or approval is needed for prep.',
     'Resolve active Maybe roles into Pursue or Pass when supported by current evidence. Review new Maybes first and continue through the saved backlog. Prepare any role moved to Pursue. Checkpoint exact blockers or interruptions privately.',
     'Rebuild and publish only the Sol dashboard and verify readback. Do not submit applications, contact anyone or write to Cursor.'
   ];
@@ -61,7 +61,7 @@ $('#sync').onclick = () => handoff(
 );
 $('#import').onclick=()=>$('#importfile').click();$('#importfile').onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text());if(data.repository!=='iansimp/job-search-sol'||!Array.isArray(data.events))throw Error('wrong queue');const validFields={interest:['Unreviewed','Pursue','Maybe','Pass'],stage:['Not started','Networking','Preparing',"Ready for Ian's Review",'Ready to submit','Applied','Interviewing','Offer','Closed']};for(const v of data.events){if(!snapshot.jobs.some(j=>j.id===v.id)||!v.eventId||!validDecisionValue(v.field,v.value))throw Error('invalid event');}const ids=new Set(queue.map(v=>v.eventId));data.events.forEach(v=>{if(!ids.has(v.eventId)){queue.push(v);ids.add(v.eventId);}});persist();render();toast('Queue imported. Decisions remain pending until synced.');}catch(err){toast('This file is not a valid Sol decision queue.');}};
 $('#close-dialog').onclick=()=>$('#handoff').close();$('#copy-prompt').onclick=async()=>{try{await navigator.clipboard.writeText($('#prompt').value);toast('Task prompt copied.');}catch(e){$('#prompt').select();toast('Select and copy the prompt.');}};
-fetch('snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json();}).then(data=>{snapshot=data;const synced=new Set(snapshot.jobs.flatMap(j=>j.syncedEventIds||[]));queue=queue.filter(e=>!synced.has(e.eventId));persist();[...new Set(snapshot.jobs.map(j=>j.family).filter(Boolean))].sort().forEach(f=>$('#family').add(new Option(f,f)));$('#footer').textContent='Published '+new Date(snapshot.publishedAt).toLocaleString()+'. Independent Sol pilot. Archived includes live roles set aside for later. Your decisions and history are retained. Private source stays in job-search-sol.';render();if(location.hash.startsWith('#apply/'))openApplication(decodeURIComponent(location.hash.slice(7)));}).catch(err=>{$('#caption').textContent='Unable to load the dashboard data. Reload or check publication.';$('#workspace').innerHTML='<p class="error">'+esc(err.message)+'</p>';});
+fetch('snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json();}).then(data=>{snapshot=data;const synced=new Set(snapshot.jobs.flatMap(j=>j.syncedEventIds||[]));queue=queue.filter(e=>!synced.has(e.eventId));persist();[...new Set(snapshot.jobs.map(j=>j.family).filter(Boolean))].sort().forEach(f=>$('#family').add(new Option(f,f)));$('#footer').textContent='Published '+new Date(snapshot.publishedAt).toLocaleString()+'. Independent Sol pilot. Archived includes live roles set aside for later. Your decisions and history are retained. Private source stays in job-search-sol.';render();void refreshApplyStatuses();if(location.hash.startsWith('#apply/'))openApplication(decodeURIComponent(location.hash.slice(7)));}).catch(err=>{$('#caption').textContent='Unable to load the dashboard data. Reload or check publication.';$('#workspace').innerHTML='<p class="error">'+esc(err.message)+'</p>';});
 
 
 
@@ -74,11 +74,11 @@ function applicationRoute(id,replace=false){const url=location.pathname+location
 function requestedApplication(){if(!location.hash.startsWith('#apply/'))return null;try{return decodeURIComponent(location.hash.slice(7));}catch{return null;}}
 window.addEventListener('hashchange',()=>{if(!snapshot)return;const id=requestedApplication();if(id===applicationId)return;if(id){openApplication(id);return;}if(applicationId){if(applicationSaving||(applicationDirty&&!confirm('Leave unsaved application edits?'))){applicationRoute(applicationId,true);return;}applicationId=null;applicationRoute(null);applicationDirty=false;render();}});
 function nextMove(j){if(j.applicationWorkspace)return 'Review your saved evidence comparison and first-pass drafts';if(preparesOnSync(j))return 'Sol prepares this role during sync';if(!j.listingCheckedAt||Date.now()-Date.parse(j.listingCheckedAt)>7*86400000)return 'Recheck the posting before preparing or waiting on a referral';if(j.stage==='Ready to submit')return 'Review the application form and submit';if(['Applied','Interviewing'].includes(j.stage))return 'Check the next conversation or follow-up';if(j.stage==='Networking')return 'Keep preparation moving while waiting for your contact';if(j.stage==='Preparing')return 'Review your draft and resolve open questions';return 'Choose evidence and prepare the first draft';}
-function today(){const all=filtered(),rank=j=>(!j.listingCheckedAt||Date.now()-Date.parse(j.listingCheckedAt)>7*86400000?10:0)+(j.stage==="Ready for Ian's Review"?-2:j.applicationWorkspace?-1:j.stage==='Ready to submit'?0:j.stage==='Preparing'?1:j.focus?2:j.stage==='Networking'?3:j.interest==='Pursue'?4:5),ordered=[...all].sort((a,b)=>rank(a)-rank(b)||addedOrder(a,b));$('#caption').textContent='Turn a decision into an application. Start with the next concrete step; networking can happen alongside it.';$('#workspace').innerHTML=`<section class="today-intro"><div><div class="eyebrow">YOUR NEXT ACTION</div><h3>${ordered.length?'Move one application forward.':'Choose a role to pursue.'}</h3><p class="muted">Choose Pursue to prepare the role on your next Sol sync.</p></div><a href="${privateHost?'#apply/celonis-senior-director-professional-services-7741095003':'https://jobs.ianatwork.com/#apply/celonis-senior-director-professional-services-7741095003'}" ${privateHost?'':'target="_blank" rel="noopener"'} class="primary" data-pilot>Open private workspace ↗</a></section><div class="today-cards">${ordered.slice(0,3).map(j=>`<article class="action-card"><div class="tags"><span class="tag">${esc(j.stage==='Not started'?'Shortlist':j.stage)}</span>${j.focus?'<span class="tag">★ Focus</span>':''}</div><div class="company">${esc(j.company)}</div><h3>${esc(j.title)}</h3><p>${esc(nextMove(j))}</p><p class="muted">${esc(addedLabel(j))}</p>${preparesOnSync(j)&&!j.applicationWorkspace?'':`<button class="primary" data-open-application="${esc(j.id)}">${j.applicationWorkspace?'Open application workspace':j.stage==='Ready to submit'?'Review application':'Apply with Sol'}</button>`}<button data-inspect="${esc(j.id)}">View role</button></article>`).join('')||'<p>No active application priorities yet. Choose Pursue on a role to add it here.</p>'}</div><div class="actions"><button data-view="Shortlist">See all ${jobs().filter(j=>matches(j,'Shortlist')).length} shortlisted roles</button><button data-view="Pipeline">See the full pipeline</button><span class="muted">Three suggested actions shown here. All roles remain available in their views.</span></div>`;}
+function today(){const all=filtered(),rank=j=>(!j.listingCheckedAt||Date.now()-Date.parse(j.listingCheckedAt)>7*86400000?10:0)+(j.stage==="Ready for Ian's Review"?-2:j.applicationWorkspace?-1:j.stage==='Ready to submit'?0:j.stage==='Preparing'?1:j.focus?2:j.stage==='Networking'?3:j.interest==='Pursue'?4:5),ordered=[...all].sort((a,b)=>rank(a)-rank(b)||addedOrder(a,b));$('#caption').textContent='Turn a decision into an application. Start with the next concrete step; networking can happen alongside it.';$('#workspace').innerHTML=`${needsYou()}${applyBulk()}<section class="today-intro"><div><div class="eyebrow">YOUR NEXT ACTION</div><h3>${ordered.length?'Move one application forward.':'Choose a role to pursue.'}</h3><p class="muted">Choose Pursue to prepare the role on your next Sol sync.</p></div><a href="${privateHost?'#apply/celonis-senior-director-professional-services-7741095003':'https://jobs.ianatwork.com/#apply/celonis-senior-director-professional-services-7741095003'}" ${privateHost?'':'target="_blank" rel="noopener"'} class="primary" data-pilot>Open private workspace ↗</a></section><div class="today-cards">${ordered.slice(0,3).map(j=>`<article class="action-card"><div class="tags"><span class="tag">${esc(j.stage==='Not started'?'Shortlist':j.stage)}</span>${j.focus?'<span class="tag">★ Focus</span>':''}</div><div class="company">${esc(j.company)}</div><h3>${esc(j.title)}</h3><p>${esc(nextMove(j))}</p><p class="muted">${esc(addedLabel(j))}</p>${preparesOnSync(j)&&!j.applicationWorkspace?'':`<button class="primary" data-open-application="${esc(j.id)}">${j.applicationWorkspace?'Open application workspace':j.stage==='Ready to submit'?'Review application':'Apply with Sol'}</button>`}<button data-inspect="${esc(j.id)}">View role</button>${applyControls(j,true)}</article>`).join('')||'<p>No active application priorities yet. Choose Pursue on a role to add it here.</p>'}</div><div class="actions"><button data-view="Shortlist">See all ${jobs().filter(j=>matches(j,'Shortlist')).length} shortlisted roles</button><button data-view="Pipeline">See the full pipeline</button><span class="muted">Three suggested actions shown here. All roles remain available in their views.</span></div>`;}
 function prepPrompt(j,revision){if(revision!=null)return `Read iansimp/job-search-sol/AGENTS.md and tasks/prepare-application.md. Review the latest saved private application workspace for ${j.company}, ${j.title}, at applications/${j.id}/workbench.json (revision ${revision} or later). Use my saved evidence notes and Resume/Letter selections together in this pass, including selected rows that still need evidence. Update the fit comparison, resume draft, cover letter and tracked Word materials where supported. Treat my firsthand notes as evidence for this application and preserve their attribution. Explain any remaining gaps privately without inventing claims. Preserve my notes, selections, and unrelated edits. Check the current official posting, save the revision privately, and verify readback. Do not submit an application or contact anyone.`;return `Read iansimp/job-search-sol/AGENTS.md and tasks/prepare-application.md. Prepare the private application workspace for opportunity ${j.id}: ${j.company}, ${j.title}, ${j.url}. Read any existing applications/${j.id}/workbench.json and preserve its choices, evidence additions, notes and edits. Read the current full official description and latest accepted shared career sources. Save sourced requirement-to-evidence rows with Direct, Transferable or Gap support, recommended resume/letter selections, and first-pass text drafts in applications/${j.id}/workbench.json. Explain gaps in the private comparison, not in the cover letter. Check unique form questions and required attachments. Save privately and verify readback. Generate tracked Word materials against the accepted master through the document workflow. Do not write to Cursor, send messages or submit this application. A copied prompt is not a started task.`;}
-async function openApplication(id){if(applicationSaving){applicationRoute(applicationId,true);return;}reviewTab="brief";if(applicationDirty&&!confirm('Leave unsaved application edits?')){applicationRoute(applicationId,true);return;}const j=jobs().find(x=>x.id===id);if(!j){applicationRoute(applicationId,true);return;}applicationRoute(id);applicationId=id;selected=id;applicationPacket=null;applicationSha=null;applicationDirty=false;applicationError='';renderApplication();if(!privateHost)return;try{const session=await fetch('/api/session',{cache:'no-store'});if(applicationId!==id)return;if(!session.ok)throw Error('Private session unavailable. Reopen the private workspace.');privateSession=true;const res=await fetch('/api/workbench/'+encodeURIComponent(id),{cache:'no-store'}),data=await res.json();if(applicationId!==id)return;if(!res.ok)throw Error(data.error);applicationPacket=data.packet;applicationSha=data.sha;}catch(e){if(applicationId!==id)return;applicationError=e.message;}renderApplication();}
+async function openApplication(id){if(applicationSaving){applicationRoute(applicationId,true);return;}reviewTab="brief";if(applicationDirty&&!confirm('Leave unsaved application edits?')){applicationRoute(applicationId,true);return;}const j=jobs().find(x=>x.id===id);if(!j){applicationRoute(applicationId,true);return;}applicationRoute(id);applicationId=id;selected=id;applicationPacket=null;applicationSha=null;applicationDirty=false;applicationError='';renderApplication();if(!privateHost)return;try{const session=await fetch('/api/session',{cache:'no-store'});if(applicationId!==id)return;if(!session.ok)throw Error('Private session unavailable. Reopen the private workspace.');privateSession=true;const res=await fetch('/api/workbench/'+encodeURIComponent(id),{cache:'no-store'}),data=await res.json();if(applicationId!==id)return;if(!res.ok)throw Error(data.error);applicationPacket=data.packet;applicationSha=data.sha;void refreshApplyStatuses();}catch(e){if(applicationId!==id)return;applicationError=e.message;}renderApplication();}
 function supportClass(s){return s==='Direct'?'direct':s==='Transferable'?'transferable':'gap';}
-function renderApplication(){const j=jobs().find(x=>x.id===applicationId);if(!j)return;nav();$('#toolbar').hidden=true;$('#heading').textContent=j.company;$('#kicker').textContent='APPLICATION WORKSPACE';$('#caption').textContent=j.title;$('#workspace').innerHTML=`<div class="application-top"><button data-close-application>← Back to opportunities</button><a href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Official posting ↗</a><span class="tag">${privateHost?'Private workspace':'Public dashboard'}</span></div>${applicationPacket?applicationBody(j):`<section class="panel"><h3>${!privateHost?'Your application materials stay private.':applicationError?'This role needs its first preparation.':'Opening private materials…'}</h3><p>${!privateHost?'Use the private workspace online to compare your career evidence and edit drafts. No private resume, contacts or notes are loaded into this public page.':esc(applicationError||'Reading the saved private GitHub packet.')}</p><div class="actions">${!privateHost?`<a class="primary" href="https://jobs.ianatwork.com/#apply/${encodeURIComponent(j.id)}" target="_blank" rel="noopener">Open private workspace ↗</a>`:''}<button data-request-preparation>Prepare this role in ChatGPT</button></div><p class="muted">A preparation prompt needs to be run in ChatGPT. Opening it does not start a background task.</p></section>`}`;}
+function renderApplication(){const j=jobs().find(x=>x.id===applicationId);if(!j)return;nav();$('#toolbar').hidden=true;$('#heading').textContent=j.company;$('#kicker').textContent='APPLICATION WORKSPACE';$('#caption').textContent=j.title;$('#workspace').innerHTML=`<div class="application-top"><button data-close-application>← Back to opportunities</button><a href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Official posting ↗</a><span class="tag">${privateHost?'Private workspace':'Public dashboard'}</span></div>${applyControls(j)}${applicationPacket?applicationBody(j):`<section class="panel"><h3>${!privateHost?'Your application materials stay private.':applicationError?'This role needs its first preparation.':'Opening private materials…'}</h3><p>${!privateHost?'Use the private workspace online to compare your career evidence and edit drafts. No private resume, contacts or notes are loaded into this public page.':esc(applicationError||'Reading the saved private GitHub packet.')}</p><div class="actions">${!privateHost?`<a class="primary" href="https://jobs.ianatwork.com/#apply/${encodeURIComponent(j.id)}" target="_blank" rel="noopener">Open private workspace ↗</a>`:''}<button data-request-preparation>Prepare this role in ChatGPT</button></div><p class="muted">A preparation prompt needs to be run in ChatGPT. Opening it does not start a background task.</p></section>`}`;}
 function legacyApplicationBody(j){const p=applicationPacket,rows=p.requirements||[],gaps=rows.filter(r=>r.support!=='Direct');return `<section class="application-summary panel"><div><div class="eyebrow">THE ROLE IN PLAIN ENGLISH</div><h3>${esc(p.roleReadout)}</h3><p>${esc(p.positioning)}</p><p class="muted">Official description checked ${date(p.descriptionCheckedAt)} · ${esc(p.draftStatus)}</p></div></section><section class="comparison-review"><div class="eyebrow">1 · UNDERSTAND THE FIT</div><h3>Compare the job with your experience</h3><p class="muted">Each card covers one job requirement. Your saved record may be incomplete: “Needs confirmation” does not mean you lack the experience.</p><div class="fit-key"><span class="tag direct">${rows.filter(r=>r.support==='Direct').length} supported</span><span class="tag transferable">${rows.filter(r=>r.support==='Transferable').length} related</span><span class="tag gap">${rows.filter(r=>r.support==='Gap').length} need confirmation</span></div>${rows.map(r=>`<article class="fit-card"><div class="fit-card-heading"><h4>${esc(r.label)}</h4><span class="tag ${supportClass(r.support)}">${esc(r.support==='Direct'?'Supported':r.support==='Transferable'?'Related experience':'Needs confirmation')}</span></div><div class="fit-card-columns"><div><h5>The job asks for</h5><p>${esc(r.requirement)}</p></div><div><h5>Your record shows</h5><p>${esc(r.evidence||'No verified evidence recorded yet.')}</p>${r.sourceUrl?`<a class="muted" href="${esc(r.sourceUrl)}" target="_blank" rel="noopener noreferrer">View career source ↗</a>`:''}<details><summary>Add or correct your experience</summary><textarea data-evidence-add="${esc(r.id)}" aria-label="Additional evidence for ${esc(r.label)}" placeholder="Add the experience or correction you want Sol to consider.">${esc((p.evidenceAdditions||[]).find(a=>a.requirementId===r.id)?.text||'')}</textarea></details></div><div class="fit-review-note"><h5>${r.support==='Direct'?'How it maps to this role':'What needs checking'}</h5><p>${esc(r.gap||'This requirement is supported by your saved experience.')}</p></div></div></article>`).join('')}</section><section class="material-choices"><div class="eyebrow">2 · CHOOSE WHAT TO USE</div><div class="application-controls"><div><h3>Build your application</h3><p class="muted">Choose which experience belongs in each document, or use Sol’s recommended choices. Unconfirmed claims stay out.</p></div><button data-auto-select>Do it for me</button></div><div class="comparison-table choices-table"><table><thead><tr><th scope="col">Experience to emphasize</th><th scope="col">Resume</th><th scope="col">Letter</th></tr></thead><tbody>${rows.map(r=>`<tr><th scope="row">${esc(r.label)}</th>${['resume','letter'].map(k=>`<td><input type="checkbox" data-choice="${esc(r.id)}" data-document="${k}" aria-label="Include ${esc(r.label)} in ${k}" ${p.choices?.[r.id]?.[k]?'checked':''} ></td>`).join('')}</tr>`).join('')}</tbody></table></div></section><div class="actions"><button data-compose>Update drafts from my choices</button><span class="muted">Uses reviewed wording, with no new model call. Existing edits are preserved until you choose to replace them.</span></div><div class="eyebrow draft-step">3 · REVIEW YOUR DRAFTS</div><section class="draft-grid"><div class="panel"><h3>Resume changes</h3><p class="muted">Proposed edits to the standard resume. The accepted master stays intact. This is not a final formatted resume.</p><textarea id="resume-draft" aria-label="Resume changes">${esc(p.resumeDraft)}</textarea></div><div class="panel"><h3>Cover letter</h3><p class="muted">First-pass text for your review. Confirm logistics before sending.</p><textarea id="letter-draft" aria-label="Cover letter draft">${esc(p.letterDraft)}</textarea></div></section><section class="panel"><h3>Keep this application moving</h3><div class="next-action"><label>Next action<input id="application-next-action" value="${esc(p.nextAction||'')}"></label><label>Target date<input type="date" id="application-next-date" value="${esc(p.nextActionDate||'')}"></label></div><label>Notes / lessons for the next application<textarea id="application-notes">${esc(p.notes||'')}</textarea></label><p class="muted">New evidence is retained with this role and its requirement. A contextual omission does not delete career history or become a global rule.</p></section><section class="panel"><h3>Research and the application form</h3>${(p.research||[]).map(x=>`<p><strong>${esc(x.label)}</strong> · ${esc(x.status)}${x.url?` · <a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.linkLabel||'Open source')} ↗</a>`:''}</p>`).join('')}<p class="muted">Connections and news are listed only when verified. No outreach or application is sent from this workspace.</p><button data-request-preparation>Save &amp; review with Sol</button></section><div class="application-save"><button class="primary" data-save-application ${applicationSaving?'disabled':''}>${applicationSaving?'Saving and verifying…':'Save privately to GitHub'}</button><span id="application-save-status" role="status">${applicationDirty?'Unsaved changes':`Private packet loaded · revision ${p.revision||0}`}</span></div>`;}
 let reviewTab='brief';
 function switchReviewTab(name){reviewTab=name;document.querySelectorAll('[data-review-panel]').forEach(x=>x.hidden=x.dataset.reviewPanel!==name);document.querySelectorAll('[data-review-tab]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.reviewTab===name)));}
@@ -100,3 +100,202 @@ document.addEventListener('click',e=>{const b=e.target.closest('button,a');if(!b
 // Exit the editor before legacy navigation; do not discard unsaved work silently.
 document.addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(!b||!applicationId)return;if(applicationSaving){e.stopImmediatePropagation();e.preventDefault();return;}if(applicationDirty&&!confirm('Leave unsaved application edits?')){e.stopImmediatePropagation();e.preventDefault();return;}applicationId=null;applicationRoute(null);applicationDirty=false;},true);
 window.addEventListener('beforeunload',e=>{if(applicationDirty){e.preventDefault();e.returnValue='';}});
+
+const hostedApply = privateHost && location.hostname === 'jobs.ianatwork.com';
+const applyStatuses = new Map();
+const applySelected = new Set();
+const applyLabels = {
+  submitted:'Submitted', held:'Waiting for your click', 'needs-ian':'Needs you',
+  'warm-path':'Held for a warm path', closed:'Posting closed', failed:'Failed'
+};
+let applyBusy = false;
+let applyStatusError = '';
+let applyDialog;
+const queuedThisSitting = new Set();
+let applyRefreshVersion = 0;
+
+function applyEligible(j) {
+  return !j.archivedAt && j.interest !== 'Pass' && !['Applied','Interviewing','Offer','Closed'].includes(j.stage) && !/^confirmed closed\b/i.test(j.availability || '');
+}
+function canRequestApply(j, status = applyStatuses.get(j.id)) {
+  return applyEligible(j) && !applyStatusError && (status?.request?.status !== 'queued' || status.result?.status === 'failed');
+}
+function applyControls(j, pipeline = false) {
+  if (!hostedApply) return '';
+  const state = applyStatuses.get(j.id);
+  const result = state?.result;
+  const queued = state?.request?.status === 'queued' && !result;
+  const label = result ? (result.status === 'held' && state.request.mode === 'review' ? 'Ready for your review' : applyLabels[result.status]) + (result.status === 'submitted' ? ' · ' + date(result.finishedAt) : '') :
+    queued ? (state.request.preparing ? 'Claude is preparing' : 'Queued for Claude') : state?.request?.status === 'cancelled' ? 'Cancelled' : '';
+  const canRequest = canRequestApply(j, state);
+  if (!label && !canRequest) return '';
+  return `<div class="apply-actions">${label ? `<p><strong>${esc(label)}</strong>${result?.blocker ? ' · ' + esc(result.blocker) : ''}</p>` : ''}
+    ${(result?.files || []).map(kind => `<a href="/api/documents/${encodeURIComponent(j.id)}/claude-${encodeURIComponent(kind)}" download>${kind === 'resumePdf' ? 'Download Claude resume' : 'Download Claude cover letter'}</a>`).join('')}
+    ${queued ? `<button data-apply-cancel="${esc(j.id)}">Cancel</button>` : ''}
+    ${canRequest ? `<button data-apply-one="${esc(j.id)}">Do it all</button>
+      ${pipeline ? `<label><input type="checkbox" data-apply-select="${esc(j.id)}" ${applySelected.has(j.id) ? 'checked' : ''}> Select <span class="sr-only">${esc(j.company)} · ${esc(j.title)}</span></label>` : ''}` : ''}
+  </div>`;
+}
+function needsYou() {
+  if (!hostedApply) return '';
+  const entries = jobs().filter(j => ['held','needs-ian'].includes(applyStatuses.get(j.id)?.result?.status));
+  return `${applyStatusError ? '<p class="error" role="status">'+esc(applyStatusError)+'</p>' : ''}
+    ${entries.length ? `<section class="panel needs-you"><h3>Needs you</h3><ul>${entries.map(j => {
+      const r = applyStatuses.get(j.id).result;
+      return `<li><a data-open-application="${esc(j.id)}" href="#apply/${encodeURIComponent(j.id)}">${esc(j.company)} · ${esc(j.title)}</a>
+        <p>${esc(r.blocker || (r.status === 'held' ? (applyStatuses.get(j.id).request.mode === 'review' ? 'Review the resume and letter Claude prepared.' : 'The form is filled and waiting for you to submit.') : 'Open the workspace to check the application.'))}</p></li>`;
+    }).join('')}</ul></section>` : ''}`;
+}
+function queuedApplyIds(ids = applyStatuses.keys()) {
+  return [...ids].filter(id => {
+    const state = applyStatuses.get(id);
+    return state?.request?.status === 'queued' && !state.request.hasResult && !state.result;
+  });
+}
+
+function applyBulk() {
+  if (!hostedApply) return '';
+  const visible = filtered();
+  const count = visible.filter(j => applySelected.has(j.id) && canRequestApply(j)).length;
+  if (!visible.some(j => canRequestApply(j)) && !queuedApplyIds().length && !applyStatusError) return '';
+  return `<div class="actions apply-bulk">
+    <button data-apply-bulk ${count ? '' : 'disabled'}>Do it all for selected${count ? ' ('+count+')' : ''}</button>
+    <button data-copy-claude ${queuedApplyIds().length ? '' : 'disabled'}>Copy Claude prompt</button>
+    ${applyStatusError ? '<p class="error" role="status">'+esc(applyStatusError)+'</p>' : ''}
+  </div>`;
+}
+
+async function refreshApplyStatuses(redraw = true) {
+  if (!hostedApply || !snapshot || applyBusy) return false;
+  const version = ++applyRefreshVersion;
+  try {
+    const res = await fetch('/api/apply-requests?all=1', {cache:'no-store'});
+    if (!res.ok) throw Error('Application status could not load. Refresh to retry.');
+    const entries = Object.entries((await res.json()).jobs);
+    if (applyBusy || version !== applyRefreshVersion) return false;
+    const changed = applyStatusError || JSON.stringify([...applyStatuses]) !== JSON.stringify(entries);
+    applyStatuses.clear();
+    for (const [id, state] of entries) applyStatuses.set(id, state);
+    applyStatusError = '';
+    if (redraw && changed && !applicationDirty && !applicationSaving && !applyDialog?.open) render();
+    return true;
+  } catch (error) {
+    if (version === applyRefreshVersion) {
+      applyStatusError = error.message;
+      if (redraw && !applicationId) render();
+    }
+    return false;
+  }
+}
+
+function claudeHandoff(ids, copy = true) {
+  if (!ids.length) return;
+  const prompt = 'Run the apply queue. Read iansimp/cursor context/job-search/auto-apply/runner.md and work every queued request in iansimp/job-search-sol: ' + ids.join(', ');
+  handoff(prompt, 'Paste this into Claude', 'Paste into your Claude chat linked to this Mac.');
+  $('#open-chat').hidden = true;
+  $('#copy-prompt').textContent = 'Copy Claude prompt';
+  $('#handoff-note').textContent = 'Copy the prompt if it was not copied automatically.';
+  if (copy) navigator.clipboard?.writeText(prompt).then(() => toast('Claude prompt copied.'), () => $('#prompt').select());
+}
+
+function confirmApply(roles) {
+  if (!roles.length || applyBusy) return;
+  if (applicationId && (applicationDirty || applicationSaving)) {
+    toast('Save and review your workspace changes first.');
+    return;
+  }
+  const requests = roles.map(job => ({job}));
+  if (!applyDialog) {
+    applyDialog = document.createElement('dialog');
+    applyDialog.setAttribute('aria-labelledby','apply-confirm-heading');
+    document.body.append(applyDialog);
+  }
+  applyDialog.innerHTML = `<form method="dialog"><h2 id="apply-confirm-heading">Do it all</h2>
+    <ul>${roles.map(j => `<li>${esc(j.company)} · ${esc(j.title)}</li>`).join('')}</ul>
+    <fieldset><legend>What should Claude do?</legend>
+      <label><input type="radio" name="mode" value="auto" required> Submit for me</label>
+      <label><input type="radio" name="mode" value="hold" required> Fill it, I’ll submit</label>
+      <label><input type="radio" name="mode" value="review" required> Show me the resume and letter first</label>
+    </fieldset>
+    <div class="actions"><button type="button" data-close-apply-dialog autofocus>Back</button>
+      <button class="primary" type="submit">Confirm and queue</button></div></form>`;
+  applyDialog.querySelector('[data-close-apply-dialog]').onclick = () => applyDialog.close();
+  applyDialog.querySelector('form').onsubmit = e => {
+    e.preventDefault();
+    const mode = new FormData(e.target).get('mode');
+    applyDialog.close();
+    void writeApplyRequests(requests, 'PUT', mode);
+  };
+  applyDialog.showModal();
+}
+
+async function writeApplyRequests(requests, method, mode) {
+  if (applyBusy) return;
+  applyBusy = true;
+  ++applyRefreshVersion;
+  let saved = 0;
+  const errors = [];
+  for (const {job, requestId} of requests) {
+    try {
+      const response = await fetch('/api/apply-request/' + encodeURIComponent(job.id), {
+        method, headers:{'Content-Type':'application/json','X-Sol-Workspace':'1'},
+        body:JSON.stringify(method === 'PUT' ? {mode} : {requestId})
+      });
+      const data = await response.json();
+      if (!response.ok || !data.verified) throw Error(data.error || 'GitHub readback failed.');
+      saved++;
+      applySelected.delete(job.id);
+      applyStatuses.set(job.id, data.status);
+      if (method === 'PUT') queuedThisSitting.add(job.id);
+      else queuedThisSitting.delete(job.id);
+    } catch (error) {
+      errors.push(job.company + ' · ' + job.title + ' — ' + error.message);
+    }
+  }
+  applyBusy = false;
+  if (!applicationDirty && !applicationSaving) render();
+  toast([saved ? saved + (method === 'PUT' ? ' queued for Claude.' : ' cancelled.') : '', ...errors].filter(Boolean).join(' '));
+  await refreshApplyStatuses(false);
+  if (!applicationDirty && !applicationSaving) render();
+  if (method === 'PUT' && saved) claudeHandoff(queuedApplyIds(queuedThisSitting));
+}
+
+document.addEventListener('change', e => {
+  const id = e.target.dataset.applySelect;
+  if (!id) return;
+  if (e.target.checked) applySelected.add(id);
+  else applySelected.delete(id);
+  const bulk = $('[data-apply-bulk]');
+  const count = filtered().filter(j => applySelected.has(j.id) && canRequestApply(j)).length;
+  if (bulk) {
+    bulk.disabled = !count;
+    bulk.textContent = 'Do it all for selected' + (count ? ' ('+count+')' : '');
+  }
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-apply-one],[data-apply-bulk],[data-apply-cancel],[data-copy-claude]');
+  if (!b || !hostedApply || applyBusy) return;
+  if (b.hasAttribute('data-copy-claude')) {
+    void fetch('/api/apply-requests?all=1', {cache:'no-store'}).then(async response => {
+      if (!response.ok) throw Error('Application status is unavailable.');
+      const {jobs: states} = await response.json();
+      const ids = Object.keys(states).filter(id => states[id].request?.status === 'queued' &&
+        !states[id].request.hasResult && !states[id].result);
+      if (ids.length) claudeHandoff(ids);
+      else { toast('No requests are waiting for Claude.'); void refreshApplyStatuses(); }
+    }).catch(error => toast(error.message));
+    return;
+  }
+  if (b.hasAttribute('data-apply-bulk')) {
+    confirmApply(filtered().filter(j => applySelected.has(j.id) && canRequestApply(j)));
+    return;
+  }
+  const job = jobs().find(j => j.id === (b.dataset.applyOne || b.dataset.applyCancel));
+  if (!job) return;
+  if (b.dataset.applyOne && canRequestApply(job)) confirmApply([job]);
+  if (b.dataset.applyCancel) void writeApplyRequests([{job,requestId:applyStatuses.get(job.id)?.request?.requestId}], 'DELETE');
+});
+if (hostedApply) {
+  window.addEventListener('focus', () => void refreshApplyStatuses());
+  window.setInterval?.(() => { if (!document.hidden) void refreshApplyStatuses(); }, 45000);
+}

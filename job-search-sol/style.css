@@ -39,3 +39,13 @@
 .pipeline-role{display:block;width:100%;border:0;background:transparent;text-align:left;padding:0;min-height:0}.pipeline-role strong,.pipeline-role span{display:block}.pipeline-role span{font-size:13px;margin-top:5px}.pipelinecard p{margin:8px 0}.review-packet-link{border-top:1px solid var(--line);padding-top:10px}
 
 .pipelinecard{background:var(--panel);border:1px solid var(--line);border-radius:9px}.pipeline-role{display:block;width:100%;text-align:left;border:0;padding:0;background:transparent}.pipeline-role strong,.pipeline-role span{display:block}.pipeline-role span{font-size:13px;margin-top:5px}.pipelinecard>p{margin:9px 0 0}.review-packet-link{font-weight:650}
+
+.apply-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; margin-block: .65rem; }
+.apply-actions p { flex-basis: 100%; margin: 0; }
+.apply-actions label, #apply-confirm-heading ~ fieldset label { display: flex; align-items: center; gap: .4rem; }
+.apply-actions input, #apply-confirm-heading ~ fieldset input { width: auto; }
+.apply-bulk, .needs-you { margin-block-end: 1rem; }
+.needs-you li + li { margin-top: .75rem; }
+.needs-you li p { margin: .25rem 0 0; }
+#apply-confirm-heading ~ fieldset { margin-block: 1rem; }
+.job-list article > .apply-actions { padding-inline: .75rem; }
